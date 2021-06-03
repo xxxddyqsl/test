@@ -1,7 +1,7 @@
 <template>
   <div class="home-wrapper">
     <div class="home-header gg-flex-3">
-      <span class="home-header-rtc-title" id="rtc-UserName" v-text="'用户名:' + UserObj.name"></span>
+      <span class="home-header-rtc-title" id="rtc-UserName" v-text="'提交测试 用户名:' + UserObj.name"></span>
       <!-- <span class="home-header-rtc-title" id="rtc-UserId">(17749721923_gd85_web)</span> -->
       <span class="home-header-rtc-title home-header-rtc-time"></span>
       <span class="home-header-rtc-title home-header-rtc-room" id="rtc-room">会议室 ID: {{ RoomNumber }}</span>
