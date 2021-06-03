@@ -1,0 +1,56 @@
+#setup-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: 0;
+  z-index: 1;
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, .4);
+}
+
+.setup-CallSettings {
+  width: 30%;
+  height: 100%;
+  display: flex;
+  background-color: #fff;
+}
+
+.setup-content {
+ flex: 1;
+}
+
+.setup-form {
+    padding: 2rem;
+    text-align: left;
+}
+.setup-form-title{
+    color: #000;
+    font-size: 1.6rem;
+    margin-bottom: 2.4rem;
+    padding-bottom: 2.4rem;
+    border-bottom: 1px solid #dcdfe6;
+}
+.setup-form-item{
+    margin-bottom: 1.8rem;
+}
+.setup-form-item-label{ 
+    vertical-align: middle;
+    font-size: 1.4rem;
+    color: #606266;
+    line-height: 3.2rem;
+    padding: 0 1.2rem 0 0;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.setup-form-item-content{
+    position: relative;
+    font-size: 1.4rem;
+    line-height: 3.2rem;
+}
+.setup-form-item-content .el-select{
+    width: 100%;
+}

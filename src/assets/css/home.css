@@ -1,0 +1,378 @@
+.home-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.home-header {
+  min-height: 5.3rem;
+  color: #fff;
+  font-size: 1.4rem;
+  padding: 0 2rem;
+  background-color: #4E6CAA;
+}
+
+.home-header-rtc-title {}
+
+.home-header-rtc-room {
+  margin: 0 auto;
+}
+
+.home-header-rtc-right {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.home-header-rtc-btn {
+  width: 3.5rem;
+  height: 3.5rem;
+  border: none;
+  cursor: pointer;
+  margin: 0 1.3rem;
+  border-radius: 50%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.home-header-rtc-hangup {
+  background-color: #e86262;
+  background-image: url('../images/hangup.png');
+}
+
+.home-header-rtc-screenshare {
+  background-color: #4E6CAA;
+  background-image: url('../images/share.png');
+}
+
+.home-header-rtc-userlist {
+  background-color: #4E6CAA;
+  background-image: url('../images/user-list.svg');
+}
+.home-header-rtc-userlist-add{
+    border: 1px solid #4E6CAA;
+    background-color: #24334B;
+}
+.home-header-rtc-userlist-add-icon{
+  width: 2.3rem;
+  height: 2.3rem;
+}
+.home-main {
+  flex: 1;
+  background-color: black;
+}
+
+.home-main-stream-wrap {
+  position: relative;
+  height: 100%; 
+}
+
+.home-main-stream-list {
+  width: 100%;
+  height: 16.5rem;
+  max-width: 135rem;
+  /* max-width: 150px; */
+  margin-top: auto;
+  /* overflow-x: auto; */
+  /*   禁止换行 */
+  /* white-space: nowrap; */
+  margin-bottom: 2rem;
+  padding-bottom: 46px;
+  z-index: 1;
+  overflow:hidden;
+   
+}
+
+
+
+.home-main-list-case-pre {
+  position: absolute;
+  left: 36px;
+  width: 60px;
+  height: 60px;
+  z-index: 2;
+  background-image: url('../images/case-pre.png');
+  background-size: 60px 60px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.home-main-list-case-next {
+  position: absolute;
+  right: 36px;
+  width: 60px;
+  height: 60px;
+  z-index: 2;
+  background-image: url('../images/case-next.png');
+  background-size: 60px 60px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+#home-main-stream-box {
+    display: flex; 
+    height: 100%;
+    white-space: nowrap;
+    overflow-x:auto;
+    width:100%;
+        /* border: 1px solid red; */
+}
+/* 隐藏滚动条 */
+#home-main-stream-box::-webkit-scrollbar {
+  display: none
+}
+.home-main-stream-item {
+  position: relative;
+  color: #fff;
+  width: 120px;
+  height: 97%;
+  margin: 0 1.5rem;
+  /* 用数值来收缩比例 默认值为1 */
+  flex-shrink: 0;
+  overflow: hidden;
+  background-color: black; 
+}
+
+.home-main-stream-is-zoom {
+  width: 100%;
+  height: 100%;
+   color: #fff;
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0;
+  z-index: -1;
+  transform: translateX(0px) !important;
+    /* 用数值来收缩比例 默认值为1 */
+  flex-shrink: 0;
+  overflow: hidden;
+   background-color: black; 
+}
+.home-main-stream-is-zoom video {
+  width: 100%;
+  height: 100%;
+}
+
+.home-main-stream-item video {
+  width: 100%;
+  height: 100%;
+}
+
+.home-main-stream-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 28px;
+  display: flex;
+  z-index: 1;
+  justify-content: flex-end;
+  align-items: center;
+}
+.home-main-stream-top-sound{
+  display: none;
+  width: 28px;
+  background: #00000047;
+  border-radius: 4px;
+}
+.home-main-stream-top-sound-show{
+  display: inline-block;
+}
+.home-main-stream-top-name{
+  font-size: 13px;
+  margin: 0 10px;
+  text-shadow: 0px 2px 4px #000;
+}
+
+
+
+
+
+.home-main-stream-opt{
+  position: absolute;
+  bottom: 4px;
+  width: 100%;
+  z-index: 1;
+  text-align: left;
+  /* padding: 0 6px; */
+  margin-bottom: 10px;
+  
+}
+.home-main-stream-is-zoom  .home-main-stream-opt-btn{
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.5);
+  width: 45px;
+  height: 45px;
+  background-position: center;
+  margin: 0 25px;
+  background-position: center;
+}
+
+.home-main-stream-opt-video{
+  background-image: url('../images/video-enable.png');
+}
+.home-main-stream-opt-video-disabled{
+  background-image: url('../images/video-disable.png');
+}
+.home-main-stream-opt-audio{
+  background-image: url('../images/audio-enable.png');
+}
+
+.home-main-stream-opt-audio-disabled{
+  background-image: url('../images/audio-disable.png');
+}
+
+.home-main-stream-is-zoom  .home-main-stream-opt-FullScreen{
+  background-image: url('../images/FullScreen.png');
+  background-size: 34px 34px;
+}
+.home-main-stream-opt-btn{
+  width: 24px;
+  height: 28px;
+  margin: 0 6px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.home-main-stream-opt-FullScreen{
+  background-image: url('../images/FullScreen.png');
+  background-size: 24px 24px;
+}
+.home-main-stream-video-name-box{
+  width: 100%;
+  /* height: 30px; */
+  /* z-index: 16; */
+  color: #fff;
+    font-size: 13px;
+  text-align: center;
+  line-height: 30px;
+  background: #0e0e0ea8;
+}
+.home-main-stream-video-name{
+  flex: 1;
+  max-width: 82px;
+  overflow: hidden;/*超出部分隐藏*/
+  white-space: nowrap;/*不换行*/
+  text-overflow:ellipsis;/*超出部分文字以...显示*/
+}
+
+.home-main-stream-opt-video-cover{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+}
+.home-main-stream-is-zoom .home-main-stream-opt-video-cover-img{
+  width: 160px;
+}
+.home-main-stream-opt-video-cover-img{
+  width: 75px;
+}
+.home-main-stream-opt-video-cover-title{
+  color: #000;
+  font-size: 17px;
+  background-color: white;
+}
+
+
+
+.home-main-user-list-box{
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 255px;
+  height: 100%;
+  z-index: 1;
+  font-size: 13px;
+  background-color: #fff;
+}
+.home-main-user-list-title{
+  width: 100%;
+  height: 35px;
+  color: #3A91F3;
+  /* line-height: 35px; */
+  background: #fff;
+  border-bottom: 1px solid #ececed;
+
+ 
+}
+.home-main-user-list-online{
+
+  padding-left: 10px;
+}
+.home-main-user-list-title span{
+  border-bottom: 2px solid #3a91f3;
+    padding-bottom: 8px;
+}
+.home-main-user-list-close{
+  margin-left: auto;
+  cursor: pointer;
+  padding-right: 10px;
+}
+
+.home-main-user-list{
+  flex: 1;
+  width: 100%;
+  font-size: 13px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.home-main-user-list-item{
+  border-bottom: 1px solid #ebeef5;
+  clear: both;
+  padding: 10px;
+}
+.home-main-user-list-item-name{
+  width: 50%;
+  text-align: left; 
+  display: inline-block;
+}
+.home-main-user-list-item-icon{
+  width: 3rem;
+  height: 3rem;
+  margin-right: 1rem;
+}
+.home-main-user-list-item-status{
+  width: 8px;
+  height: 8px;
+  margin-left: auto;
+  border-radius: 50%;
+  background-color: #42b983;
+}
+.home-main-user-list-item-status-not{
+  background-color: #ccc;
+}
+
+.home-main-user-list-item-mode{
+  display: inline-block;
+  margin-left: 5px;
+  padding: 0 5px;
+  border: 1px solid #15BFCE;
+  background: #15BFCE;
+  color: #fff;
+  margin-right: auto;
+}
+.home-main-user-list-item-mode-join-video{
+    background: #FD7D93;
+    border: 1px solid #FD7D93;
+}
+.home-main-user-list-item-Initiate{
+ 
+}
+/* 通过 >>> 可以使得在使用scoped属性的情况下，穿透scoped，修改其他组件的样式 */
+/* .home-main-video-item >>> video{
+    height: 100%;
+} */
+
+
+#demio{
+  width: 300px;
+  height: 300px;
+  position: fixed;
+  left: 50%;
+  top: 30px;
+  background: cornsilk;
+}

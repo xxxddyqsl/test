@@ -1,0 +1,126 @@
+/* 公共-开始 */
+html {
+  font-size: 62.5%;
+
+  /*10
+   ÷ 16 × 100% = 62.5%*/
+}
+
+body {
+  font-size: 1.4rem;
+  /*1.4 × 10px = 14px */
+}
+/* html,body{-moz-user-select: none; -khtml-user-select: none; user-select: none;} */
+.gg-flex-1 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gg-flex-2 {
+  flex-direction: column;
+}
+
+.gg-flex-3 {
+  display: flex;
+  align-items: center;
+  justify-items: flex-start;
+}
+.gg-flex-4 {
+  display: flex;
+  align-items: flex-start;
+  justify-items: flex-start;
+}
+/* 清除input 聚焦状态下默认样式 */
+p, input, button {
+    outline: none;
+}
+/* 清除 ul  默认样式 */
+ul{
+  margin: 0;
+  padding: 0;
+  list-style:none;
+}
+/* 公共-结束 */
+/* 修改 element tree  默认样式 */
+.el-tree {
+  background-color: transparent;
+}
+.el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content{
+  background-color: transparent;
+}
+.el-tree-node__expand-icon{
+  color: #ff9000;
+}
+.el-tree-node__content{
+  height: 35px;
+  border-bottom: 1px solid #dbdbdb;
+}
+.el-tree-node__content > label.el-checkbox {
+  margin-right: 8px;
+  position: absolute;
+  right: 0;
+  margin-right: 20px;
+}
+.el-checkbox__inner{
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid #AAAFB9;
+  background: #DCDFE4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.el-checkbox__input.is-focus .el-checkbox__inner{
+  border: 1px solid #AAAFB9;
+}
+.el-checkbox__inner:hover{border-color:#AAAFB9}
+.el-checkbox__input.is-checked .el-checkbox__inner, .el-checkbox__input.is-indeterminate .el-checkbox__inner {
+  /* background-color: #409EFF;
+  border-color: #409EFF; */
+  background-color: #505765;
+  border-color: transparent;
+}
+.el-checkbox__inner::after{
+  content: '';
+  position: relative;
+  top: -1px;
+  left: auto;
+  width: 10px;
+  height: 5px;
+  border: 2px solid #fff;
+  border-radius: 1px;
+  border-top: none;
+  border-right: none;
+  background: transparent; 
+  -webkit-transform: rotate(-45deg) scaleY(0);
+  transform: rotate(-45deg) scaleY(0);
+}
+ 
+.el-checkbox__input.is-checked .el-checkbox__inner::after{
+  content: '';
+  position: relative;
+  top: -1px;
+  left: auto;
+  width: 10px;
+  height: 5px;
+  border: 2px solid #fff;
+  border-radius: 1px;
+  border-top: none;
+  border-right: none;
+  background: transparent; 
+  -webkit-transform: rotate(-45deg) scaleY(1);
+  transform: rotate(-45deg) scaleY(1);
+}
+ 
+.el-checkbox__input.is-indeterminate .el-checkbox__inner::before{
+  content: '';
+  top: 50%;
+  left: 50%;
+  width: 40%;
+  height: 0px;
+  border: 1px solid #fff;
+  transform: translate(-50%, -50%);
+}
