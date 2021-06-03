@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+</head>
+<body>
+    
+</body>
+<script type="text/javascript">
+
+   function  forChildren (data) {
+      data.forEach(item => {
+        if (item.ChildDepts) {
+            item.children = item.ChildDepts.concat(item.ChildEmps)
+            item.children.forEach(element => {
+               if(element.SDeptName){
+                element.label=element.SDeptName
+               }else if(element.SEmpName){
+                element.label=element.SEmpName
+               }
+            });
+            if(item.SDeptName){
+                item.label=item.SDeptName
+               }else if(item.SEmpName){
+                item.label=item.SEmpName
+               }
+            forChildren(item.ChildDepts)
+        } else {
+            return false
+        }
+      })
+    }
+$(function () {
+  
+    
+var data = [{
+        ChildDepts: [{
+            $$hashKey: "05H",
+            ChildDepts: [{
+                ChildDepts: [{
+                    ChildDepts: [],
+ChildEmps:  [{ }, { }, { }],
+IsDept: true,
+IsEmp: false,
+NOrder: 0,
+SDeptCode: "CXJCGN",
+SDeptId: "a4b8a95127ad4f209d3970f1782d8363",
+SDeptName: "基础功能",
+SEntId: "ff808081581b3e2801581b47dd4e0000",
+SLabelIndex: "00000000000000080000000300000024000000010000000100000005",
+SParentId: "eda7825fd63f434f8ba0b6136cfba288",
+SStatus: "Y",
+entId: "ff808081581b3e2801581b47dd4e0000",
+level: 6,
+showChild: false,
+                }, { }, { }, { }],
+ChildEmps: [{}],
+IsDept: true,
+IsEmp: false,
+NOrder: 0,
+SDeptCode: "HEGNCX",
+SDeptId: "eda7825fd63f434f8ba0b6136cfba288",
+SDeptName: "程序",
+SEntId: "ff808081581b3e2801581b47dd4e0000",
+SLabelIndex: "000000000000000800000003000000240000000100000001",
+SParentId: "7fe649f3b7444d119a11bf45bd4a37a8",
+SStatus: "Y",
+entId: "ff808081581b3e2801581b47dd4e0000",
+level: 5,
+showChild: false,
+            }, {
+                ChildDepts:   [{ }, { }, { }, { }, { }],
+ChildEmps: [],
+IsDept: true,
+IsEmp: false,
+NOrder: 0,
+SDeptCode: "HEGNCXZC",
+SDeptId: "5a6e313410c949dd814d1f517d8d8bbd",
+SDeptName: "程序支持",
+SEntId: "ff808081581b3e2801581b47dd4e0000",
+SLabelIndex: "000000000000000800000003000000240000000100000002",
+SParentId: "7fe649f3b7444d119a11bf45bd4a37a8",
+SStatus: "Y",
+entId: "ff808081581b3e2801581b47dd4e0000",
+level: 5,
+showChild: false,
+            }, {}, {}],
+            ChildEmps: [{ISMain: false,
+IsEmp: true,
+NOrder: 1,
+SAvatar: "/IM/avatars/5de113aa83594dbfae8d265d5b1f6922/5de113aa83594dbfae8d265d5b1f6922.jpg",
+SAvatarMd5: "",
+SDeptId: "7fe649f3b7444d119a11bf45bd4a37a8",
+SEmpId: "5de113aa83594dbfae8d265d5b1f69",
+SEmpMail: "snail.com",
+SEmpName: "柳尧顺",
+SEmpNo: "WN0716",
+SEmpPost: "技术总监-研究院",
+SEntId: "ff808081581b3e2801581b47dd4e0000",
+SLeader: "780877dec5564cfa9e77a5c9703e86",
+SPhone: "+8617085050484",
+SSex: "男",
+SShowName: "柳尧顺",
+SSignature: "I have a dream. Just DO It！",
+SStatus: "y",
+SStruct: "蜗牛公司\蜗牛游戏\业务架构\Hermes\国内开发组",
+SUserId: "5de113aa83594dbfae8d265d5b1f6922",
+entId: "ff808081581b3e2801581b47dd4e0000"}, {ISMain: false,
+IsEmp: true,
+NOrder: 2,
+SAvatar: "/IM/avatars/f6cb8d68f1774b229f1a8bfce4c1e4af/f6cb8d68f1774b229f1a8bfce4c1e4af.jpg",
+SAvatarMd5: "",
+SDeptId: "7fe649f3b7444d119a11bf45bd4a37a8",
+SEmpId: "9d871b1b9e6348dc92f4d04daeb55d",
+SEmpMail: "snail.com",
+SEmpName: "裴诚龙",
+SEmpNo: "WN3712",
+SEmpPost: "主策划",
+SEntId: "ff808081581b3e2801581b47dd4e0000",
+SLeader: "9d871b1b9e6348dc92f4d04daeb55d",
+SPhone: "+8618550011705",
+SSex: "男",
+SShowName: "裴诚龙",
+SSignature: "",
+SStatus: "y",
+SStruct: "蜗牛公司\蜗牛游戏\业务架构\Hermes\国内开发组",
+SUserId: "f6cb8d68f1774b229f1a8bfce4c1e4af",
+entId: "ff808081581b3e2801581b47dd4e0000"}],
+            IsDept: true,
+            IsEmp: false,
+            NOrder: 0,
+            SDeptCode: "HEGNKFZ",
+            SDeptId: "7fe649f3b7444d119a11bf45bd4a37a8",
+            SDeptName: "国内开发组",
+            SEntId: "ff808081581b3e2801581b47dd4e0000",
+            SLabelIndex: "0000000000000008000000030000002400000001",
+            SParentId: "a7cdbaea6b72479396f44687a3165845",
+            SStatus: "Y",
+            childCreate: false,
+            entId: "ff808081581b3e2801581b47dd4e0000",
+            level: 4,
+            showChild: false,
+        }],
+        ChildEmps: [{
+            ISMain: false,
+            IsEmp: true,
+            NOrder: 1,
+            SAvatar: "/IM/avatars/783560b3c8334e4c876b7a6937b7442e/783560b3c8334e4c876b7a6937b7442e.png",
+            SAvatarMd5: "",
+            SDeptId: "a7cdbaea6b72479396f44687a3165845",
+            SEmpId: "783560b3c8334e4c876b7a6937b744",
+            SEmpMail: "ail.com",
+            SEmpName: "吴天奇",
+            SEmpNo: "WN0011",
+            SEmpPost: "副总裁",
+            SEntId: "ff808081581b3e2801581b47dd4e0000",
+            SLeader: "0c2a2e336456490fb68596729c16c7",
+            SPhone: "+8617095011999",
+            SSex: "男",
+            SShowName: "吴天奇",
+            SSignature: "",
+            SStatus: "y",
+            SStruct: "蜗牛公司\蜗牛游戏\业务架构\Hermes",
+            SUserId: "783560b3c8334e4c876b7a6937b7442e",
+            entId: "ff808081581b3e2801581b47dd4e0000",
+        }],
+        IsDept: true,
+        IsEmp: false,
+        NOrder: 0,
+        SDeptCode: "SNAIL",
+        SDeptId: "bb60a0d78c66403cb1f161b70e54f682",
+        SDeptName: "蜗牛公司",
+        SEntId: "ff808081581b3e2801581b47dd4e0000",
+        SLabelIndex: "00000000",
+        SParentId: "0",
+        SStatus: "Y",
+        entId: "ff808081581b3e2801581b47dd4e0000",
+        level: 0,
+        showChild: true,
+    }];
+
+    forChildren(data);
+       console.log(data)
+    })
+    </script>
+</html>

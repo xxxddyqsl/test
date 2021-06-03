@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.staticfile.org/angular.js/1.4.6/angular.min.js"></script>
+</head>
+<body>
+    <div ng-controller='myCtrl'>
+
+    </div>
+    <!-- angualr 1.2之后，就已经开始支持controllerAs的语法，这样我们就可以不用将属性和方法挂载到$scope上，而是this上。 -->
+    <div ng-app='APP' ng-controller="demoController  as demo">
+        {{ demo.name }}
+    </div>
+    <!-- <script type="text/ng-template" id="testDirective">
+        <div>
+
+            
+        </div>
+    </script>  -->
+</body>
+<script>
+    let app=angular.module('APP',[]);
+    app.controller('demoController',['$scope',function(){
+        this.name='controllerAs---this';
+    }]);
+   
+//    app.directive('testDirective',function(){
+//       return{
+//         controller:function(){
+//             this.name='aaa';
+//           },
+//       } 
+//    });
+
+</script>
+</html>

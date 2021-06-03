@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>vueDemo</title>
+  <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+  <div id="app"> 
+    <!-- 通过使用 v-once 指令，你也能执行一次性地插值，当数据改变时，插值处的内容不会更新。但请留心这会影响到该节点上的其它数据绑定： -->
+    <div v-once> msg::v-once 指令:{{msg}}</div>
+    <br>
+    <div>msg::{{msg}}</div>
+    <br>
+    <button @click='ClickMsg()'>测试once</button>
+    <br>
+    <div v-bind:title="message">
+      鼠标悬停几秒钟查看此处动态绑定的提示信息！
+    </div>
+    <br>
+    <ul>
+      <li v-for='(item, index) in todos' v-bind:title='item.id' :key="index" :data-id="item.id" @click='goList($event)'>
+        {{item.id}}-{{index}}-{{item.text}}</li>
+    </ul> 
+    <!-- 双大括号会将数据解释为普通文本，而非 HTML 代码。为了输出真正的 HTML，你需要使用 v-html -->
+    <p>{{rawHtml}}</p> 
+    <p v-html='rawHtml'></p>
+    <!-- 绑定标签 id -->
+    <p v-bind:id="dynamicId">Attribute</p>
+    <!-- <button v-on:(click)="expression"></button> -->
+  </div>
+</body>
+<script>
+
+  var app = new Vue({
+    el: '#app',
+    data: {
+      msg:'once 指令数据内容不会更新',
+      message: '页面加载于 ' + new Date().toLocaleString(),
+      todos: [
+        { id: 'a', text: '蔬菜' },
+        { id: 'b', text: '奶酪' },
+        { id: 'c', text: '随便其它什么人吃的东西' }
+      ],
+      rawHtml:'<div>v-html为了输出真正的 HTML</div>',
+      dynamicId:'Pid', 
+    },
+    // 在 `methods` 对象中定义方法
+    methods: {
+      ClickMsg(){
+        this.msg='改变msg数据';
+      },
+      goList: function (event) {
+        console.log(event);
+        // 获取自定义 data
+        console.log(event.currentTarget.getAttribute("data-id"));
+      }
+    }
+  })
+//   v-bind 缩写
+// <!-- 完整语法 -->
+// <a v-bind:href="url">...</a>
+
+// <!-- 缩写 -->
+// <a :href="url">...</a>
+
+// <!-- 动态参数的缩写 (2.6.0+) -->
+// <a :[key]="url"> ... </a>
+// v-on 缩写
+// <!-- 完整语法 -->
+// <a v-on:click="doSomething">...</a>
+
+// <!-- 缩写 -->
+// <a @click="doSomething">...</a>
+
+// <!-- 动态参数的缩写 (2.6.0+) -->
+// <a @[event]="doSomething"> ... </a>
+  // console.log(app.msg='aaa');
+</script>
+
+</html>

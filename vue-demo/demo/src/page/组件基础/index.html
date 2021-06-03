@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vue入门之组件基础</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <!-- // 1、组件注册 -->
+    <!-- （1）全局注册组件 -->
+    <button-counter></button-counter>
+    <!-- （2）局部注册组件 -->
+    <button-inner></button-inner>
+
+    <!-- 2、props属性传值   静态 from-here  动态 v-bind 绑定  -->
+    <!-- 注意: prop 是单向绑定的：当父组件的属性变化时，将传导给子组件，但是不会反过来。 -->
+    <!--<root> 隐性的根组件,相对于注册的组件button-prop来说，是父组件-->
+    <!-- 类似于用 v-bind 绑定 HTML 特性到一个表达式，也可以用 v-bind 动态绑定 props 的值到父组件的数据中。每当父组件的数据变化时，该变化也会传导给子组件： -->
+    <!-- 父组件利用v-on为事件绑定onClick处理器 -->
+    <!-- from-here 常规属性传值 -->
+    <!-- v-bind传值 -->
+    <button-props v-bind:msg="mssage" v-bind:digital="digital" v-on:myclick='onClick' from-here="world"></button-props>
+    <!--button-prop相对root来说是子组件，而 msg 这个变量是存在于父组件内的，应该属于父组件里的数据，虽然这个变量不是初始化就定义了的-->
+    <!--</root>-->
+
+
+    <!-- 父子组件调用 -->
+    <div>
+      <parent v-bind:msgA="mssage"></parent>
+    </div>
+
+  </div>
+</body>
+<script>
+  // 简单来讲：Vue.component()是制作子组件,<button-counter></button-counter>是制作好了，在父组件环境里面用 
+  // 父子组件是相对而言 谁包含谁 谁就是父组件 有点类似标签
+  // 1、组件注册
+  // （1）全局注册
+  Vue.component('button-counter', {
+    data: function () {
+      return {
+        count: 0,
+      }
+    },
+    template: '<button @click="count++">全局注册组件：{{count}}</button>',
+  });
+
+
+  // 子组件
+  var city = {
+    props:['msgb'], 
+    template: '<button @click="childClick">子组件：Sichuan of China---{{msgb}}</button>',
+    methods: {
+      childClick() {
+        alert(111);
+        console.log(this.msgb);
+      }
+    }
+  };
+  // 父组件
+  var parent = {
+    props:['msga'],
+    template:'<div><p> {{msga}}---Panda from China!</p><city  v-bind:msgb="msga" ></city></div>',
+    components: {
+      "city": city, 
+    }
+  };
+
+  var app = new Vue({
+    el: '#app',
+    data: {
+      mssage: 'helloA',
+      digital: 1,
+    },
+    // （2）局部注册
+    components: {
+      'button-inner': {
+        data: function () {
+          return {
+            inner: 0
+          }
+        },
+        template: '<button @click="inner++">局部注册组件： {{ inner }}</button>',
+      },
+
+      "button-props": {
+        // prop 是子组件用来接受父组件传递过来的数据的一个自定义属性。 
+        // 父组件的数据需要通过 props 把数据传给子组件，子组件需要显式地用 props 选项声明 "prop"：
+        // PS：如果属性带“-”，props中需要驼峰取值 如：fromHere
+        props: ['msg', 'digital', 'fromHere'],//接收父组件传递的数据
+        // 这个 prop 用来传递一个初始值；这个子组件接下来希望将其作为一个本地的 prop 数据来使用。在这种情况下，最好定义一个本地的 data 属性并将这个 prop 用作其初始值：
+        data() {
+          return {
+            digitalA: this.digital,
+          }
+        },
+        template: '<div style="color:red;"  @click="childClick">参数1： {{ msg }}:---参数2： {{fromHere}}---参数3点击子组件本地值： {{digitalA}}-----参数4 直接使用父组件传的值： {{digital}}</div>',
+        methods: {
+          childClick() {
+            console.log(this.msg);
+            this.digitalA++;
+            console.log(this.digitalA)
+            // 子组件给父组件传参数 第一个参数是自定义事件的名字 后面的参数是依次想要发送出去的数据
+            this.$emit('myclick', this.digitalA, '这是我暴露出去的数据2')
+          }
+        },
+      },
+      // 组件注册
+      "parent": parent
+    },
+    methods: {
+      onClick() {
+        // arguments是一个参数集合，里面可以是子组件传过来的参数，也可以是父组件自己的参数
+        console.log(arguments)
+      }
+    }
+  })
+</script>
+
+</html>

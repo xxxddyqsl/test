@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="../css/app.css">
+  <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="https://cdn.staticfile.org/angular.js/1.4.6/angular.min.js"></script>
+  <style>
+    /* 图片旋转动画 */
+    .Loading_bg {
+      width: 173px;
+      height: 141px;
+      text-align: center;
+      border-radius: 4px;
+      background: rgba(0, 0, 0, 0.2);
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .Loading_title {
+      color: #333;
+      font-size: 12px;
+      margin-top: 8px;
+      letter-spacing: 2px;
+    }
+
+    .Loading_icon {
+      width: 30px;
+      height: 30px;
+      -webkit-transform: rotate(360deg);
+      animation: rotation 2s linear infinite;
+      -moz-animation: rotation 2s linear infinite;
+      -webkit-animation: rotation 2s linear infinite;
+      -o-animation: rotation 2s linear infinite;
+    }
+
+    @-webkit-keyframes rotation {
+      from {
+        -webkit-transform: rotate(0deg);
+      }
+
+      to {
+        -webkit-transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="wrap" class="gg-flex-3 gg-flex-2" ng-controller='myCtrl'>
+    <div class="header gg-flex-3" header ng-controller='myAppHeader as hData'></div>
+    <div class="main" style="position: relative;">
+      <!-- <div class="Loading_bg gg-flex-1">
+                <div class="Loading_bk">
+                  <img class=" Loading_icon" src="../image/Loading.png" />
+                  <div class=" Loading_title">消息查询较慢，请稍等</div>
+                </div>
+              </div> -->
+      <div class="main_left"></div>
+      <div class="main_right"></div>
+    </div>
+    <div class="footer" footer></div>
+  </div>
+
+  <script type="text/ng-template" id="footer.html">
+            <div class='footer_left'>{{footertitle}}</div>
+</script>
+
+</body>
+<script>
+  var app = angular.module('myApp', []);
+  app.controller('myCtrl', ['$scope', function ($scope) {
+    $scope.title = '我是头部';
+    $scope.footertitle = '我是底部';
+  }]);
+  app.controller('myAppHeader', ['$scope', function ($scope) {
+    this.title = $scope.title;
+  }]);
+
+  app.directive('header', function ($templateCache) {
+    return {
+      restrict: 'EA',
+      templateUrl: '/html/header.html',
+      replace: false,
+      link: function (scope) {
+
+      }
+    }
+  });
+
+  app.directive('footer', function () {
+    return {
+      restrict: 'EA',
+      templateUrl: 'footer.html',
+      replace: false,
+      link: function (scope) {
+
+      }
+    }
+  })
+
+</script>
+
+</html>

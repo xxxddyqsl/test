@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="./angular.js"></script>
+</head>
+
+<body ng-app="myApp">
+    <div ng-controller="ParentCtrl">
+        <!--父级-->
+        <div ng-controller="SelfCtrl">
+            <!--自己-->
+            <a ng-click="click()">click me</a>
+            <!--子级-->
+        </div>
+        <div ng-controller="BroCtrl"></div>
+        <!--平级-->
+    </div>
+
+
+
+</body>
+<script>
+//  $on、$emit和$broadcast使得event、data在controller之间的传递变的简单。
+
+// 区别 1：
+
+// 发送消息： $scope.$emit(name, data) 或者 $scope.$broadcast(name, data);
+// 接收消息： $scope.on(name,function(event,data){ });
+// 区别 2： 
+
+// $emit 广播给父controller   父 $broadcast 广播给子controller
+// broadcast 是从发送者向他的子scope广播一个事件。
+// $emit 广播给父controller，父controller 是可以收到消息
+// $on 有两个参数function(event,msg)  第一个参数是事件对象，第二个参数是接收到消息信息
+    var app = angular.module('myApp', []);
+    app.controller('SelfCtrl', function ($scope,$rootScope) {
+        $scope.click = function () {
+            // $scope.$emit('to-parent', 'parent');
+            // $scope.$emit('to-child', 'child');
+            $rootScope.$emit('CC',"ping");
+        }
+    });
+
+    app.controller('ParentCtrl', function ($scope,$rootScope) {
+        // $scope.$on('to-parent', function (event, data) {
+        //     console.log('父=ParentCtrl', data + 'AA');       //父级能得到值
+        // });
+        // $rootScope.$on('to-child', function (event, data) {
+        //     console.log('父=ParentCtrl', data + 'BB');      //子级得不到值
+        //     // $rootScope.$broadcast('CC', '父发送值');
+        // });
+        
+    });
+
+  
+    app.controller('BroCtrl', function ($scope,$rootScope) {
+        $rootScope.$on('CC', function (event, data) {
+            console.log('BroCtrl', data);
+            dom(data)
+        });
+        function dom(e){
+            alert(e);
+            console.log($rootScope);
+        }
+    });
+</script>
+
+</html>

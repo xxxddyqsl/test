@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>自定义滚轮事件</title>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <style type="text/css">
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        #wrap {
+            height: 500px;
+            width: 300px;
+            position: relative;
+            /*超出隐藏*/
+            overflow: hidden;
+            margin: 200px auto 0;
+            border: 3px solid black;
+        }
+
+        #content {
+            width: 300px;
+            /*不需要设置高度，可被图片撑开*/
+            position: absolute;
+            left: 0;
+            top: 0;
+            border: 1px solid red;
+        }
+
+        #content>div {
+            width: 294px;
+            /*去除图片间的间隙*/
+            vertical-align: top;
+            height: 300px;
+            border: 1px solid red;
+            text-align: center;
+            font-size: 100px;
+            line-height: 300px;
+        }
+
+        #sliderWrap {
+            visibility: hidden;
+            height: 100%;
+            width: 16px;
+            background-color: greenyellow;
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
+
+        #slider {
+            width: 10px;
+            height: 50px;
+            background-color: blue;
+            position: absolute;
+            left: 3px;
+            top: 0px;
+            border-radius: 10px;
+        }
+
+        #wrap:hover>#sliderWrap {
+            visibility: visible;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrap">
+        <div id="content">
+            <div>1</div>
+            <div>2</div>
+            <div>3</div>
+            <div>4</div>
+            <div>5</div>
+        </div>
+        <!--右侧滚动条部分-->
+        <div id="sliderWrap">
+            <div id="slider">
+
+            </div>
+        </div>
+    </div>
+    <button  id="Retrofit">点击</button>
+</body>
+<script type="text/JavaScript">
+        var wrapDiv = document.getElementById("wrap");
+        var contentDiv = document.getElementById("content");
+        var sliderWrap = document.getElementById("sliderWrap");
+        var slider = document.getElementById("slider");
+        var isDown=false;
+        //设置比例
+        //clientHeight - 不包括border
+        var scale = wrapDiv.clientHeight / contentDiv.clientHeight;
+        //设置滑块的高度
+        var h1 = sliderWrap.clientHeight * scale;
+        //为了合理设置高度，设置滑块的最小高度
+        if (h1 < 50) {
+            h1 = 50;
+        }else if (scale >= 1) {
+            //说明当前内容能过完全显示在可视区域内，不需要滚动条
+            sliderWrap.style.display = "none";
+        }
+        //设置滑块的高度
+        slider.style.height = h1 +"px";
+        //设置y轴的增量
+        var y = 0;
+        var t=0;
+        //为wrap添加滚轮事件
+        wrapDiv.onmousewheel = function(e){ 
+             // 获取 滑块距离 顶部的偏移量
+            y=slider.offsetTop;
+            var event = event || e
+            if (event.wheelDelta < 0) {
+                //滑动条向下滚动
+                y += 10;
+            }else if (event.wheelDelta > 0) {
+                //滑动条向上滚动
+                y -= 10;
+            }
+            //y变化时说明在滚动，此时使滚动条发生滚动，以及设置content内容部分滚动
+            //判断极端情况，滑块不能划出屏幕
+            if (y <= 0) {
+                //滑块最多滑到顶部
+                y = 0;
+            }
+            if(y >= sliderWrap.clientHeight - slider.clientHeight){
+                //滑块最多滑到最底部
+                y = sliderWrap.clientHeight - slider.clientHeight;
+            }
+           
+            //更新滑块的位置
+            slider.style.top = y +"px";
+            scale = wrapDiv.clientHeight / contentDiv.clientHeight;
+            contentDiv.style.top = - y / scale +"px";
+        }
+  //鼠标按下事件 触发 onmousedown 事件，然后，当鼠标按钮被松开时，会触发 onmouseup 事件，最后，当鼠标点击完成时，触发 onclick 需要阻止冒泡
+  slider.onmousedown=function (e) {  
+        //获取按下的y坐标
+            y = e.clientY;
+        //获取顶部的偏移量
+        t = slider.offsetTop;
+          //开关打开
+          isDown = true;
+         //设置样式  
+         slider.style.cursor = 'move';
+         e.preventDefault();
+    }
+    // 鼠标运动
+    document.onmousemove=function (e) {
+        if (isDown == false) {
+            return;
+            }
+            //获取x和y
+        var ny = e.clientY;
+            // clickscroll(ny)
+            //计算移动后的左偏移量和顶部的偏移量
+            var nt = ny - (y - t);
+             //y变化时说明在滚动，此时使滚动条发生滚动，以及设置content内容部分滚动
+            //判断极端情况，滑块不能划出屏幕
+            if (nt <= 0) {
+                //滑块最多滑到顶部
+                nt = 0;
+            }
+            if(nt >= sliderWrap.clientHeight - slider.clientHeight){
+                //滑块最多滑到最底部
+                nt = sliderWrap.clientHeight - slider.clientHeight;
+            } 
+            // y=nt;
+            slider.style.top = nt +"px";
+            scale = wrapDiv.clientHeight / contentDiv.clientHeight;
+            contentDiv.style.top = - nt / scale +"px";
+     }
+    // 阻止冒泡 触发 父元素轨道的点击事件
+     slider.onclick = function(e) {
+        console.log('div2'+e);
+        console.log(e);
+        console.log(y);
+        stopPropagation(); 
+        } 
+     //鼠标抬起事件
+     document.onmouseup = function(e) { 
+         console.log(e);
+         console.log(y);
+          //开关关闭
+          isDown = false;
+          slider.style.cursor = 'default';
+        } 
+        // 点击轨道
+        sliderWrap.onclick=function (e) {
+            // offsetY 鼠标相对于事件源元素的x,y坐标
+            //  e.offsetY
+            console.log('点击的距离顶端:'+ e.offsetY)
+            console.log('元素距离顶端:'+slider.offsetTop)
+            console.log('元素高度:'+slider.clientHeight)
+            if(e.offsetY<=(slider.offsetTop+slider.clientHeight)){
+                  //滑动条向上滚动
+                     y=slider.offsetTop -= 10;
+               
+            }else{
+                //滑动条向上滚动
+                   y=slider.offsetTop += 10;
+            }
+              //判断极端情况，滑块不能划出屏幕
+              if (y <= 0) {
+                //滑块最多滑到顶部
+                y = 0;
+            }
+            if(y >= sliderWrap.clientHeight - slider.clientHeight){
+                //滑块最多滑到最底部
+                y = sliderWrap.clientHeight - slider.clientHeight;
+            }
+            console.log(y);
+            slider.style.top = y +"px";
+            scale = wrapDiv.clientHeight / contentDiv.clientHeight;
+            contentDiv.style.top = - y / scale +"px";
+        }
+        function stopPropagation(e) {  
+            e = e || window.event;  
+            if(e.stopPropagation) { //W3C阻止冒泡方法  
+                e.stopPropagation();  
+            } else {  
+                e.cancelBubble = true; //IE阻止冒泡方法  
+            }  
+        }
+        document.getElementById("Retrofit").onclick=function (e){
+            console.log(data)
+            OnRetrofit([],data)
+        }
+function OnRetrofit(arr,msg) {
+    msg.map((item,index)=>{
+          console.log(item);
+          if(item.ChildDepts.length>0){
+            let obj={};
+            item.ChildDepts.map((Ditem,Dindex)=>{
+                obj={id:Ditem.SDeptId,label:Ditem.SDeptName,img:''};
+                item.arr.push(obj);
+                if(Ditem.ChildDepts.length>0){
+                    OnRetrofit(item.arr,Ditem)
+                }
+            })
+          }
+        //   if(item.ChildEmps.length>0){
+        //     let obj={};
+        //     item.ChildEmps.map((Eitem,Eindex)=>{
+        //         obj={id:Eitem.SUserId,label:Eitem.SEmpName,img:Eitem.SAvatar};
+        //         item.children.push(obj);
+
+        //     })
+        //   }
+
+      })
+}
+
+        var data = [{
+        ChildDepts: [{
+            $$hashKey: "05H",
+            ChildDepts: [{
+                ChildDepts: [{
+                    ChildDepts: [],
+ChildEmps:  [{ }, { }, { }],
+IsDept: true,
+IsEmp: false,
+NOrder: 0,
+SDeptCode: "CXJCGN",
+SDeptId: "a4b8a95127ad4f209d3970f1782d8363",
+SDeptName: "基础功能",
+SEntId: "ff808081581b3e2801581b47dd4e0000",
+SLabelIndex: "00000000000000080000000300000024000000010000000100000005",
+SParentId: "eda7825fd63f434f8ba0b6136cfba288",
+SStatus: "Y",
+entId: "ff808081581b3e2801581b47dd4e0000",
+level: 6,
+showChild: false,
+                }, { }, { }, { }],
+ChildEmps: [{}],
+IsDept: true,
+IsEmp: false,
+NOrder: 0,
+SDeptCode: "HEGNCX",
+SDeptId: "eda7825fd63f434f8ba0b6136cfba288",
+SDeptName: "程序",
+SEntId: "ff808081581b3e2801581b47dd4e0000",
+SLabelIndex: "000000000000000800000003000000240000000100000001",
+SParentId: "7fe649f3b7444d119a11bf45bd4a37a8",
+SStatus: "Y",
+entId: "ff808081581b3e2801581b47dd4e0000",
+level: 5,
+showChild: false,
+            }, {
+                ChildDepts:   [{ }, { }, { }, { }, { }],
+ChildEmps: [],
+IsDept: true,
+IsEmp: false,
+NOrder: 0,
+SDeptCode: "HEGNCXZC",
+SDeptId: "5a6e313410c949dd814d1f517d8d8bbd",
+SDeptName: "程序支持",
+SEntId: "ff808081581b3e2801581b47dd4e0000",
+SLabelIndex: "000000000000000800000003000000240000000100000002",
+SParentId: "7fe649f3b7444d119a11bf45bd4a37a8",
+SStatus: "Y",
+entId: "ff808081581b3e2801581b47dd4e0000",
+level: 5,
+showChild: false,
+            }, {}, {}],
+            ChildEmps: [{ISMain: false,
+IsEmp: true,
+NOrder: 1,
+SAvatar: "/IM/avatars/5de113aa83594dbfae8d265d5b1f6922/5de113aa83594dbfae8d265d5b1f6922.jpg",
+SAvatarMd5: "",
+SDeptId: "7fe649f3b7444d119a11bf45bd4a37a8",
+SEmpId: "5de113aa83594dbfae8d265d5b1f69",
+SEmpMail: "snail.com",
+SEmpName: "柳尧顺",
+SEmpNo: "WN0716",
+SEmpPost: "技术总监-研究院",
+SEntId: "ff808081581b3e2801581b47dd4e0000",
+SLeader: "780877dec5564cfa9e77a5c9703e86",
+SPhone: "+8617085050484",
+SSex: "男",
+SShowName: "柳尧顺",
+SSignature: "I have a dream. Just DO It！",
+SStatus: "y",
+SStruct: "蜗牛公司\蜗牛游戏\业务架构\Hermes\国内开发组",
+SUserId: "5de113aa83594dbfae8d265d5b1f6922",
+entId: "ff808081581b3e2801581b47dd4e0000"}, {ISMain: false,
+IsEmp: true,
+NOrder: 2,
+SAvatar: "/IM/avatars/f6cb8d68f1774b229f1a8bfce4c1e4af/f6cb8d68f1774b229f1a8bfce4c1e4af.jpg",
+SAvatarMd5: "",
+SDeptId: "7fe649f3b7444d119a11bf45bd4a37a8",
+SEmpId: "9d871b1b9e6348dc92f4d04daeb55d",
+SEmpMail: "snail.com",
+SEmpName: "裴诚龙",
+SEmpNo: "WN3712",
+SEmpPost: "主策划",
+SEntId: "ff808081581b3e2801581b47dd4e0000",
+SLeader: "9d871b1b9e6348dc92f4d04daeb55d",
+SPhone: "+8618550011705",
+SSex: "男",
+SShowName: "裴诚龙",
+SSignature: "",
+SStatus: "y",
+SStruct: "蜗牛公司\蜗牛游戏\业务架构\Hermes\国内开发组",
+SUserId: "f6cb8d68f1774b229f1a8bfce4c1e4af",
+entId: "ff808081581b3e2801581b47dd4e0000"}],
+            IsDept: true,
+            IsEmp: false,
+            NOrder: 0,
+            SDeptCode: "HEGNKFZ",
+            SDeptId: "7fe649f3b7444d119a11bf45bd4a37a8",
+            SDeptName: "国内开发组",
+            SEntId: "ff808081581b3e2801581b47dd4e0000",
+            SLabelIndex: "0000000000000008000000030000002400000001",
+            SParentId: "a7cdbaea6b72479396f44687a3165845",
+            SStatus: "Y",
+            childCreate: false,
+            entId: "ff808081581b3e2801581b47dd4e0000",
+            level: 4,
+            showChild: false,
+        }],
+        ChildEmps: [{
+            ISMain: false,
+            IsEmp: true,
+            NOrder: 1,
+            SAvatar: "/IM/avatars/783560b3c8334e4c876b7a6937b7442e/783560b3c8334e4c876b7a6937b7442e.png",
+            SAvatarMd5: "",
+            SDeptId: "a7cdbaea6b72479396f44687a3165845",
+            SEmpId: "783560b3c8334e4c876b7a6937b744",
+            SEmpMail: "ail.com",
+            SEmpName: "吴天奇",
+            SEmpNo: "WN0011",
+            SEmpPost: "副总裁",
+            SEntId: "ff808081581b3e2801581b47dd4e0000",
+            SLeader: "0c2a2e336456490fb68596729c16c7",
+            SPhone: "+8617095011999",
+            SSex: "男",
+            SShowName: "吴天奇",
+            SSignature: "",
+            SStatus: "y",
+            SStruct: "蜗牛公司\蜗牛游戏\业务架构\Hermes",
+            SUserId: "783560b3c8334e4c876b7a6937b7442e",
+            entId: "ff808081581b3e2801581b47dd4e0000",
+        }],
+        IsDept: true,
+        IsEmp: false,
+        NOrder: 0,
+        SDeptCode: "SNAIL",
+        SDeptId: "bb60a0d78c66403cb1f161b70e54f682",
+        SDeptName: "蜗牛公司",
+        SEntId: "ff808081581b3e2801581b47dd4e0000",
+        SLabelIndex: "00000000",
+        SParentId: "0",
+        SStatus: "Y",
+        entId: "ff808081581b3e2801581b47dd4e0000",
+        level: 0,
+        showChild: true,
+    }]
+    </script>
+
+</html>

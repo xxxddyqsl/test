@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="/js/rtc.js"></script>
+    <style>
+        video{
+            width: 200px;
+            height: 200px;
+            border: 1px solid red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Realtime communication with WebRTC</h1>
+    <!-- 增加的代码在下面这里: -->
+    <div id="video_box">
+      <!-- 第一个 video 元素(id="localVideo")用于展示通过 getUserMedia() 获取到的本地视频流,  --> 
+    <video id="localVideo" class="video_item" autoplay playsinline></video> 
+    <!-- 第二个 video 元素(id="remoteVideo")则通过RTCPeerconnection, 接收并显示同样的视频 -->
+    <!-- <video id="remoteVideo" class="video_item VideoSwitching" autoplay playsinline></video> -->
+    <!-- 提示：在实际应用中, 页面中一般都有两个 video 元素: 一个用来展示本地视频, 另一个用来播放远程传输过来的视频( 可以参考微信视频聊天界面, 其中有一大一小,两个视频展示窗口 )。 -->
+  </div>
+    <div>
+      <!-- 开启本地视频流 -->
+      <button id="startButton" >Start</button>
+        <!-- 开启对方视频流 -->
+      <button id="callButton">Call</button>
+      <!-- 关闭对方视频流 -->
+      <button id="hangupButton" disabled='true'>Hang Up</button>
+    </div>
+    <script>
+        $('#startButton').on('click',start);
+        function start(){
+            let localVideo=document.querySelector('#video_box');
+            let appendId='video_box';
+            Rtc.createMedia(appendId,localVideo)
+        }
+    </script>	
+</body>
+</html>

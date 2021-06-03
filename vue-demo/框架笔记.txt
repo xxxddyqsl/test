@@ -1,0 +1,2618 @@
+一：
+VUE:
+	官网：https://cn.vuejs.org
+	API：https://cn.vuejs.org/v2/api/
+
+	小 -> 大
+	封装(函数)->多个封装(文件)==库||框架
+					↓
+				   插件
+
+				   模块(文件)  分类（目录)->包
+	框架：改变了编码思想   VUE: 数据驱动，一切都是数据,面向数据
+		面向  事件
+		面向  对象
+		面向  数据
+	库:  工具本身不改变编码的方式
+		jquery -> dom		事件驱动
+
+MVC：html页面里面会出现<%=后台属性%>  {$后台属性$} {{后台属性}} mustache
+	一个思想、是后端产物,是为了前后端分离
+	1. 后台 java(jsp+html)  php(php+html+js)  nodejs(nodejs+ejs)
+	2. 前台 (html+css+js)
+	3. 编辑 (拿着后台给他开发的后台管理页面xxx.com:8008/admin)
+	4. 设计
+
+前端MVC(分离js)：   数据、表现、业务分离
+	model		M  数据  ajax/jsonp/数据解析  可以复用
+		| xx.js
+		...
+	view	    V  视图表现层 展示数据、创建元素，变色，运动 可以复用
+		...
+	control		C  控制层(串业务,事件驱动)  一般不复用
+		...
+
+	function readBaidu(str,callback){..拿着需求str,求数据，调用回调带数据出去.}
+	function writeLi(data){...拿着数据写页面}
+	window.onload=function(){
+		oBtn.onclick=function(){
+			readBaidu('xxx',function(res){
+				writeLi(res);
+				winObj.close()
+			})
+		}
+	}
+VUE: 是个M V VM框架
+	MVC:衍生出很多变体  MVP MVVM MV*
+	vm  =  C
+	MVVM M  <-> VM <-> V
+
+
+基本使用：
+	new出来一个Vue的实例，传一堆配置参数，控制一片html
+
+	VM:		响应系统 - > vDOM做标记 ->一个循环周期结束后->操作DOM
+		new Vue   返回  VM
+		new Vue({
+			el:'选择器'  要控制器的那片html代码
+			data:{key:value}数据
+			methods:{fnName:fn} 方法
+		})
+	M:	初始化数据
+		data 选项   number/string/boolean/array/json/undefined/null
+	V:  数据绑定
+		{{数据名}}	模板 mustche  插值表达式
+		v-text="数据名"		vue特有的属性(指令)
+		v-html="strong"		非转义输出
+		v-for="(val,index) in 数据"		val值  index索引	变量数组、对象
+			key="bmw"  指定key 是个bmw字符 vue是认得 修改VDom的key值
+			:key="item.id"  指定key 是数据id（唯一性） 修改VDom的key值
+		v-bind:html|dom属性="数据"	普通的html属性绑定数据
+			:html|dom属性="数据"  简写   title/src/url/.....
+		事件：
+			v-on:事件名="方法"
+			   @事件名="方法"	简写
+			   @事件名="方法(参数)"
+			   @事件名="方法($event,参数)"		methods:{方法:function(ev,参数){ev/event}}
+
+
+模块表达式:
+
+	{{数据本身|data的属性|变量|表达式}}
+
+	v-指令名="数据|data的属性|变量|表达式"
+
+
+计算属性:是一个函数,所依赖的元数据变化时，就会再次执行
+
+
+	computed:{
+		计算属性:函数:function(){return 返回值}		使用:	{{计算属性}}
+	}
+
+	与method的区别:	方法会每次调用，计算属性不会(只有在与之相关的原数据发生变化时，才调用)
+		计算属性的性能高: 适合做筛选
+		方法：适合在列表渲染使用，强制渲染执行
+
+		计算属性：计算属性也可以是个对象
+				读取了属性 -> get:fn
+				修改了属性 -> set:fn
+
+
+class操作/style操作:
+	v-bind:class="数据"
+		  :class/style = " 数据 "		数据类型：字符/对象 / 数组
+		  :class="{类名:true,类名2:false}"  布尔值决定样式是否使用
+		  :style="[{css属性名:值},{css属性名小驼峰：值}]"
+
+
+双向绑定：
+	v-model:	创建双向数据绑定(M<->V) , 用在能生产数据的表单元素
+		input/radio/select/.....  绑定的是表单元素的  value值
+
+单向绑定模拟双向绑定:
+	:value="...."   model->view
+	v-on:input="fn($event.value)"  输入时把事件对象的value携带到方法，方法修改了model
+
+
+
+指令:  扩展了html语法功能,区别了普通的html属性
+	vue自带的指令:	v-text/v-html/v-bind/v-for/v-model/v-on
+
+			v-show="布尔" 			v-if="布尔"
+	区别:	操作css					操作dom
+	场景:	适合频繁切换		    适合不频繁切换
+	性能:	初始渲染消耗			频繁切换回有消耗
+
+
+
+二：
+
+类属性|方法  和 实例属性|方法
+	Vue == 类
+	vm ==  new Vue({配置}) 返回  实例
+	在配置内部  的  this == vm 实例
+		Vue.类方法|类属性
+		vm.$实例方法()|$实例属性  == this.$实例方法()|$实例属性
+		vm==this   this.$set/Vue.set
+(
+	1、数组修改根键，无效，不会响应，若改变不是根键，则有效，更新的是虚拟DOM，带着更新dom  ["a",{a:11,b:12},"c"]
+	2、更改数祖长度，无效
+	3、不修改原数组的api,返回新数组
+	4、json数组不存在添加项，vm.json.c="b"
+)
+数据检测：vue的数据是响应式，非响应式的情况如下
+	数组数据变化：
+			问题:对数组使用了非变异 (non-mutating method) 方法（返回的了新数组）
+			解决： 对象合并
+
+			问题：利用索引直接设置一个项|修改数组的长度时
+			解决：Vue.set(数组|对象, key, value) | vm|this.$set(数组|对象, key, value)
+	对象的数据变化：
+			问题：data:{a:1}
+					a 数据是响应式的
+					vm.b='qq';  b 属性不是响应式的
+			解决：Vue.set(数组对象, key, value) | vm|this.$set(数组对象, key, value)
+--------------------------------------------------------------------------------
+
+指令(directive):
+	v-text/v-html/v-bind/v-on/v-model/v-for/v-if/v-show/v-else/v-else-if/v-bulala
+
+
+自定义指令: 指令是个函数|对象,用来操作dom的, 里面的this 返回window
+	（自定义指令，定义在类中，所有都可以用，定义在选项中，只有该实例可以用）
+	a)	Vue.directive('指令名不带v-',函数(el,binding))
+		el == 使用指令的DOM元素
+		binding 是个对象 含有传入的 参数(binding.value)
+	b)  定义在选项里面
+		directives:{
+			指令名不带v-	: 函数(el,binding){}
+		}
+
+	指令是个函数(简写)，可以是个对象
+
+（约定指令的执行时机）
+	{
+		钩子函数
+		inserted:fn(el,binding)		绑定指令的元素插入到父节点时调用
+		bind:fn	指令第一次绑定到元素时调用
+		update:fn	指令所在的元素的model层的数据，view有更新请求时
+		componentUpdated:fn	更新完成时
+	}
+
+	简写方式: bind + update
+
+（指令中的this，无条件的指向window,操作dom）
+--------------------------------------------------------------------------------
+
+自定义事件（只能通过emit触发）事件：
+	模块绑定行间事件:		<xx v-on:事件名="方法名($event,参数)"
+						<xx @事件名="方法名($event,参数)"
+	绑定自定事件:
+		定义：vm.$on( '自定义事件名'|['自定义事件名1','自定义事件名2'], 回调(参数) )
+		销毁：vm.$off( '自定义事件名'|['自定义事件名1','自定义事件名2'], 回调(参数) )
+		触发: vm.$emit(自定义事件名1,参数)
+		(只能通过emit触发 )
+
+		自定义事件名：	使用 kebab-case 的事件名
+	事件对象:
+		事件对象可以不传递，需要传递的场景:传参数同时使用事件对象时
+		show($event,参数)
+
+	冒泡：默认冒泡
+		$event   ev|event.cacelBubble=true ev.stopPropagation()
+		@click.stop 修饰符
+	默认行为:
+		event|ev.preventDefault();   @事件.prevent
+
+	连缀:	@事件.修饰符.修饰符	@事件.prevent.stop
+
+
+修饰符：
+	事件修饰符: @click.stop
+		capture 事件捕获模式
+		self	是当前元素自身时触发处
+		once	件将只会触发一次
+		passive	滚动行为非频繁触发
+	按键修饰符:	@keyup.left
+		系统键	修饰符:	@keyup.ctrl  
+		exact	严格匹配所有的修饰符
+	
+	sync 后续再说看缘分
+
+	表单修饰符: v-model.number
+		.lazy	失焦时更新 model
+		.number 要求输入数字
+		.trim  首尾空白字符过滤掉
+
+
+--------------------------------------------------------------------------------
+vue提供的的方法不用箭头函数，自己写的尽量用箭头函数
+php接口是个文件，node不是
+
+实例方法：事件触发时需要调用的
+过滤器：目标是不要修改原有数据，对原有数据按照某种模式过滤，业务层只是对数据本身过滤（给什么数据对什么数据进行过滤）
+计算属性：计算属性的业务层可能不是对数据本身，而是多个数据的关系（如根据数据更改另一个数据）
+
+过滤器(filter)： 就是个函数
+	场景： 格式数据
+	vue1.x： currency / number / date   
+	vue2.x： 取消了自带过滤器,  需要用户自行封装
+
+	使用：	{{ 数据名 | 过滤器名(参数1,参数2)}}
+			v-xxx="数据名 | 过滤器名(参数1,参数2)"
+			:属性="数据| ... "
+	定义:
+			a) Vue.filter('过滤器名称',函数(要过滤的元数据,参数1,2))
+			b) 选项
+				filters:{
+					过滤器名称:函数
+					过滤器名称2:函数(要过滤的元数据,参数)
+				}
+           Vue.filter("currency",(data,currency,digit=2)=>{
+                console.log("过滤器运行了",data);
+                currency=currency||"$";
+                return currency+data.toFixed(digit);
+            })
+			 <dd>小计：{{item.price*item.count | currency('￥',3)}}</dd>
+--------------------------------------------------------------------------------
+
+箭头函数:
+	vue提供的选项的值是函数时，不要用，this的指向会丢失
+
+--------------------------------------------------------------------------------
+
+数据交互：
+
+	XMLHttpRequest|ActiveXObject
+		- ajax函数
+	$.ajax()
+
+	promise
+
+	vue-resource   下载安装引入   vue1.x 推荐	支持jsonp
+		使用:	返回的是promise对象
+		this.$http.get('url地址?key=value&key=value').then(succFN).catch(errorFn)
+		this.$http.get('url地址',{配置}).then(succFN,errorFn)
+		this.$http.post('url地址',{数据},{配置}).then(succFN,errorFn)
+		this.$http.jsonp('url地址',{配置}).then(succFN,errorFn)
+			params:{ //携带参数
+                wd:'bulala'
+              },
+            jsonp:'cb', //约束回调函数的key, callback
+            jsonpCallback:'show',//回调函数名
+
+			请求:
+				body: post需要携带的数据
+					支持string  a=1&b=2
+ 					对象<需要设置emulateJSON：true>
+ 					UrlSearchParams 类型 new Xxx() -> x.set(key,value)
+				params: {key:value}  携带数据  get
+				headers: {}  携带请求头
+				method：'get' get/post/.....   string
+				timeout: number  超时
+				progress：fn   进度
+				credentials: false  是否携带跨源凭证
+				emulateJSON：true post请求是需要携带的请求头
+				jsonp:'回调函数键' 默认是callback
+			响应：
+				body      返回的数据  对象  (JSONP.parse)
+				bodyText  返回的数据  文本格式  toString
+	
+
+	axios	下载安装引入	vue2.x只有推荐		支持jsonp ??
+
+		axios({
+			url: 地址
+			method: 提交方法   get/post/put........
+			params: get提交参数
+			data: post提交参数  参数==URLSearchParams  new URLSearchParams().set(key,value)
+			timeout:超时间
+			headers： 请求头
+		})
+
+
+三：
+
+
+生命周期:
+mounted:渲染vdom,构造dom进行渲染加载
+最好不要在（updated|beforeUpdated）中访问数据，否则会不停的更新。
+-----------------------------------------------------------
+
+组件：（
+
+	组件使用必需要有根
+	组件默认情况下有自己的作用域，不能拿到父的数据
+	除根组件的其他组件的data数据必需是一个函数且返回一个对象
+）
+
+	Vue根实例表示1个应用，一个应用有若干个组件拼装而成
+
+使用组件
+
+	<组件名></组件名>
+
+	<Header></Header>脚手架环境下webpack协助解决了，调用时依然不能小写header
+
+定义组件
+	定义:
+		a) 	  let 组件变量名= Vue.extend({
+		        template:'<div class="header">我是header组件</div>'
+		      });  // xx.1现在推荐不用
+		b)	 let 组件变量名={  
+				name:'buycar123',
+      			template:'<div>buycar组件123</div>'
+	  		};		√
+注册(拼装)
+		a)	Vue.component('组件名',组件变量名);例如：v-buy-car,BuyCar
+			全局注册的行为必须在根 Vue 实例 (通过 new Vue) 创建之前发生
+		b)	选项
+			components:{
+				组件名：组件变量名	√
+			}
+组件数据
+	data 要是个函数，且要有返回值 object
+	一个组件的 data 选项必须是一个函数，因此每个实例可以维护一份被返回对象的独立的拷贝，否则组件复用时，数据相互影响
+模板：未来放在.vue文件中
+	组件内部: template: #id名 在定义组件的内部取template的id。
+    1、 <script type="x-template" id='id名'  vue1.x
+	<script>
+        let Wrap={
+            date(){//数据是一个函数，必须返回对象
+                return {
+                    data:"111"
+                }
+            },
+			 methods: {
+        		show() { alert('ok') }
+      		},
+            template:"#wrap"
+        }
+    </script>
+     //v.1版本
+    <script type="x-template" id="wrap">
+        <div id="wrap"><div>wrap组件</div><v-buy-car></v-buy-car></div>
+    </script>
+
+	2、<tempate id='id名'...   √
+	<script>
+	 let Header={
+            data(){
+                return {
+                    msg1:"000"
+                }
+            },
+            template:'#hd',
+        }
+    </script>
+    <template id="hd">
+        <div class="hd">
+            <h3>hd组件{{msg1}}</h3>
+            <v-buy-car></v-buy-car>
+        </div>
+    </template>
+
+
+组件（单文件 xxx.vue)
+	script + template + style
+
+组件模板：组件模板如何加事件，不需要拆的很零散，就有可能这样写：（组件名：变量出现的地方等于组件本身出现）:
+components:template:"1111",
+			methods:{
+
+			},
+			methods:{
+              show(){}
+          	},
+          	components:{
+           		 bb:{
+             		 template:"<div>bb</div>"
+           		 }
+          	}
+------------------------------------------------------------
+
+组件通讯: 组件数据流动/数据传递/通讯
+a)  父->子 子->父 兄弟->兄弟   (props父子  事件 子父 )
+b)  订阅发布模式（第三方库 pubsub ）
+c) 	web存储(cookie,localstroge/session)
+d) 	存库
+e)  状态管理
+
+------------------------------------------------------------
+默认情况下：三大框架数据都是由外到内，自上而下 ，若修改子的数据，虽然数据会修改，只能说明是响应的
+			并不能修改父的数据，而且会出现警告
+	父->子  属性(props)		√(父中的数据, 然后通过 :自定义属性=“父中的数据” 在子中拿到，子组件中加入props选项,接收属性)
+		<子 :自定义属性="父数据"></..>
+		子组件:
+			选项
+			props:['自定义属性']   props:{自定义属性:{type/default/required/...}}
+		展示:	子模板	{{自定义属性}}
+
+		props命名：
+			props: ['postTitle']
+			<xx post-title="hello!"></xx>
+		格式检查类型：props 可以是数组或对象，用于接收来自父组件的数据。props 可以是简单的数组，或者使用对象作为替代，对象允许配置高级选项，
+		如类型检测、自定义校验和设置默认值。，如下所示：
+		 props:{
+			// age:描述,
+			// msg2:描述
+			// age:Number
+			age:{
+			type: Number,
+			required: true
+			},
+			height:{
+			type:Number,
+			default:18
+			}
+     	 }
+		Prop 类型：String
+					Number
+					Boolean
+					Array
+					Object
+					Date
+					Function
+					Symbol
+
+		单向下行绑定: 父级 prop 的更新会向下流动到子组件中，但是反过来则不行
+			在 JavaScript 中对象和数组是通过引用传入的，所以对于一个数组或对象类型的 prop 来说，
+			在子组件中改变这个对象或数组本身将会影响到父组件的状态
+
+
+	子->父  事件(自定义)
+		<子 @自定义事件="父方法"></..>
+		子:		this.$emit('自定义事件',子.数据名)
+		父:		methods-> 父方法(接受数据){处理}
+        
+		(在父元素方法中写方法，在子组件中写自定义事件，然后在子组件中发送数据，将自定义事件绑定父的方法，传参就可以拿到子的数据
+		注：在父中数据.依然要给一个空的数据，等待接收
+		)
+
+	同级<->同级 
+		a) 中间人  子A -> 父 -> 子B
+
+		b) 订阅发布  
+		
+		c) vue公共总线
+			new Vue()=bus  bus.$emit()/$on()
+			let bus = new Vue();		返回  Vue对象
+
+			bus.$emit('自定义的事件名',数据)
+	        bus.$on('自定义的事件名',function(接){处理})
+
+------------------------------------------------------------
+
+四：
+
+父子之间共享数据和方法 
+（
+	在template中拿不到ref,在mounted中可以拿到
+	ref操作的是dom,但抓取dom要在渲染之后
+）
+		<子 ref="自定义子名称"></..>
+
+		父访问子:	this.$refs.自定义子名称.数据名/方法()
+		子访问父:	this.$parent.数据名/方法()
+
+		$refs 只会在组件渲染完成之后生效，并且它们不是响应式的,避免在模板或计算属性中访问 $refs
+
+		使用场景: 通用组件
+		components:{aa},
+     	 mounted(){//refs操作的是dom,抓取dom要在渲染后
+			 this.$refs.d1.innerHTML='qq';
+			// console.log('组件数据',this.$refs.a1.msg)
+			// console.log('组件数据',this.$refs.a1.show)
+			// this.$refs.a1.show();
+     	 }
+
+
+
+
+组件通讯:解决方案
+
+	逐层传递
+
+		父->子  
+			props父子		使用场景: 电商 (松耦合)
+			$parent 子抓父 	使用场景: 通用组件（紧耦合)
+		子->父  
+			自定义事件 
+			ref | $children 父抓子  ($children返回所有的子,以数组的形式展现)
+
+		兄弟->兄弟
+			中间人
+
+	集中式管理
+		订阅发布模式（第三方库 pubsub ）
+		公共总线(vue)
+		$root(vue)
+
+		web存储(cookie,localstroge/session)
+		存库
+
+		状态管理
+
+
+动态组件:
+	动态组件： 组件动态化(数据化)，在不同组件之间进行动态切换
+	<component is="'组件名'"></component> (vue自带的组件，自身不渲染)
+	<component :is="数据"></component>
+
+	如： <input type="button" value="按钮" @click="com='v-aa'" >//绑定组件名
+        <input type="button" value="按钮" @click="com='v-bb'" >
+
+内容分发
+	<组件名><标签 slot="槽名">内容</..</组件名>
+	template:	slot 组件槽位  <slot 属性：name=槽名></slot>
+
+	场景:  通用组件
+
+			<vue-swiper>
+				<vue-swiper-slider>
+					<img...>
+					<div>
+				</vue-swiper-slider>
+				<vue-swiper-slider>
+					<img...>
+					<div>
+				</vue-swiper-slider>
+			</...>
+
+vue动画:
+	
+	动画组件: transition|transition-group	谁做动画，就包着谁
+		transition:(.动画名-enter{..} | .动画名-leave-active{..})	
+
+	组件属性:
+		name =  "动画名"
+		mode="out-in|in-out"
+		enter-class = "类名"
+		enter-active-class = "类名"
+		leave-class = "类名"
+		leave-active-class = "类名"
+
+transition动画：enter-active-class = "类名" |leave-active-class = "类名" 
+	<transition
+      enter-active-class = "fadeIn"
+      leave-active-class = "fadeOut"
+    >
+         <div class="box" v-show="bl">box</div>
+    </transition>
+
+
+	样式：
+		.动画名-enter{..}  入场前(打哪来)
+		.动画名-enter-active{..} 入场后(来了停哪)
+		.动画名-leave{..} 离场前
+		.动画名-leave-active{..} 离开场后(到哪去)
+
+	transition组件事件:(可以改变元素的样式等,只要有transition包着,就会有动画，只是动画的过程有我们自己写)
+		@before-enter="方法(el)"   el==做动画的元素(原生)
+		@enter="方法"
+		@after-enter="方法"
+		@before-leave="方法"
+		@leave="方法"
+		@after-leave="方法"
+
+	1) css3
+		transition：无跳变
+			.动画名-enter{..} 打哪来1   +   .动画名-leave-active{..} 到哪去4
+		animation：有跳变
+			.动画名-enter-active{指定入场} 来了停哪2 + .动画名-leave-active{指定离场}到哪去4
+	2) css库 animate.css
+		同 animation 有跳变
+	3) js库 动画名  需要设定初始位置
+	(
+		transition组件事件与velocity.js配合使用，在实例中定义方法（函数），用Velocity(el,{css属性},{配置})控制进入的过程和离开的过程，
+		transition组件事件=“方法名”
+		如：（进入函数中使用Velocity队列，他们之间会排队等候）
+		 enter(el){                                               
+				//Velocity(el,{CSS属性:值},{配置})    
+				Velocity(el,{
+				opacity:1
+				},{
+				duration:400
+				});
+				Velocity(el,{
+				opacity:0
+				},{
+				duration:100,
+				loop:3
+				})
+			},
+
+	)
+
+	enter(el){
+            Velocity(el,{
+              marginLeft:'800px'
+            },{
+              progress:function(){
+                console.log(el.offsetLeft)
+              },
+              complete:function(){console.log('complete')},
+              display:'none'
+            });
+          }
+
+
+		下载 velocity.js   http://velocityjs.org/
+		使用:	Velocity(el,{css属性},{配置})
+
+		配置:
+			duration: 毫秒   事件
+			easing: 动画类别 ''
+			Queue
+			complete:fn()
+			progress:fn
+			loop: 1 次  true无限
+			delay: 毫秒 延时
+			display:'none/block' 动画结束时是否可见
+		注意：(velocity不知道什么时候为入场，什么时候为出场，给使用velocity的函数加入回调done,动画就可以来回播放)
+			leave(el,done){}
+
+transition-group:
+	一组动画
+	transition-group 包着一组元素  ，每个元素要有key(key自己起但不能相等)  其他的同transition
+	注：谁要做动画就给谁加key,不做动画就不加，只是会警告而已
+
+
+
+
+五：
+
+-----------------------------------------------------------------------------
+目标:
+	
+	a: 项目环境 SPA
+	b: 项目环境 MPA
+	c: 架构师(node工程师->全栈)
+
+webpack 4
+	官网: http://webpack.github.io/docs/
+	中文: https://doc.webpack-china.org/concepts/|https://www.webpackjs.com/
+	前身: browserify	缺点，只能转化js
+webpack作用?
+	干嘛的:	项目管理、打包、模块管理、加载资源(js/css/html/png../woff/data/vue...),转换器(loader)
+	前身：grunt/gulp/browserify->webpack->parcel
+		 backbone/jq/angularjs/vue1.x/vue2-3/angular7
+
+webpack的历史
+	webpack1支持CMD和AMD，同时拥有丰富的plugin和loader，webpack逐渐得到广泛应用。
+	webpack2 支持ES Module，分析ESModule之间的依赖关系，webpack1必须将ES，Module转换成CommonJS模块，2支持tree sharking
+	webpack3 新的特性大都围绕ES Module提出，如Scope Hoisting和Magic Comment；
+
+环境支持： Node8+、npm5+
+
+安装：
+	全局
+	npm i webpack webpack-cli -g
+	cli 命令行工具 打包会依赖cli
+
+	本地
+	npm i webpack webpack-cli --save-dev 开发依赖
+
+概念：(webServer打包（服务器）不会打包到磁盘上，是直接打包到内存上)
+	webpack是一种静态编译工具(预编译)
+	入口文件、出口、转换器、插件、模块
+打包
+	webpack  --mode development  会自动找src/index.js 到 dist/main.js
+	要求设置开发模式|生产模式
+
+	webpack 入口地址 --mode development  指定入口
+
+环境分离
+		development:
+			a.浏览器调试工具
+			b.注释、开发阶段的详细错误日志和提示
+			c.快速和优化的增量构建机制
+		production:
+			a.开启所有的优化代码
+			b.更小的main大小
+			c.去除掉只在开发阶段运行的代码
+			d.Scope hoisting(作用域提升)和Tree-shaking(打包的结构只包含实际用到的 exports)
+
+自动解决依赖:
+
+	原理：Webpack 会分析入口文件，解析包含依赖关系的各个文件。这些文件（模块）都打包到 main.js 。
+	Webpack 会给每个模块分配一个唯一的 id 并通过这个 id 索引和访问模块。在页面启动时，会先执行 main.js 中的代码，
+	其它模块会在运行 require 的时候再执行。
+
+loader：转换
+	webpack默认只支持javascript文件(默认)
+	* 其他文件(CSS/LEASS/..)	需要用加载器(loader)
+
+	loader:	类似一种转化器， 它可以把一个东西，转成另一个
+		需要下载	style-loader(读取到的css文件插到页面)	css-loader(读取css文件)
+		下载: npm install style-loader css-loader -D
+
+配置 webpack.config.js  是一个nodejs
+
+	作用: 配置一些webpack需要入口、出口、loader、Chunk代码块、Plugin扩展插件、Module模块
+
+	编写：
+		module.exports={
+			entry:'./src/index.js'	入口文件
+			output:{ 默认输出到dist
+				path:path.resolve(__dirname,'dist')//指定编译目录  不写默认指定到dist
+				filename:'js/boundle.js'//以编译目录为根的出口文件路径
+			},
+			module:{
+				rules:[
+					{test:'/\.css$/',use:['style-loader','css-loader']}
+				]
+			},
+			mode:'development' | production 区别环境
+		}
+
+---------------------------------------------------
+需要自动刷新：webServer 搭建前端开发服务器(webServer打包（服务器）不会打包到磁盘上，
+是直接打包到内存上 需要安装配置)
+	(默认：自动打包，创建前端开发型服务器（默认找webpack.config所在的位置，找index.html）)
+	cnpm install webpack-dev-server -g|-D
+	参数：命令行
+	webpack-dev-server --port 8080 --open --mode development
+	1、写到webpack.config.js中的配置文件(主推)注:如果一个包的详细配置拿到那个包文件下配置
+	publickPath:"/",
+	path要使用path:path.join(__dirname,'dist')
+	devServer:{//和moduke同级
+		port:8080,
+		open:true
+	}
+	把运行命令放到package.json文件：devServer可以不要了
+	"scripts":{
+		"dev":"webpack-dev-server --port 8080 --open --mode development"
+	}
+    2：在包的配置文件里配置
+	3、也可以直接在命令行写配置 webpack-dev-server --port 8080 --open --mode development (要安装全局环境才可以直接用)
+-----------------------------------------------------
+对模块是否需要使用的扩展 :在配置中直接配置resolve(解析文件)
+
+	 resolve: {//解析文件 解决后缀省略配置 与module同级
+      extensions: [ '.vue', '.js', '.json','.css','.scss','.sass']
+    }
+-----------------------------------------------------
+产出html（服务搭建好之后，html的打包位置随着webpack一同改变 
+将开发环境下的html文件自动产出到生产环境
+有可能生成好多文件，让自己自动插入
+跟开发环境无关，依然需要自己引入，对生产环境有意义
+）
+webpack插件都是类
+	npm i html-webpack-plugin ---save-dev
+	const HtmlWebpackPlugin = require('html-webpack-plugin')
+	plugins:[
+	        new HtmlWebpackPlugin({
+	          template: './index.html',
+      			filename: './index.html',//到path目录找生产环境资源|开发环境的publicPath  默认到output目录，出口文件
+	            hash:true,//防止缓存,会给文件后面加入hash  好处：避免浏览器缓存
+	            minify:{
+	                removeAttributeQuotes:true//压缩 去掉引号
+	            }
+	        })
+	]
+
+另一个：
+---------------------------------------------------
+
+css抽离（代码分离）
+	yarn add extract-text-webpack-plugin@next --dev
+	npm i extract-text-webpack-plugin@next --save-dev | -D
+		@next 兼容webpack4 未来会不需要
+
+	const extractTextPlugin = require("extract-text-webpack-plugin")
+
+	loader配置：
+	use: ExtractTextWebapckPlugin.extract({
+          use: 'css-loader'
+        }) //不再需要style-loader
+
+	new ExtractTextWebapckPlugin('css/[name][hash:6].css')
+
+	同类推荐: mini-css-extract-plugin
+
+---------------------------------------------------
+
+图片|文件 打包   
+yarn add url-loader file-loader --dev  
+url-loader 打包，链接成base64到生产环境
+file-loader 打包压缩成文件
+npm i url-loader file-loader --save-dev
+	url-loader 存base64  file-loader存文件
+	{
+        test:/\.(png|jpg|gif)/,
+        use:[{
+          loader: 'url-loader',
+          options: {
+            limit: 5000,
+            outputPath: 'images/', 5000意思存到images
+          }
+        }]
+      }
+
+css中引入 | js动态(模块化) 引入
+
+---------------------------------------------------
+
+资源copy： 静态资源(js，数据图片，json) -> 生产环境
+ 	require('copy-webpack-plugin')
+ 	new CopyWebpackPlugin([
+      { from: path.resolve(__dirname,'static'), to: path.resolve(__dirname,'build/static') }
+    ])
+
+    同类推荐： transfer-webpack-plugin
+
+--------------------------------------------------
+
+（
+		webpack -p 生产环境打包
+		转换器：loader 配置在rules
+		插件需要配置在plugins中
+		全局没有安装webpack-dev-server,可以用npx在项目环境下替代 npx webpack-dev-server
+		测试在生产环境下是否可以运行：（
+				需要搭建服务器环境：npm i serve -g 用命令行跑服务器
+				  运行：serve （也可以配置一些端口号什么，查看帮助：server -help）
+				  测试 ：serve -s . 在当前找到index.html
+				）
+	）
+
+--------------------------------------------------
+
+配置文件拆分到模块:
+	
+	webpack.config -> webpack.config.dev|prod|base 开发环境 生产环境 基础环境
+	"dev": "webpack --mode development --config config/webpack.config.dev.js",
+    "build": "webpack --mode production --config config/webpack.config.prod.js",
+    "server": "webpack-dev-server --mode development --config config/webpack.config.dev.js"
+
+
+六：
+
+vue cli3
+	官网:	https://cli.vuejs.org/zh/
+	关于旧版本
+		Vue CLI 的包名称由 vue-cli 改成了 @vue/cli。 如果你已经全局安装了旧版本的 vue-cli (1.x 或 2.x)，
+		你需要先通过 npm uninstall vue-cli -g 或 yarn global remove vue-cli 卸载它。
+
+	安装cli3 ：
+		npm install -g @vue/cli | yarn global add @vue/cli
+
+		npm install -g @vue/cli-init  和cli2 命令行 并用 (后续在cli3下指向一切cli2操作)
+
+	创建项目环境:
+		a) 简洁  cli2 需要自行配置
+		b）专业  cli2 配置多
+		c）零配置 cli3
+
+cli2:
+
+	创建项目环境:
+		vue init webpack-simple 目录|.    webpack-simple|webpack  模板
+		cd 目录
+		npm install
+		npm run dev  运行
+		开发....
+		npm run build 打包
+
+	webpack-simple:
+		webpack-dev-server --port 8001 --open 设置端口，开启浏览器
+		webpack.config.js:
+			devServer
+				port 	端口
+				open  开启浏览器
+（vue组件默认对外导出，如果没有数据可以不写，只写template）
+
+路由:(根据不同的url去下载、加载不同组件，去添加历史记录，去修改web栏的地址)
+
+	SPA: single page application   单页面应用
+
+	特点： 速度快，数据ajax请求，通过路由，页面不会整体重载
+	实现:  路由 -> 加载(ajax)对应的内容  告诉你去哪?  根据url的不同，加载组件
+
+	区别：https://www.cnblogs.com/nangezi/p/9201226.html
+
+
+	路由要求： 引入 vue-router
+
+	路由使用流程：
+		0.	import VueRoter from 'vue-router' -> Vue.use(VueRouter) 安装
+		1. 使用路由 (去哪)
+			<router-link to="/home">首页</router-link>
+	  		<router-view>展示区</router-view>
+	  		router-link 组件属性
+				tag='li' 指定编译后的标签
+				active-class='类名' 指定激活后的样式
+		2. 配置路由(建立组件和请求的对应关系)	数组
+			[{path:'/home',component:home},,{}]
+			path 路径
+			component: 指向的组件变量名
+		3. 创建路由(传递配置)
+			router = new VueRouter(配置)
+			配置:	{routes:数组,mode:'hash|history|abstrict'}
+		4. 顶层|根组件，注册路由 （路由控制页面组件的加载）
+			选项
+				router(选项):router (router对象)
+	子路由：children
+		routes=[
+			{},
+			{
+				path:xx
+				component:xx
+				children:[  子路由
+					{}
+					..
+				]
+			},
+			{}
+		]
+
+	参数配置:
+		{path:'xx/:参数变量',component:xx}
+
+	传递参数 and 数据
+	router-link to='xx/参数?a=1b=2'
+	router-link :to='{name:'xx',params:{id:1},query:{a:2,b:3}}'
+
+	接收参数和数据(
+		代码：
+		const User = {
+			props: ['id'],
+			template: '<div>User {{ id }}</div>'
+		}
+		const router = new VueRouter({
+		routes: [
+			{ path: '/user/:id', component: User, props: true }]
+		}
+	)
+
+
+		a)	{{this.$route.params|query|path}} 紧耦合
+		
+		b) 	{{id|a|b}} 组件:props:['id','a','b'] routes: props:(route)=>({id:route.params.id, ...route.query})
+			松耦合 组件便于不依赖路由，单独测试 可以通过路由 组件传参给props
+
+	编程式跳转:
+		this.$router.push({path:'...'})   添加一个路由 （记录到历史记录)
+		this.$router.replace({path:'...'})   替换一个路由 （不记录到历史记录)
+		this.$router.go(-1|1)|goBack()  回退/前进  history.go|goBack
+
+
+路由守卫:
+
+		全局守卫/路由独享的守卫/组件内的守卫（组件更好复用）
+
+		beforeRouteEnter(to,from,next){}	前置守卫,进入
+			to 目标路由
+			from 当前路由
+			next 是个函数  next() == next(true)  运行跳转
+						   next(false) 不让跳转
+						   next('字符路径')/next({对象路径}) 重定向
+
+		beforeRouteLeave(to,from,next){}  后置守卫,离开
+	路由数据预载:
+		beforeRouteEnter(to,from,next){
+			1. 兜库 this.$http   axios可用
+			2. next( _this => _this.属性="拿到的数据")
+		}
+
+		数据监测 | beforeRouteUpdate(组件复用，路由改变的钩子)  一个组件|路由在跳转时如何拿到数据
+
+
+七：
+
+通用组件|全局组件|插件
+
+	Vue.use(插件)  loading插件
+
+	插件封装->做项目(用第三方)->找第三方插件（读代码->写一遍)
+
+	props(类型检查)|$refs|$parent|$children|slot|component
+
+https://www.cnblogs.com/lhb25/p/loading-spinners-animated-with-css3.html loading代码下载
+
+状态管理  store
+		什么时候用： 打算开发中大型应用
+		集中式数据管理, 一处修改，多处使用
+		思维流程:
+											store
+					this.$store.commit('increment')	-> mutations
+					this.$store.dispatch('jia')		-> actions
+				     mapActions() ->actions						mapGetters()->getters
+				学生			代课老师			校长		 	  财务     版主任		学生
+			components - >  actions		->  mutations ->  state  <- getters	<-	components
+				发送请求      处理			修改状态
+							  业务逻辑		修改state			   读取state
+							  异步
+			state<-$store.state <-  学生
+
+
+八：
+
+
+vue-cli 脚手架  (搭建项目环境)  命令行工具
+	内部代码:	webpack
+
+cli2   ->   cli3
+
+cli2:
+
+	创建项目环境:
+		vue init webpack-simple 目录|.    webpack-simple|webpack  模板
+		cd 目录
+		npm install
+		npm run dev  运行
+		开发....
+		npm run build 打包
+
+	webpack-simple:
+		webpack-dev-server --port 8001 --open 设置端口，开启浏览器
+		webpack.config.js:
+			devServer
+				port 	端口
+				open  开启浏览器
+	webpack:
+		webpack-dev-server --port 8001 --open 设置端口，开启浏览器
+		config/index.js
+			autoOpenBrowser: 开启浏览器
+			useEslint: eslint检查的开启关闭
+			port: 端口
+		build/webpack.base.conf.js
+			loader 配置
+			entry 入口
+
+vue cli3
+	官网:	https://cli.vuejs.org/zh/
+	关于旧版本
+		Vue CLI 的包名称由 vue-cli 改成了 @vue/cli。 如果你已经全局安装了旧版本的 vue-cli (1.x 或 2.x)，你需要先通过 npm uninstall vue-cli -g 或 yarn global remove vue-cli 卸载它。
+
+	安装cli3 ：
+		npm install -g @vue/cli | yarn global add @vue/cli
+
+		npm install -g @vue/cli-init  和cli2 命令行 并用 (后续在cli3下指向一切cli2操作)
+
+	创建项目:
+		vue create xxx / .
+			删除默认配置:		.vuerc     C:\Users\Admin
+		vue ui 		图形UI形式
+
+
+	打包:	
+
+		npm run build
+		npx vue-cli-service build
+		vue-cli-service build   需要安装vue-cli-service 命令行?
+
+		index.html 会带有注入的资源和 resource hint
+		第三方库会被分到一个独立包以便更好的缓存
+		小于 10kb 的静态资源会被内联在 JavaScript 中
+		public 中的静态资源会被复制到输出目录中
+
+	Index.html 文件
+		插值:
+			使用 lodash template 语法插入内容
+			<link rel="icon" href="<%= BASE_URL %>favicon.ico">
+			打包后	->  <link rel=icon href=/favicon.ico>
+		Preload:
+			 是一种 resource hint，用来指定页面加载后很快会被用到的资源，所以在页面加载的过程中，我们希望在浏览器开始主体渲染之前尽早 preload。
+			  vue 自动生成
+			 <link href=/css/app.8c41b469.css rel=preload as=style>
+		Prefetch:
+			用来告诉浏览器在页面加载完成后，利用空闲时间提前获取用户未来可能会访问的内容。
+			 Vue CLI 应用会为所有作为 async chunk 生成的 JavaScript 文件 (通过动态 import() 按需 code splitting 的产物) 自动生成 prefetch 提示。
+
+
+	资源安排:
+
+		./ 指向assets开发目录
+		/ 指向public目录
+
+		在 JavaScript 被导入或在 template/CSS 中通过相对路径被引用。这类引用会被 webpack 处理。
+		放置在 public 目录下或通过绝对路径被引用。这类资源将会直接被拷贝，而不会经过 webpack 的处理。
+
+		url-loader 将小于 10kb 的资源内联，以减少 HTTP 请求的数量
+
+		推荐 资源放置到assets:
+			脚本和样式表会被压缩且打包在一起，从而避免额外的网络请求。
+			文件丢失会直接在编译时报错，而不是到了用户端才产生 404 错误。
+			最终生成的文件名包含了内容哈希，因此你不必担心浏览器会缓存它们的老版本
+		何时使用 public 文件夹
+			你需要在构建输出中指定一个文件的名字。
+			你有上千个图片，需要动态引用它们的路径。
+			有些库可能和 webpack 不兼容，这时你除了将其用一个独立的 <script> 标签引入没有别的选择。
+
+	安装CLI插件:  vue官网 找vue-cli-plugin-插件  生成器
+			vue add axios	/指向public
+			vue add router / vue add vuex
+				可以安装包，并创建文件(插件配置的基本小样)
+
+			npm i axios vue-router vuex -D
+
+			vue add animate 没有vue-plugin-animate-> npm i animate.css
+			vue add swipe   没有 -> npm i vue-swipe
+
+			注意:
+				vue add 的设计意图是为了安装和调用 Vue CLI 插件。这不意味着替换掉普通的 npm 包。对于这些普通的 npm 包，你仍然需要选用包管理器。
+
+				CLI 插件都会包含一个 (用来创建文件的) 生成器和一个 (用来调整 webpack 核心配置和注入命令的) 运行时插件
+
+	配置
+
+		修改启动端口:
+			a) package.json->scripts->vue-cli-service serve --port 8001 --open
+			b) @vue/cli-service/lib/options
+			c) vue.config.js  √
+
+		node_module配置:	cli-service 对 webpack 配置进行了抽象
+			@vue/cli-service/lib/options
+				css: {
+				    extract: false,
+				    modules: false, //css模块化
+				    	使用：a) 组件import引入样式后	写入data 选项后模板中使用
+				    		  b) style标签 添加module属性 模板:$style | 组件:this.$style
+				    	场景: scoped/moudle 对css内部import css时无效时
+				    localIdentName: '[name]_[local]_[hash:base64:5]',
+				    sourceMap: false,
+				    loaderOptions: {}
+				  }
+		vue.config.js
+				参考：https://github.com/vuejs/vue-cli/tree/dev/docs/zh/config
+					  https://cli.vuejs.org/zh/config/
+
+				module.exports={
+				  css: {
+				    extract:false,//css分离 生产环境下是 true，开发环境下是 false
+				    modules: true, //开启css模块化
+				    loaderOptions:{//向 CSS 相关的 loader 传递选项
+				      css: {
+				        // 这里的选项会传递给 css-loader
+				      },
+				      postcss: {
+				        // 这里的选项会传递给 postcss-loader
+				      }
+				    }
+				  },
+				  devServer:{
+				    // proxy: 'http://localhost:3000',//告诉开发服务器将任何未知请求 (没有匹配到静态文件的请求) 代理到http://localhost:4000。
+				    // host: '0.0.0.0',
+				    port: 8003,
+				    open: true,
+				    // https: false,
+				    // proxy: null, // string | Object
+				  },
+				  lintOnSave:false, //关闭esling警告
+				  lintOnSave: process.env.NODE_ENV !== 'production', //生产构建时禁用
+				  productionSourceMap:false, //打包不携带map文件
+				}
+
+
+--------------------------------------------------------------------------------------------------
+
+
+技术栈:
+
+vue-cli + vue-router + axios + vue-aniamte + vuex .....   全家桶  + nodejs + express + mongodb
+
+新闻客户端
+	1. 环境搭建(vue-cli +  vue-router + axios + vuex == 全家桶)
+	2. 项目分析(组件安排)
+		dist
+			|-...
+		public
+			|-data:
+				|-数据.json
+				....
+		src
+			|-assets
+				|-js
+				|-css
+				|-image
+			|-component
+				|-	navbar.vue / footbar.vue
+				|-	home.vue / follow.vue / column.vue / user.vue
+				|-  detail.vue / login.vue / reg.vue
+				|-	silder.vue / error.vue / list.vue
+			|-filters
+				date.js
+				fillzero.js
+				...
+			|-loading
+				index.js
+				|-component
+					|-loading.vue
+			|-store
+				|-index.js
+				|-actions.js
+				|-mutations.js
+				|-getters.js
+				|-state.js
+				|-types.js
+			main.js
+			App.vue
+			router.js
+		package.json
+		vue.config.js
+	3. 布局
+		a) 切图(需要设计稿)
+			css特点：
+				style-loader 插入到style标签
+				样式会继承父组件
+				样式有机会冲突
+			css 规划问题:
+				a) css命名空间   .app-home{}   .app-product{}  √
+				b) css模块化
+					webpack 配置:
+						cli2
+
+							webpack 配置:
+								utils->css-loader->options{modules:true}
+							组件引入样式1: import style from '../asset/css/xx.css'
+								data(){return {style:style}}
+								应用样式:  <div :class='style.类名|id名'
+
+							组件引入样式2: 写在style内部
+								应用样式:  <div :class='$style.类名|id名'
+
+						cli3:
+							node_module配置:	cli-service 对 webpack 配置进行了抽象
+							@vue/cli-service/lib/options | vue.config.js
+								css: {
+								    modules: true, //css模块化
+								  }
+								使用：style标签 添加module属性 模板:$style | 组件:this.$style
+								场景: scoped/moudle 对css内部import css时无效时
+
+				c) scoped 独立样式作用域
+		b) UI库	(bootstrap/elementUI pc端 / mintUI移动端 / 妹子UI/ant.design/weex)
+		c) html+css模板 移植 到 组件
+			01 全局资源 在主入口文件(index.html)引入
+			02 全局资源 主程序(main.js|app.vue)
+			03 自执行脚本，跟着要控制的元素走    *
+			04 私有资源，进入组件内部
+			05 开发环境资源引入动作，取决于资源的输出方式，和业务自身的要求(如何暴露)
+
+	4. 路由搭建
+
+		css 冲突:
+			style-loader 插入所有组件css 到 style标签，选择器重名
+		解决：
+			1)	css命名空间   √
+				.app-home{}   .app-product{}  √
+			2)	css模块化
+				cli2
+					webpack 配置:
+						utils->css-loader->options{modules:true}
+					
+					组件引入样式1: import style from '../asset/css/xx.css'
+						data(){return {style:style}}
+						应用样式:  <div :class='style.类名|id名'
+
+					组件引入样式2: 写在style内部
+						应用样式:  <div :class='$style.类名|id名'
+
+				cli3:
+					node_module配置:	cli-service 对 webpack 配置进行了抽象
+					@vue/cli-service/lib/options | vue.config.js
+						css: {
+						    modules: true, //css模块化
+						  }
+						使用：style标签 添加module属性 模板:$style | 组件:this.$style
+						场景: scoped/moudle 对css内部import css时无效时
+			3)	scoped 独立样式作用域
+				style 标签 计入scoped属性
+
+	5. 数据交互+全局过滤器+全局组件（loading）
+
+		home(axios)->porps(list,dataName)->list         -> 路由传递参数和数据-> detail(参数->axios)
+		follow(axios)->porps(list,dataName)->list
+
+		全局过滤器:	Vue.filter('name',varname)
+
+	6. 非状态管理（控制导航显示)
+		this.$root  返回的是根实例  new Vue (main.js)
+		this.$root.$data.根数据名;
+		this.$root.$data.根数据名=值
+
+		<组件 @click.native=“函数   组件事件绑定
+
+
+
+	7. 状态管理
+
+		路由监听：数据观测|检测 watch   找一个根组件
+		拦截器：插件读数据时(提交前|数据返回后 操作loading (state))
+
+	8 动画
+		vue-animate    vue add animate
+			import varname form 'vue-animate'
+		animate.css  npm i xxxx
+			全局引入
+
+
+			
+
+
+
+	8.5 路由守卫
+
+		条件: user->同步->状态管理
+
+		login:修改状态管理state
+
+	9. 组件懒加载|异步组件|异步路由
+
+		原理: 利用webpack对代码进行分割是懒加载的前提，懒加载就是异步调用组件，需要时候才下载,
+			  告诉webpack把组件打包成块，告诉路由激活时触发一个函数，函数再加载组件,加载时会请求组件的块代码，块代码会插入当前组件的样式
+		webpack配置:
+			output:
+				chunkFilename:'chunks/[name]-[chunkhash:8].js',//build之后的代码更便于识别
+		路由配置:
+			const home =()=>import(/* webpackChunkName: "group-home" */ "../components/home.vue");
+			import 导入 需要安装 babel-plugin-syntax-dynamic-import ,import会被提升，先执行?
+			配置 babelrc  "plugins": ["syntax-dynamic-import"]
+			webpackChunkName: "group-home" 给块命名 | 同名会拆到一个块，可减少请求次数
+		组件内部注册异步组件:
+			const navbar =()=>import(/* webpackChunkName: "group-home" */ "./components/navbar.vue");
+			components:{navbar}
+			navbar 不异步的话，代码会打到app.js,而不是home块或者navbar块
+	10. 高级异步组件
+		https://cn.vuejs.org/v2/guide/components.html#%E9%AB%98%E7%BA%A7%E5%BC%82%E6%AD%A5%E7%BB%84%E4%BB%B6
+	11. 前后端分离
+	12.	滚动行为
+		VueRouter({scrollBehavior})
+		scrollBehavior(to,from,savedPosition){
+			return { x: 0, y: 0 }//对于所有路由导航，简单地让页面滚动到顶部
+		}
+
+		滚动到之前位置:
+			模块变量: let top=0;
+			destroyed:	top=document.documentElement.scrollTop;  | 存到 cookie,store,vue根
+			updated:	document.documentElement.scrollTop=top;	| 取cookie,store,vue根
+	13. actions内部路由跳转
+		import router from '../router.config.js'
+		router.push('/reg')
+	14. actions可以返回promise给调用dispatch的组件
+		actions:return axios(..).then(commit(...))
+		组件: this.$dispatch(..).then(()=>{业务})
+	15. sass
+
+九：
+
+项目
+
+路由守卫
+	条件: user->同步->读state
+
+	login: 修改state|同步cookie
+
+	强刷新:
+		main|app  读cookie 同步 state
+
+	actions可以返回promise给调用dispatch的组件
+		actions:return axios(..).then(commit(...))
+		组件: this.$dispatch(..).then(()=>{业务})
+
+组件懒加载|异步路由|异步组件
+
+	webpack概念:	code split 分片打包
+	原理: 利用webpack对代码进行分割是懒加载的前提，懒加载就是异步调用组件，需要时候才下载,
+		  告诉webpack把组件打包成块，告诉路由激活时触发一个函数，函数再加载组件,加载时会请求组件的块代码，块代码会插入当前组件的样式
+
+	webpack配置:
+		output:
+			chunkFilename:'chunks/[name]-[chunkhash:8].js',//build之后的代码更便于识别
+	路由配置:
+		const home =()=>import(/* webpackChunkName: "group-home" */ "../components/home.vue");
+		
+		webpackChunkName: "group-home" 给块命名 | 同名会拆到一个块，可减少请求次数
+	组件内部注册异步组件:
+		const navbar =()=>import(/* webpackChunkName: "group-home" */ "./components/navbar.vue");
+		components:{navbar}
+		navbar 不异步的话，代码会打到app.js,而不是home块或者navbar块
+
+
+滚动行为
+		每次滚到顶部
+
+			VueRouter({scrollBehavior})
+			scrollBehavior(to,from,savedPosition){
+				return { x: 0, y: 0 }//对于所有路由导航，简单地让页面滚动到顶部
+			}
+
+		记录滚动位置:
+
+			模块成员|data数据 : let top=0;
+			destroyed:	top=document.documentElement.scrollTop;  | 存到 cookie,store,vue根($root)
+			updated:	document.documentElement.scrollTop=top;	| 取cookie,store,vue根
+actions内部路由跳转
+		import router from '../router.config.js'
+		router.push('/reg')
+
+----------------------------------------------------------------------------------------
+
+sass
+		SCSS 是 Sass 3 引入新的语法
+		sass：
+			使用换行和缩进
+
+			$bg-color: #939
+			.box
+				background: #bg-color
+
+		scss：
+			使用分号和花括号
+			$bg-color: #399;
+			.box{
+			  background: $bg-color;
+			}
+
+		scss for vue-cli3脚手架 需要安装node-sass / sass-loader
+
+			引入:	<style lang="scss"  使用: <xx class="box"
+			引入:	<style lang="scss" module  使用: <xx class={$style.box}
+			引入:	<style lang="scss" scope  使用: <xx class={box}
+
+		引入sass全局变量?
+			定义主题： $theme-color: '#300' -> base.scss -> assets
+			配置webpack：
+			1） vue.config.js
+				module.exports = {
+				  css: {
+				    loaderOptions: {
+				      sass: {
+				        data: `
+				          @import "@/assets/css/base.scss";
+				        `
+				      }
+				    }
+				  }
+				}
+			2） node_modules/@vue/cli-service/lib/options.js
+				css: {
+				    // extract: true,
+				    // modules: false,
+				    // localIdentName: '[name]_[local]_[hash:base64:5]',
+				    // sourceMap: false,
+				    loaderOptions: {
+				      sass: {
+				        data: `
+				          @import "@/assets/css/base.scss";
+				        `
+				      }
+				    }
+				  }
+
+		scss for vue-cli2脚手架 
+			需要安装node-sass / sass-loader
+			配置: 在build文件夹下的webpack.base.conf.js的rules里面添加配置
+			  {
+		        test: /\.scss$/,
+		        loaders: ["style-loader", "css-loader", "sass-loader"]
+		      }
+
+			使用:	<style lang="scss"  使用: <xx class="box"
+			使用:	<style lang="scss" module  使用: <xx class={$style.box}
+			使用:	<style lang="scss" scope  使用: <xx class={box}
+
+		引入sass全局变量?
+			定义主题： $theme-color: '#300' -> base.scss -> assets
+			
+			配置webpack： 在build/utils.js中修改配置
+			scss: generateLoaders('sass').concat(
+			  {
+			    loader: 'sass-resources-loader',
+			    options: {
+			      resources: path.resolve(__dirname, '../src/assets/scss/base.scss')  //注意自己的路径
+			    }
+			  }
+			),
+
+
+
+十：
+
+服务：
+	通用业务逻辑(同步|异步)
+
+组件 -> 服务 -> 发送action
+
+		局部调用
+			//service.js
+			export default {
+			   getUserInfo(v){
+			      return v.axios...state
+			   }
+			}
+			//component.vue
+			import service from 'path'
+			//调用
+			service.getUserInfo(this).then(业务)
+		全局函数
+			//service.js
+			exports default = {
+				getUserInfo(){...}
+				install:(Vue)=>{
+					 Vue.prototype.$service=this
+				}
+			}
+
+			//main.js
+			import service from 'path'
+			Vue.use(service)
+
+			//components.vue
+			this.$service.getUserInfo(...)
+
+
+前后端联调|前后端分离
+
+	3个服务:前端(8080),后端(3000),数据库(3306/27017)
+
+解决前后端服务器共存
+		大前端：
+			Vue-cli + vue-router + axios/resource + vuex 	前端处理路由
+				this.$http(url:接口,params:{keyvalue})
+			nodeJs + express
+				负责:写接口,处理后端到库，send（库数据) json() write+end()
+		前后端分离：
+			跨域：需要后台允许的， 设置响应头
+				a)  逐条设置
+					res.setHeader('Access-Control-Allow-Origin', req.headers.origin)
+					问题：每一个路由都要设置
+				b)  统一设置(中间件cors)
+					app.use(cors({
+					  "origin": ['http://localhost:8080'],
+					  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+					  allowedHeaders:['Content-Type', 'Authorization']
+					}));
+
+					
+ 跨源凭证
+		ajax跨源请求数据，默认不提供凭据(cookie,http认证，客户端SSL证明)
+		
+		使用携带跨源凭据|反向跨域
+			前端: 携带
+				a)	逐条允许 axios({})
+					withCredentials: true,//携带跨源凭证
+				b) axios.defaults.withCredentials=true
+			后端：允许携带
+				a) 逐条允许
+					res.setHeader('Access-Control-Allow-Credentials', true);
+				b) 中间件统一配置(cors)
+
+
+
+	前端原生：请求头里面带凭证，带cookie
+	var xhr = new XMLHttpRequest();
+	xhr.open("post", "xxx/xxx", true);
+	xhr.withCredentials = true;		放在 open 方法后面比较靠谱
+	xhr.onload = function(){}
+	xhr.send("a=1&b=2");
+
+	前端jqAjax:	请求头里面带凭证，带cookie
+		$.ajax({
+			type:'get',
+			url:"http://localhost:3000/logouts",
+			dataType:"json",
+			xhrFields: {
+				withCredentials: true
+			},
+			success:function(data){
+				console.log(data);
+			}
+		})
+		前端:vue-resource
+				this.$http.get(url,{credentials:true}) 追条
+
+			Vue.http.interceptors.push(function(request, next) {
+			  request.credentials = true  统一
+			  next();
+			});
+
+部署前：build
+	历史记录模式路由，部署nodejs服务器环境问题
+		技术环境: nodejs + express +public(build后的vue代码)
+		问题：客户端路由服务找/todos/42时，服务器会找build/todos/42（没有这个子服务接口)
+		解决：以index.html用于任何未知路径
+
+		app.use(express.static(path.join(__dirname, 'build')));
+
+		+app.get('/*', function (req, res) {
+		   res.sendFile(path.join(__dirname, 'build', 'index.html'));
+		 });
+		app.listen(3000);
+
+
+
+
+REACT
+
+一：
+
+----------------------react----------------------
+干嘛的：前端框架，把用户界面抽象成一个个的组件，按需组合成页面
+官网：https://reactjs.org/
+	  http://react.css88.com/
+不同点：
+		angularJs 	vueJs 	reactJs 			angularTs(2+)
+控制器	√			-		-						-
+过滤器	√			√		-						√
+指令 	√			√		-						√
+模板引擎 √			√		-						√
+服务     √          -        -                       √
+
+jsx     -           √		√						-
+
+npm i create-react-app -g 官方脚手架
+参考：https://facebook.gitbhub.io/create-react-app/docs/getting-started
+create-react-app 目录名|.
+yarn start 开发模式
+yarn build 打包
+
+共同点：
+	虚拟DOM(angularJs除外  angular有)，数据驱动
+
+JSX：
+	文件: oo.js/  oo.jsx  yarn
+	理解1：比喻(js + 类html)		类XML语法(json前身)
+	理解2：jsx是js一个类型		var a='<strong></strong>' 字符  var b= <strong></strong>  jsx类型
+	
+语法要求：
+	标签要闭合
+	元素必须要有一个顶层元素
+	变量首字母大写代表组件，小写对应是js数据类型
+	属性，小驼峰命名 tabindex -> tabIndex
+
+
+
+------------------------------------------
+组件:
+
+ES6 创建组件：es6/7类
+	import React from 'react';
+	class 组件名 extends React.Component{
+		constrctor(props){ //组件有状态 constrctor就出现
+			super(props) //类如果有继承 super就要出现
+				需要在组件构造器内处理传递过来的props时，props参数就出现
+
+			this.state={ // 本地状态
+
+			}
+		}
+		render(){
+			return jsx
+		}
+		方法1(){} 自定义的方法
+		方法2(){}
+	}
+ES5 创建组件：
+	var React = require('react');
+	let 组件名 = React.createClass({
+	  getInitialState:function(){  //组件状态
+	  	return {
+	  		数据:值
+	  	}
+	  }
+	  render:function(){
+	    return html|jsx
+	  }
+	});
+使用组件：
+	<HelloWorld/>
+	<HelloWorld></HelloWorld>
+
+渲染（描画）页面
+	import ReactDom from 'react-dom';
+	var RactDom = require('react-dom');
+
+	ReactDom.render(组件/dom,插入点)
+
+
+------------------------------------------
+
+组件属性(props)：
+
+	调用组件：<组件名 属性名=值 属性名2=值2 .. />	传递属性
+	组件内部: {this.props.属性名}   {jsx表达式}  使用属性
+			  this 代表的是组件本身
+
+	值类型：字符||{js表达式}
+	this.props.属性名==array 需要循环
+	arr值：this.props.属性名.map(function(){
+		return html
+	})
+	json {json} 报错， 对象无法直接通过{obj}展示->{obj.key}
+
+
+props类型检查
+
+	需要安装  import propsTypes from 'prop-types'
+
+	默认值:		组件.defaultProps={propName:值}
+	类型约定:	组件.propTypes={propsName:使用propsTypes库.类型名}
+
+		propsTypes库.类型名
+		propName: propsTypes.array/bool/func/number/object/string
+	必传参数: propName: propsTypes库.类型名.isRequired
+------------------------------------------
+组件的状态 
+	(state|数据|封装状态|本地状态)
+
+	getInitialState:fn(){return {状态名:值,xx:oo}}   ES5
+
+	this.state={}   es6   
+	state={}  es7
+
+	获取组件状态： this.state.xx
+	修改组件状态: this.setState({key:newvalue})
+
+------------------------------------------
+事件:
+	驼峰命名  es6 事件函数内部this会丢失
+	<元素 onClick={this.方法}
+
+	修正this的指向
+
+	onClick={this.方法.bind(null,值)}
+	onClick={()=>{this.方法()}}
+	this.方法=this.方法.bind(this)
+
+	方法(ev)	ev 代理事件对象 ev.target 返回vdom √
+
+
+------------------------------------------
+
+ref:  获取jsx元素  获取的是dom
+	
+	给jsx元素 设置ref属性=名字
+		this.refs.名字
+	何时用: 操作dom是用
+		处理focus、文本选择或者媒体播放
+		触发强制动画
+		集成第三方DOM库  $(this.refs.xx).addClass()
+
+------------------------------------------
+
+组件之间数据传递(props传递)  √
+
+	父到子	props 传递 <Child 属性=父数据/> 父数据->子数据
+	子到父  props 传递 <Child 属性=父方法/> 子数据->父数据
+			{this.props.属性(子.数据)}
+	并禁止修改其自身 props
+
+	发布订阅: 类似vue公共总线(浏览器的下层，app应用的上层)
+		1）手动封装库,	2)第三方 pubsub-js
+
+		用法:
+			发布:	PubSub.publish('事件名', '数据|消息|负载'); 
+			订阅:	token = PubSub.subscribe('事件名', 回调(事件名,数据));  同步返回 token
+			取定:	PubSub.unsubscribe(事件名)
+------------------------------------------
+
+受控元素(module层)： value  | 不受控元素 defaultValue
+
+	react 默认是单项绑定  defaultValue
+
+	value={this.state.数据名}  model->view
+	onChange={this.监听方法}   view->model(  setState )
+
+处理多个输入元素
+	可以为每个元素添加一个 name 属性(通常和数据名一致)
+	处理函数根据 event.target.name 的值来选择要做什么
+
+	name="inputUserName" name="inputContent"
+	this.setState({[ev.target.name]:ev.target.value})
+
+
+------------------------------------------
+
+二：
+
+react 处理 样式:
+	1) 在index.html ： 引入  link/style  场景：应用的公共样式
+	2）在组件里面引入： import './css/xx.css'  是全局 注入口（程序) 公共样式
+		问题: 选择器冲突，
+		解决：
+			a) 命名空间 BEM √
+			b) 模块化:
+				引入 import 变量  from './css/xx.css' 模块
+				使用 <xx className={变量.类名}
+				配置1 webpack配置 "style-loader!css-loader?modules" | module:true
+					 问题：所有css都需要模块化使用
+				配置2 改名xx.css -> xx.module.css 需要模块化的才修改,不影响其他非模块化css写法  √
+
+	jsx:
+		className="类名 类名2" className={返回字符}
+		style={{key:value,key:value}}
+
+	3）SCSS 是 Sass 3 引入新的语法  
+			
+			安装相关支持: node-sass
+
+			scss for create-react-app脚手架
+				引入:	xx.sass/xx.scss  使用: <xx className="box"
+				引入:	style form xx.module.sass/xx.module.scss  使用: <xx className={style.box}
+
+				引入sass全局变量?
+					1. 局部sass： @import './全局.scss'
+					2. 安装插件 : sass-resources-loader
+					配置:use: [
+				              {loader:'style-loader'},
+				              {loader:'css-loader'},
+				              {loader:'sass-loader'},
+				              {
+				                loader: 'sass-resources-loader',
+				                options:{
+				                  resources:'./src/xx/全局主题.scss'
+				                }
+				              }
+				            ]
+动画
+	css tansition|animation
+	ant.desinge动画
+
+		https://motion.ant.design/api/queue-anim
+
+		QueueAnim:进退场动画  组件
+  
+		QueueAnim组件内部的 一级元素&& 进退场,做动画
+		一级元素要有key，根据编号依次做动画,无key不动画
+		yarn add rc-queue-anim --save
+
+官方脚手架
+
+		参考:	https://facebook.github.io/create-react-app/docs/getting-started
+
+		目录解析:
+			manifest.json 生成一个网页的桌面快捷方式时，会以这个文件中的内容作为图标和文字的显示内容
+			registerServiceWorker.js
+				支持离线访问，所以用起来和原生app的体验很接近,只有打包生成线上版本的react项目时，registerServiceWorker.js才会有效。服务器必须采用https协议
+			对Internet Explorer 9,10和11的支持需要polyfill。
+
+		create-react-app 目录名| .
+		yarn start 开发模式
+		yarn build 打包
+
+		更改默认的端口号:
+		1.	node_modules\react-scripts\scripts
+		const DEFAULT_PORT = parseInt(process.env.PORT, 10) || 3001;
+
+
+		2.	npm run eject / yarn eject
+		 修改script/start.js
+
+		 报git错误时: git add . -> git commit -m 'init' -> yarn eject
+
+
+		本地资源导入(import) 不可以导入src之外的包
+
+		jsx前景图片, ./ 和 / 都指向了 public目录
+
+		去除eslint 警告：
+			yarn  eject
+			找到项目下config/webpack.config
+			注释关于eslint的导入和rules规则
+
+		打包 + 预览：
+			npm run build / yarn build
+			serve -s build --port 端口 --open
+			serve 服务器命令行工具（npm i serve -g)
+
+			public目录里面的资源会直接copy到build目录，src里面的资源会打包模块化
+
+		建议:
+			项目资源，尽量从src目录下引入，打包时会优化
+			无需优化的资源，如何来自库只能放到public目录下
+
+------------------------------------------------------------------------------------
+生命周期流程:
+
+	实例化 ->  更新期  -> 销毁时
+
+	实例化:
+		es5:
+			1.取得默认属性(getDefaultProps) 外部传入的props
+			2.初始状态(getInitailState)  state状态
+		    3.即将挂载 componentWillMount
+		    4.描画DOM  render
+		    5.挂载完毕 componentDidMount
+		es6:
+			1.取得默认属性(getDefaultProps) 外部传入的props
+			2.初始状态(getInitailState)  state状态
+				1 && 2 都在构造器里面完成
+				constructor(props){
+					super(props) == getDefaultProps
+					this.state={} == getInitailState
+				}
+		    3.即将挂载 componentWillMount
+		    4.描画DOM  render
+		    5.挂载完毕 componentDidMount
+	更新期:
+		0.props改变 componentWillReceiveProps(nextProps)
+			初始化render时不执行 这里调用更新状态是安全的，并不会触发额外的render调用
+			nextProps 更新后  this.props更新前
+		1.是否更新 shouldComponentUpdate  指视图
+		2.即将更新 componentWillUpdate
+		3.描画dom  render
+		4.描画结束 componentDidUpdate
+	销毁时:
+		即将卸载 componentWillUnmount
+		可以做一些组件相关的清理工作，例如取消计时器、网络请求等
+
+
+
+三：
+
+
+数据交互：
+	官方脚手架 静态数据读取时，参考根指向public  '/data' == public/data
+
+	方式: 
+		1) 手动封装ajax库|promise库|await库
+		2) 第三方法库(jq|react-resouce|axios|react-promise)
+		3) 原生 XMLHttpRequest | fetch (promise语法糖) | async + await
+
+	fetch	原生就有
+	fetch(url+数据,{配置}).then(成功函数(res),失败函数(error),完成函数()).catch(error)
+	res.ok -> true/false 成功/失败 代表有没有发出去
+	res.status - > 状态码
+	res.body 数据 数据流(stream)
+	res.text() 转换 文本(string)
+		过程异步：	return res.text()
+		同步： res.text().then((data)=>{})	data:转换后的数据
+	res.json() 转  对象
+	配置:
+		method:'POST'
+		headers:{"Content-type":"application/x-www-form-urlencoded"},
+		body:'a=1&b=2'| let params=new URLSearchParams(); params.append("a","111"); params.append("b","222") body:params
+
+jsonp:  fetch不带jsonp请求  需要依赖第三库
+	npm install fetch-jsonp -D
+	import xxx from 'xxx'
+	用法:
+		fetchJsonp(url+数据,{配置}).then(success(res)).catch(error)
+		特点: 是个promise 返回promise 数据是个流
+		解析：res.json()  -> 流转换数据 是异步
+		配置:
+			timeout: 延时  5000
+			jsonpCallback: 回调函数key callback
+			jsonpCallbackFunction: null
+
+setState: 是异步的,会将多个 setState() 调用合并为一次更新,所以不能同步依赖上一个setState的值，作为下一个setState的参数
+		解决：
+			1) this.setState(function(prevState,props){})
+			  prevState 抓取之前this.setState修改后的状态
+			  props 所有属性
+		      更新	会被合并,浅合并
+		    2) 函数节流(异步操作) 可以在延时器里 0秒
+		    3) ev.target......
+refs绑定的是dom元素,挂载完毕时才可访问
+
+
+函数式组件||无状态组件||UI组件
+
+
+无状态(没有state)组件（简写）创建：
+	const 组件名=(props)=>(jsx)
+	const 组件名=props=>jsx
+	const 组件名=(props)=>{
+		let xx=props.xx
+		return html
+	}
+
+无状态组件特点：
+	不能访问this对象(this.ref,this.state  ... )
+	只能访问props
+	无需实例化，渲染性能高
+	this.方法/钩子（生命周期)  也不需要
+
+
+---------------------------------------------------------------------------------------------------
+
+react路由 4.x
+	资料：
+		API:https://reacttraining.com/react-router/web/guides/quick-start
+		CN：http://blog.csdn.net/sinat_17775997/article/details/77411324
+		redux：https://github.com/reacttraining/react-router/tree/master/packages/react-router-redux
+	区别：
+		V4
+			嵌套式路由（路由配置在组件内部），动态路由，包容性（多路由渲染）
+			舍去了路由钩子
+		V3
+			分离式（统一位置配置），静态路由，排他性（只有一个路由被渲染）
+	理念：
+		遵循Just Component的 API 设计理念 万物皆组件，路由规则位于布局和 UI 本身之间
+
+	安装引入 react-router-dom
+
+	React Router被拆分成三个包：react-router,react-router-dom和react-router-native。react-router提供核心的路由组件与函数。其余两个则提供运行环境（即浏览器与react-native）所需的特定组件
+
+	BrowserRouter 使用 HTML5 提供的 history API 来保持 UI 和 URL 的同步
+	HashRouter 使用 URL 的 hash (例如：window.location.hash) 来保持 UI 和URL 的同步
+
+	结构：
+		BrowserRouter|HashRouter 路由对象
+			根组件(App)|其他组件
+				NavLink|Link  导航
+				Route    匹配+展示
+				Redirect 跳转
+				404 <Redirect to="/error"/>
+				默认路由 <Route exact path={match.path} render={fuc}
+	Route 属性
+		path（string）: 路由匹配路径。（没有path属性的Route 总是会 匹配）；
+		exact（bool）：
+			为true时，要求全路径匹配(/home)。V4 的路由默认为“包含”的(/和/home都匹配)，这意味着多个 <Route> 可以同时进行匹配和渲染
+
+		component：在地址匹配的时候React的组件才会被渲染，route props也会随着一起被渲染
+		render：这种方式对于内联渲染和包装组件却不引起意料之外的重新挂载特别方便
+	Link：
+		to：string/object：要跳转的路径或地址；
+	NavLink：是<Link> 的一个特定版本
+		activeClassName（string）：设置选中样式，默认值为 active；
+		activeStyle（object）：当元素被选中时, 为此元素添加样式；
+	Switch：该组件用来渲染匹配地址的第一个<Route>或者<Redirect>，仅渲染一个路由，排他性路由,默认全匹配(场景：侧边栏和面包屑，引导选项卡等
+	Redirect:
+		<Redirect to='/home'/> 总是会被重定向
+	404:	<Route component={Error}/> 总是会匹配
+
+	参数数据：{history,location,match}==props
+		传递：
+			to={match.url+'/001'}
+			to={`${match.url}/002?a=1&b=2`}
+			to={{pathname:match.url+'/003',search:'?a=11&b=12',hash:'#a1'}}
+			<Route path={match.path+'/:aid'} component={Detail}
+				注意：
+					url - (浏览器 URL 中的实际路径) URL 匹配的部分。 用于构建嵌套的 <Link>
+					path - (路由编写的路径) 用于匹配路径模式。用于构建嵌套的 <Route>
+		接收：
+			接参数:{match.params.aid}
+			接数据:{location.search}
+			接地址:{location.pathname}
+		注意：
+			无法从v4 中获取 URL 的查询字符串了。因为没有关于如何处理复杂查询字符串的标准。所以，作者让开发者去选择如何处理查询字符串。推荐query-string库
+	跳转：
+		history.push('/user?a=1&b=2')
+		history.push({pathname:'/user',search:'?a=11&b=22'})
+		history.replace({pathname:'/user',search:'?a=111&b=222'})
+		history.go(-1)
+	授权路由：自定义路由
+		前置守卫
+			<AuthRoute path="/user" component={User}/>
+			AuthRoute==授权路由==react组件==自定义路由
+			条件：返回一个Route 组件
+				  Route的render函数内部判断加载目标||Redirect组件
+			实现：
+				AuthRoute = ({ component: Component, ...rest }) => (
+				  <Route {...rest} render={props =>
+				      Math.random()<0.5 ?
+				        <Component {...props} />
+				       : <Redirect to="/login" />
+				    }
+				  />
+				)
+
+			目标组件 component
+			组件字面量 : Component
+			延展剩余属性 rest
+			路由信息 ...props User组件需要用到的路由信息
+		数据预载：
+			AuthRoute 组件构造器存状态和预载数据
+			DidMount钩子里异步请求，获取状态和数据
+				fetch(url).then(result=>this.setState({}))
+			render钩子返回 Route
+				 <Route {...rest} render={props => Xxx?<Component data={预载数据}
+				 if(!this.state.hasAuthed) return null;初始渲染时，未发送认证请求，因此不渲染
+	Prompt:后置守卫,离开后守卫
+		import { Prompt } from 'react-router-dom'
+		<Prompt
+          when={布尔值} 
+          message={location=>{return `未保存，是否去向${location.pathname}`}}
+        />
+        message: 后面可以跟简单的提示语，也可以跟函数，函数是有默认参数的。
+        when: when的属性值为true时防止跳转；
+
+
+
+四：
+
+--------------------------------------------------------------------------
+1. 项目分析,组件安排
+
+|-pubilc
+	|- data
+		|- 数据
+	|-index.html
+|-node_modules
+|-src
+	|-library
+		|-jquery.js
+		|-swiper.js
+	|-common
+		|- Header/Footer/Slider / Error / List
+	|- components
+		|- App
+			App.js/App.css|image
+		|- Home / Follow / Column / User
+		|- Detail / Login / Reg
+	|- api
+		|- date.js / fillzero.js/...
+	|- assets
+		|- img
+	|- store
+		|- state/reducer/asyncAction
+	Index.js
+	index.css 公共样式
+------------------------------------------------
+2. 布局(切图,mint-ui,elementUI...ant.design),模板移植
+	样式：全局引入
+		src / import
+------------------------------------------------
+3. 路由搭建
+ 	样式冲突（命名冲突（错开））
+ 	import 模块名 from '../css/xx.css'
+
+ 	模块名.类名
+------------------------------------------------
+4. 数据交互
+	fetch(url,{配置}).then().catch()
+
+	home->newlist  	dataName="home" listData={this.state.listData}
+	follow->newlist dataName="follow" listData={this.state.listData}
+	↓
+	newlist -》link pathname:'detail/'+item.id,
+                    query:{dataName:dataName}
+    ↓
+    detail this.props.router.location.query.dataName
+5.	全局方法（过滤事件，补零）
+	|-common
+		date.js
+		fillzero.js
+		...
+		index.js
+			import date/fillzero ..
+			export {
+				date,fillzero
+			}
+	  <Provider store={store}>
+	    <BrowserRouter>
+	      <App/>
+	    </BrowserRouter>
+	  </Provider>
+------------------------------------------------
+6. 非状态管理，控制navbar / footbar / loading
+
+	this.props.location.pathname -> navbar / footbar
+
+6.5 全局loading
+   pubsub [App订阅,  home/follow/.. 发布]
+   问题：用户速度切换，this.setState报错
+   分析：fetch中断--无法中断
+   解决：
+   	1.	高光盒（lightBox）√  / 自个维护一个组件属性 this.自定义属性
+   	2. 	状态管理，数据回来不修改组件，修改状态
+
+
+五：
+
+
+react状态管理
+	redux 库 通用库
+	react-redux 补充redux一些不足
+	异步action： 通用异步逻辑
+		中间件: 
+异步路由|组件
+
+
+状态管理
+	flux(思想) vue实现(vuex) react实现(react-redux)
+
+状态管理(redux)：可以同一个地方查询状态，改变状态，传播状态
+何时用：中大项目,组件状态需要共享，在任何地方都可以拿到，组件需要改变全			局状态，一个组件需要改变另外一个组件的状态
+思维：
+		在顶层组件创建store(状态),其他底层组件共享这个store(状态)
+
+数据流动：
+	component->action->reducer->state->component
+	component: 展示结果(含处理结果代码)
+	action: 动作转发,异步请求，
+	reducer: 业务处理逻辑,返回(return)新state
+	state:	状态收集，更新内部state状态，更新订阅(store.subscribe)state的组件（component）
+
+	通过store.dispatch发送action 给 reducer
+	在组件内部 通过 store.getState() 抓state状态  特点 只抓一次
+			   store.subscribe() 订阅  数据更新，会触发
+			   getState放在subscribe内部
+操作流程：
+	1. {createStore} from 'redux'
+	2. 生成默认state defaultState={}
+	3.	创建reducer
+		const reducer = (state=defaultState,action)=>{
+			let {type,payload}=action
+			swtich type
+				case XXXXX
+				更新copy后的state  Object.assign(空,老,新)
+			default:
+				return state
+		}
+	4. 创建store对象
+		store = createStore(reducer,state)
+
+	5. store传递给组件
+		<组件名 store={store}/>
+
+	6. 更新，状态获取
+		组件内部:	this.props.store== store
+			this.props.store.dispatch({type:xxx,payload:ooo}) 发送action给reducer
+			this.props.store.subscribe(回调)  订阅 state  更新state时触发
+			this.props.store.getState() 获取状态，执行一次
+
+react-redux
+	基于redux思想,专门为react而生
+
+	思想:  容器组件, UI组件
+		App: 拿到store,修改、获取store
+		store:外面
+	主入口:
+		import {Provider} from react-redux
+
+		<Provider store={store}>
+			<容器组件/>
+		</Provider>
+
+		
+	目标组件:(使用状态组件)
+		export default connect(
+		  mapStateToProps,
+		  mapdispatchToProps
+		)(App)
+
+
+异步action + 可复用:	dispatch(asyncAction(xx,xx,xx))  dispatch 默认接受对象  asyncAtion内部要返回对象
+异步action + 可复用:	dispatch(asyncAction(xx,xx,xx))  dispatch 接受函数  asyncAtion内部要返回函数
+	需要中间件redux-thunk支持 ,dispatch默认支持对象，不接受函数,中间件用来改装dispatch
+	let store = createStore(
+	  reducer,
+	  state,
+	  applyMiddleware(thunk)  applyMiddleware是redux API
+	);
+
+	asyncAction = (url,type,id) => (dispatch,getState)=>{dispatch1次 + return fetch+then+dispath2次+return data}
+		外部dispatch调用返回的函数后，返回promise,因此在组件内部可以做一些结果处理业务
+			action内部需要return fetch
+
+六：
+
+
+react 单页滚动条问题
+		路由切换，每次切换到页面顶部 app.js
+		componentWillReceiveProps(nextProps){//props改变时
+		    if(this.props.location !== nextProps.location){//当前地址不等于目标地址
+		      window.scrollTo(0,0);//滚动到顶部
+		    }
+		  }
+
+		页面切换出去再切换回来后怎样保持之前的滚动位置
+			componentDidMount->window.scrollTo(0,sTop)
+			componentWillUnmount->sTop = document.documentElement.scrollTop
+			sTop =  模块内部变量 | 类属性
+			参考:https://blog.csdn.net/tujiaw/article/details/77511460
+
+		判断某个组件是否滚动到底部
+			原生思想实现:	 https://blog.csdn.net/tujiaw/article/details/77511460
+		推荐: react-iscroll
+			react-lazy
+			react-slider
+
+异步组件：create-react-app 环境 webpack自动分片打包
+思想：（其实路由指向是一个空，控组件内部去异步加载目标组件之后去代替自身变成目标组件，导致试图重新加载）
+	方式1 import ("./ChildB.js").then(
+        ChildB=>console.log(ChildB)
+      )
+    方式2 const Child = asyncComponent(()=>import("./Child"))
+
+    	export default function asyncComponent(importComponent) {
+		  class AsyncComponent extends Component {
+		    constructor(props) {
+		      super(props);
+
+		      this.state = {
+		        component: null
+		      };
+		    }
+
+		    async componentDidMount() {
+		      const { default: component } = await importComponent();
+
+		      this.setState({
+		        component: component
+		      });
+		    }
+
+		    render() {
+		      const C = this.state.component;
+		      return C ? <C {...this.props} /> : null;
+		    }
+		  }
+
+		  return AsyncComponent;
+		}
+	方式3
+	  import Loadable from 'react-loadable';
+	  const Loading = () => <div>Loading...</div>;
+	  const Home = Loadable({
+	  	loader: () => import('./routes/Home'),
+	 	loading: Loading,
+	 	loading:()=>{return null}
+	  });
+
+	  路由 <Route path=.. component={Home}/>  路由懒加载
+
+		补：子路由由使用父路由的展示区（插槽）
+		<Route path="/reg" render{()=>
+		     <div>
+						<Switch>
+								<Route path="/reg/a"/ component={a}>
+								<Route path="/reg/b"/ component={b}>
+								<Route path="/reg"/ component={reg}>
+						</Switch>
+				 </div>
+
+		} />
+
+
+
+
+
+七：
+
+
+部署阿里云（centos+nodejs+mongodb)
+
+	一、购买阿里云ECS
+		服务器： 阿里云ECS云服务器（活动，包年，新手）
+			https://promotion.aliyun.com/ntms/act/qwbk.html?spm=5176.8112568.420890.1.32349ed5zifXDH
+		手动停止服务器 ----> 初始化磁盘 ---> 重设密码（登录密码）
+
+		用户名: root
+		pw: Root1234
+	 
+	二、使用xshell连接服务器
+		新建会话：
+			主机：公网IP
+			端口 ： 22
+			用户身份验证:
+				用户名：root
+				密码: 登录密码
+
+		所在环境操作: 终端命令行  http://www.runoob.com/linux/linux-command-manual.html
+	三、給服务器安装环境（node）
+		参考： https://help.aliyun.com/document_detail/50775.html?spm=5176.doc25426.6.655.kn1mB7
+		1、安装node in xshell
+			curl --silent --location https://rpm.nodesource.com/setup_10.x | sudo bash -
+			yum install -y nodejs
+			检测: node -v  版本版本过低或者想多版本管理结合↓
+		2、使用NVM安装多版本(可选)
+			2.1    yum install git
+			2.2    git clone https://github.com/cnpm/nvm.git ~/.nvm && cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`
+			2.3   echo ". ~/.nvm/nvm.sh" >> /etc/profile
+			2.4  source /etc/profile
+			2.5  cd /
+			2.6  nvm list-remote
+			nvm install vx.x.x
+			nvm use vx.x.x
+		3、安装解压文件模块 (Xshell 支持压缩包上传)
+			yum install unzip
+	四、上传代码
+		将本地的代码压缩成zip格式，记住一定不要把node-modules压缩进去
+		新建文件传输(Ctrl + alt + f)，选择取消安装xftp(收费的)，找到位置+拖入||找到位置+put
+		解压文件 unzip myapp.zip
+		删除压缩包： rm myapp.zip
+		安装依赖: npm i
+		启动 npm start(node ./bin/www)
+	 
+	 	问题关闭后：服务停止
+
+		安装pm2, nodejs服务器管理器 (npm i pm2 -g)
+		启动服务器:pm2 start 启动文件.js 
+		浏览器访问项目即可
+		如果想停掉服务器: pm2 stop all
+	 
+		Pm2扩展：https://blog.csdn.net/chengxuyuanyonghu/article/details/74910875
+
+	六、給服务器安装mongodb服务
+		安装mongodb
+		yum install mongodb-server mongodb -y
+		 
+		创建数据库目录和日志目录
+		mkdir -p /data/mongodb
+		mkdir -p /data/logs/mongodb
+		 
+		启动数据库
+		mongod --fork --dbpath /data/mongodb --logpath /data/logs/mongodb/nodeapp.log
+		 
+		创建远程数据库（与本地操作一样）
+			use 库、db.集合.save、
+
+	七、本地数据库copy到远程库
+			需要先导出本地的数据（json）-》 xshell上传到远端磁盘 -》 远端入库
+
+			本地的数据-》json
+		 	mongoexport -h 127.0.0.1 -d 库名 -c 集合名 -o 输出路径
+		 
+			上传到服务器
+				xshell上传： 到对应app 内部的创建个data目录
+
+			远端导入
+				在远程数据库的安装目录 /usr/bin   ---默认安装目录
+				給远程数据库导入数据
+				mongoimport -d 远端库 -c 集合 -file 服务器json路径
+
+	问题1：如果关闭xshell之后，再次打开发现之前安装的模块都无效了，
+	分析： 安装了多版本node环境导致
+	解决：
+		a) 输入nvm ls 查看可用的node的版本，-->手动指向nvm use当前使用的node版本
+		b) 使用nvm install vx.x.x，之后使用nvm alias default vx.x.x可以不用每次进入服务器都要nvm use了***
+
+	问题2：可以有多个node app？使用一个实例？
+	分析：app指向不同端口就好了
+	解决：app指向不同端口，安全组里添加多个端口，pm2 进入到对应服务器位置，逐个启动，如果端口重复，先启用的应用会占用端口
+
+	问题3：本地代码对应有哪些变动
+	http://localhost:3000/接口 -> http://服务器ip:3000/接口 ||   /接口 （同域）
+	mongodb://localhost:27017 可不用动，远端访问的也是localhost
+	io(‘http://localhost:3000’)->io(‘http://服务器ip:3000’)
+
+
+	问题3：服务器代码数据库都已上传，但是访问不了
+	分析: 很可能是3000端口不能被使用，
+	解决: 找到管理->安全组-》配置规则-》添加规则-》端口范围（3000/3000）,授权范围(0.0.0.0/0)
+	    	  
+	问题4： 不想要端口可以？，
+	分析：使用http协议默认的80端口
+	解决： 修改本地的端口号指向80,安全组添加80
+
+
+	问题5： 不使用ip，使用网址
+	分析： 是一个IP和域名关联的过程
+	解决： 必须得用于一个已经备过案的域名(未备案不可使用一级域名和端口省略)
+		域名购买:
+			特惠专区-》域名与网站->域名新手多重礼（实名，备案15工作日）
+		域名解析:
+			域名-》解析-》添加记录->记录值(ip)
+				www：解析后的域名为www.aliyun.com。
+				@：直接解析主域名 aliyun.com。
+				二级域名：如：abc.aliyun.com，填写abc。
+	问题6： 不备案有什么影响
+		小程序开发时不能部署
+		没有域名不便于宣传
+		无法使用https安全协议
+
+
+八：
+
+
+ant.design
+
+pc:	http://design.alipay.com/develop/web/react/introduce
+	1) yarn add antd --save
+	2) yarn add babel-plugin-import --save   按需引入
+	3) webpack loader配置,找到babel-loader  按需引入配置
+		+ options 项目
+		"plugins": [
+                ["import", { "libraryName": "antd", "libraryDirectory": "es", "style": "css" }], // `style: true` 会加载 less 文件 pc
+
+              ]
+    4) import {LocaleProvider, DatePicker,Button } from 'antd'; 直接使用直接，之后都是按需引入
+
+    5) //文案改中文
+		import zhCN from 'antd/lib/locale-provider/zh_CN';
+		import moment from 'moment';
+		import 'moment/locale/zh-cn';
+		moment.locale('zh-cn');
+	组件需要被 <LocaleProvider locale={zhCN}>组件包裹
+
+touch:	http://design.alipay.com/develop/mobile/introduce
+	1) yarn add antd-mobile --save
+	2) yarn add babel-plugin-import --save   按需引入
+	3) webpack loader配置,找到babel-loader  按需引入配置
+		+ options 项目
+		"plugins": [
+            ["import", { libraryName: "antd-mobile", style: "css" }] // `style: true` 会加载 less 文件 touch  pc端配置和touch端配置不可并存
+        ]
+    4) import { DatePickerView } from 'antd-mobile'; 直接使用组件 文案是中文
+
+
+elementUI:
+	官网:http://element.eleme.io
+
+	安装+全局引入
+
+	安装:	npm i element-ui -S
+
+	全局引入:
+		import ElementUI from 'element-ui';
+		import 'element-ui/lib/theme-chalk/index.css';
+
+		Vue.use(ElementUI);
+
+	按需引入:
+
+		npm install babel-plugin-component -D
+
+		修改babel配置 baberc/babel.config.js
+
+		添加:
+			"plugins": [
+			    [
+			      "component",
+			      {
+			        "libraryName": "element-ui",
+			        "styleLibraryName": "theme-chalk"
+			      }
+			    ]
+			  ]
+
+		main引入:   所有应用内部组件直接使用 <el-button></..>
+			import { Button } from 'element-ui';
+			Vue.component(Button.name, Button); | Vue.use(Button)
+
+		组件内部引入： 只有当前组件可使用
+			import { Select, Option } from 'element-ui';
+			components:{
+			    'bulala':Select,
+			    [Option.name]:Option,
+			  },
+
+mintUI:  
+	官网: https://mint-ui.github.io
+
+	安装:	npm i mint-ui -S
+	
+	全局引入:
+		import Mint from 'mint-ui';
+		import 'mint-ui/lib/style.css'
+		Vue.use(Mint);
+	按需引入全局使用: npm install babel-plugin-component -D
+		import { Button } from 'mint-ui';
+		Vue.component(Button.name, Button);
+
+		babel.config.js配置: 添加
+		"plugins": [
+	      [
+	        "component", 
+	        {
+	          "libraryName": "mint-ui",
+	          "style": true
+	        }
+	    ]
+	    
+	组件内部引入： 只有当前组件可使用
+			import { Button } from 'mint-ui';
+			components:{
+			    //'bulala':Button,
+			    [Button.name]:Button,
+			  },
+
+vue + echarts
+  npm i echarts --save
+  import echarts from 'echarts'
+  使用eechartsAPI
+  	基于准备好的dom，初始化echarts实例
+  	echarts.init(this.$refs.ec);   <div ref="ec"
+
+vue + 百度地图
+  http://lbsyun.baidu.com/
+    1 注册百度账号
+    2 申请成为百度开发者  注册   浏览器端
+    3 获取服务密钥（ak）
+    4 使用相关服务功能
+
+    vue的index.html cdn加入 库
+      <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=您的密钥">
+
+    组件里面使用：
+      <div id="allmap"></div>
+      <div ref="bdmap"></div>
+
+      mounted->new BMap.Map("allmap");
+      mounted->new BMap.Map(this.$refs.bdmap);

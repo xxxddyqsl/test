@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>内部指令</title>
+  <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <style>
+    [v-cloak] { 
+        display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app" v-cloak>
+    <input type="text" v-model='type' placeholder="输入 A/B/C 控制下方div显示隐藏">
+    <!-- 1、v-if 、v-else、 v-show、v-else-if  -->
+    <!-- 这几个条件指令用于显示与隐藏各类元素，使用方式如下： -->
+    <!-- （1）v-if -->
+    <div v-if="isLogin">你好</div>
+    <!-- （2）v-else -->
+    <div v-else>请登录后操作</div>
+    <!-- （3）v-show -->
+    <div v-show="isLogin">你好</div>
+    <!-- （4）v-else-if -->
+    <div v-if="type === 'A'">显示div A 标签</div>
+    <div v-else-if="type === 'B'">显示div B 标签 </div>
+    <div v-else-if="type === 'C'">显示div C 标签 </div>
+    <div v-else>显示 Not A/B/C 标签</div>
+    <!-- （5）v-if与v-show的区别 
+    v-if： 在切换过程中条件块内的事件监听器和子组件适当地被销毁和重建，开销较高，在运行时条件很少改变时使用。
+    v-show：调整css dispaly属性 控制显示隐藏，开销较小，在常频繁地切换时使用。 -->
+    <br>
+
+    <!-- 2、v-for
+    （1）基本用法 数组    参数： 第一个为值，第二个为键名-->
+    <ul>
+      <li class="class" v-for='(item,index) in listArray' :data-index='index' v-bind:title='index'>{{item}}</li>
+    </ul>
+    <!-- （2）对象遍历
+    参数： 第一个为值，第二个为键名，第三个为索引 -->
+    <ul>
+      <li v-for='(value,key,index) in object'>{{ index }}. {{ key }} - {{ value }}</li>
+    </ul>
+    <br>
+
+    <!-- 3、v-text 、v-html -->
+    <!-- （1）v-text
+    {{xxx}}取值有个弊端，当网速很慢或javascript出错时，会在页面显示{{xxx}}，Vue提供的v-text可以解决这个问题 -->
+    <div>{{ msg }}</div>
+    <!-- 和下面的一样 -->
+    <div v-text="msg"></div>
+
+    <!-- （2）v-html用于输出html代码 -->
+    <span v-html="msgHtml"></span>
+    <br>
+
+    <!-- 4、v-on -->
+    <!-- （1）常规用法 -->
+    <div>本场比赛得分：{{count}}</div>
+    <button v-on:click="add">加分</button>
+    <!-- （2）缩写 -->
+    <!-- <button @click="add">加分</button> -->
+    <br>
+
+    <!-- 5、v-model -->
+    <!-- 以下的model都需要在data中声明初始值： -->
+    <!-- （1）input  -->
+    <input type="text" v-model="message" placeholder="双向绑定">
+    <!-- （2）textarea  -->
+    <br>
+    <textarea cols="30" rows="10" v-model="message"></textarea>
+    <br>
+
+    <p> checkbox 多选框</p>
+    <!-- （3）checkbox -->
+    <input type="checkbox" id="first" value="1" v-model="status">
+    <label for="first">有效</label>
+    <input type="checkbox" id="second" value="2" v-model="status">
+    <label for="second">无效</label>
+    <div>状态：{{status}}</div>
+
+    <p> radio 单选框</p>
+    <!-- （4）radio -->
+    <input type="radio" id="one" value="男" v-model="sex">
+    <label for="one">男</label>
+    <input type="radio" id="two" value="女" v-model="sex">
+    <label for="one">女</label>
+    <div>性别：{{sex}}</div>
+
+    <p> select 下拉选框</p>
+    <!-- （5）select  -->
+    <select v-model="selected">
+      <option disabled value="">请选择</option>
+      <option>A</option>
+      <option>B</option>
+      <option>C</option>
+    </select>
+    <div>Selected: {{ selected }}</div>
+
+
+    <!-- 6、v-bind -->
+    <!-- 用于处理html标签的动态属性，即动态赋值。
+    （1）常规用法 -->
+    <img v-bind:src="imgSrc"  width="200px">
+    <!-- （2）缩写  -->
+    <!-- <img :src="imgSrc"  width="200px"> -->
+
+
+    <!-- 7、v-pre、v-cloak、v-once -->
+    <!-- （1）v-pre
+    在模板中跳过vue的编译，直接输出原始值，如果在标签中加入v-pre就不会输出vue中的data值了 -->
+    <div v-pre>{{msg}}</div> <!--即使data里面定义了msg这里仍然是显示的{{msg}}-->
+
+    <!-- （2）v-cloak 当网络较慢，网页还在加载 Vue.js ，而导致 Vue 来不及渲染，这时页面就会显示出 Vue 源代码。我们可以使用 v-cloak 指令来解决这一问题。
+    在vue渲染完指定的整个DOM后才进行显示。它必须和CSS样式一起使用 -->
+    <!-- 在简单项目中，使用 v-cloak 指令是解决屏幕闪动的好方法。但在大型、工程化的项目中（webpack、vue-router）只有一个空的 div 元素，
+      元素中的内容是通过路由挂载来实现的，这时我们就不需要用到 v-cloak 指令咯。 --> 
+    <div v-cloak>{{msg}}</div>
+
+
+    <!-- （3）v-once--> 
+     <!-- 只显示DOM第一次渲染的值，以后不改变了 即使当数据改变时 --> 
+    <div v-once>第一次绑定的值：{{message}}</div>
+
+  </div>
+</body>
+<script>
+  var vm = new Vue({
+    el: '#app',
+    data: {
+      type: 'A',
+      isLogin: true,
+      listArray: [20, 23, 18, 65],
+      object: {
+        firstName: 'John',
+        lastName: 'Doe'
+      },
+      msg: '{{xxx}}取值 —— v-text区别',
+      msgHtml: '<div>v-html 输出 html代码</div>',
+      count: 0,
+      message: '测试',
+      status: [],
+      sex: '男',
+      selected: 'B',
+      imgSrc:'http://liangxinghua.com/uploads/image/20180709/1531106989.png',//生命周期
+    },
+    methods: {
+      add() {
+        this.count++
+      }
+
+    },
+  });
+</script>
+
+</html>

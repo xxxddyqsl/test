@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.staticfile.org/angular.js/1.4.6/angular.min.js"></script>
+</head>
+
+<body ng-app='APP'>
+<div ng-controller='myCtrl'>
+        <!--外部scope-->
+     <p>父scope：<input type="text" ng-model="color" ></p>
+        <div style='border:1px solid #000;margin: 10px ;'>
+            <p>内部隔离scope =：双向绑定</p>
+            <cd-hello color="color" name="name"></cd-hello>
+            <!-- <div cd-hello  color="color"></div>
+            <div class="cd-hello"  color="color"></div> -->
+ 
+        </div>
+
+        <div  style='border:1px solid #000;margin: 10px ;padding: 10px;'>
+            <p>-内部隔离scope @：单向绑定</p>
+            <hello-world color-attr="{{color}}" name-text='{{name}}'></hello-world>
+        </div>	
+
+       <div  style='border:1px solid #000;margin: 10px ;padding: 10px;'>
+            <p>-内部隔离scope &：把内部scope的函数的返回值和外部scope的任何属性绑定起来</p>
+            <hello-Alert sayclick="say()" color="{{color}}"></hello-Alert>
+       </div> 
+
+        <div style='border:1px solid #000;margin: 10px ;padding: 10px;'>
+            <h1>自定义指令directive的控制器controller</h1>
+            <test-directive  url="http://www.tigerbrokers.com">我是clone参数</test-directive>
+            <!-- <div test-directive  url="http://www.tigerbrokers.com">我是clone参数</div> -->
+        </div>
+        <div style='border:1px solid brown;margin: 10px ;padding: 10px;'>
+            <div ng-controller="sonController">
+                <test-directive2 url="http://www.tigerbrokers.com">炒美股，上老虎2</test-directive2>
+            </div>
+        </div>
+    <div >
+        <div>
+            hello {{name}}
+        </div>
+    <custom-tags  name="{{name}}"></custom-tags>
+    </div>
+
+    <ul>
+        <li *ngFor='let item of dataList'>{{item}} {{dataList}}</li>
+        <li ng-repeat='item in dataList'>{{item}}</li>
+    </ul>
+            <!--内部隔离scope =：双向绑定-->
+        <script type="text/ng-template" id="hello.html">
+            <div> 
+                <h3>{{color}}</h3>
+                <h1 ng-bind="name" style="background-color:{{color}}"></h1> 
+                <input  type="text" ng-model="color">
+            </div>
+        </script> 
+        <!--内部隔离scope @：单向绑定-->
+          <script type="text/ng-template" id="helloWorld.html">
+            <div> 
+                <h3>{{color}}</h3>
+                <h1 ng-bind="name" style="background-color:{{color}}"></h1> 
+                <input  type="text" ng-model="color">
+            </div>
+        </script> 
+
+         <!--内部隔离scope &：把内部scope的函数的返回值和外部scope的任何属性绑定起来 -->
+         <script type="text/ng-template" id="helloAlert.html">
+            <div> 
+                <h3>{{color}}</h3>
+                <h1 ng-bind="color" style="background-color:{{color}}"></h1> 
+                <button type="button" ng-bind="color" ng-click="say()"></button>
+            </div>
+        </script> 
+
+        <script type="text/ng-template" id="testDirective.html">
+            <div> 
+                <!--自定义指令directive 内部创建内容 赋过来-->
+
+            </div>
+        </script>
+
+        <script type="text/ng-template" id="testDirective2.html">
+            <div> 
+                <!--自定义指令directive 内部创建内容 赋过来 使用父级作用域 $scope.$parent-->
+
+            </div>
+        </script>
+    
+</div>
+
+</body>
+ 
+<script>
+     let arr = { 
+    data: ['JaniA', 'HegeB', 'KaiV']
+  };
+    var app = angular.module('APP', []);
+    app.controller('myCtrl', ['$scope',function ($scope) {
+        $scope.color= "red"; 
+        $scope.name= "name名多个值"; 
+        $scope.title = "==》我是祖先";
+        $scope.dataList=arr.data;
+        $scope.say = function() {
+            $scope.name= "hello! name 我&被修改了"; 
+            alert('hello!');
+        }
+    }]);
+    app.directive('cdHello', [function () {
+        return {
+            restrict: 'EAC',
+            templateUrl: 'hello.html',
+            replace: true,//如果此配置为true则替换指令所在的元素 如果为false或者不指定 则把当前指令追加到所在元素的内部
+            //scope，通常用于创建可复用的指令，也就是它不用管父scope中的model。然而虽然说是“隔离”，但通常我们还是需要让这个子scope跟父scope中的变量进行绑定。绑定的策略有3种：
+            // @：单向绑定，外部scope能够影响内部scope，但反过来不成立
+            // =：双向绑定，外部scope和内部scope的model能够相互改变
+            // &：把内部scope的函数的返回值和外部scope的任何属性绑定起来
+            scope: {
+                color: '=',
+                name:'=name'
+                },
+                link : function($scope){
+                    
+                }
+        }
+    }]);
+
+    app.directive('helloWorld', [function () {
+        return {
+            restrict: 'EAC',
+            templateUrl: 'helloWorld.html',
+            replace: true,
+            //scope，通常用于创建可复用的指令，也就是它不用管父scope中的model。然而虽然说是“隔离”，但通常我们还是需要让这个子scope跟父scope中的变量进行绑定。绑定的策略有3种：
+            // @：单向绑定，外部scope能够影响内部scope，但反过来不成立
+            // =：双向绑定，外部scope和内部scope的model能够相互改变
+            // &：把内部scope的函数的返回值和外部scope的任何属性绑定起来
+            scope: {
+                color: '@colorAttr',
+                name:'@nameText'
+                },
+                link : function($scope){
+                    
+                }
+        }
+    }]);
+
+    app.directive('helloAlert', [function () {
+        return {
+            restrict: 'EA',
+            templateUrl: 'helloAlert.html',
+            replace: true,//如果此配置为true则替换指令所在的元素 如果为false或者不指定 则把当前指令追加到所在元素的内部
+            //scope，通常用于创建可复用的指令，也就是它不用管父scope中的model。然而虽然说是“隔离”，但通常我们还是需要让这个子scope跟父scope中的变量进行绑定。绑定的策略有3种：
+            // @：单向绑定，外部scope能够影响内部scope，但反过来不成立
+            // =：双向绑定，外部scope和内部scope的model能够相互改变
+            // &：把内部scope的函数的返回值和外部scope的任何属性绑定起来
+            scope: {
+                color: '@',
+			    say: '&sayclick'
+                },
+                // controller 若为字符串，则将字符串当做控制器的名字，来查找注册在应用中的控制器的构造函数 会查找模块中其他被名为targetController的控制器
+                // 另外还有一些特殊的服务可以注入， 
+                // $scope 与指令元素相关联的作用域
+                // $element 当前指令对应的元素
+                // $attrs 当前元素的属性组成的对象
+                // $transclude 嵌入链接函数，实际被执行用来克隆元素和操作DOM中的函数（除非是用来定义一些可复用的行为，否则一般不推荐在这使用）
+                controller:'targetController',
+                // 当然，也可以直接在指令内部定义为匿名函数，同样可以注入任何服务
+                // controller: function($scope, $element, $attrs, $transclude) {
+                // // 控制器逻辑
+                // alert('直接在指令内部定义为匿名函数')
+                // },
+                // controller 指令的控制器和link函数（后面会讲到）可以进行互换。区别在于，控制器主要用来提供可在指令间复用的行为，可对外提供与外部交互的接口，但是link链接只能在当前指令内部中定义行为，且无法在指令间复用。
+                link : function($scope){
+                    
+                }
+        }
+    }]).controller('targetController', function($scope, $element, $attrs, $transclude) {
+    // 控制器逻辑放在这里
+        alert('将字符串当做控制器的名字');
+       
+    });
+   
+
+    app.directive('testDirective',[function(){
+        return{
+            transclude: true,
+            replace: true,//如果此配置为true则替换指令所在的元素 如果为false或者不指定 则把当前指令追加到所在元素的内部
+            scope:false,//改变此处的取值,看看有什么不同
+            templateUrl: 'testDirective.html',
+            controller: function($scope, $element, $attrs, $transclude, $log) {
+                 // $transclude 它还有最简单的用法 这里的$transclude就是嵌入的内容
+                // var a = $transclude();
+                // $element.append(a);
+            $transclude($scope, function(clone) {//$transclude 可以接受两个参数，第一个是$scope，第二个是才有参数clone的回调函数。而这个clone实际上就是嵌入的内容。可以在根据它做很多DOM操作。
+            //但是我们要注意，使用$transclude会生成一个新的作用域。默认情况下，如果我们简单使用$transclude()，那么其作用域就是$transclude 生成的作用域。但是如果我们使用$transclude($scope, function(clone) {})，那么作用域就是directive的作用域了。
+            // 当然问题又来了，如果我们想使用父级作用域呢？// $scope.$parent
+                console.log($scope,clone);
+                // 创建a标签
+                var a = angular.element('<a>');
+                // 给a标签添加href属性
+                a.attr('href', $attrs.url); 
+                // a.text('我是a标签');
+                a.text(clone.text());
+                // a标签添加到标签内部
+                $element.append(a);
+            });
+        },
+        link: function(scope, element, attrs) {
+            console.log(element);
+            // 内部添加创建ul li标签
+            element.append('<ul><li>添加元素</li></ul>');
+            // 获取内部 li标签
+           var liColo= element.find('li'); 
+           // 给内部li标签 设置字体颜色
+           liColo.attr('style','color:red;');
+        }
+        }
+    }]);
+     // testDirective2 的父级作用域（sonController）
+     app.controller('sonController', ['$scope',function($scope) {
+        $scope.title = "CHILDREN TIGER";
+        alert('父级作用域的值'+$scope.name);
+    }])
+    app.directive('testDirective2', function() {
+    return {
+        transclude: true,
+        replace: true,//如果此配置为true则替换指令所在的元素 如果为false或者不指定 则把当前指令追加到所在元素的内部
+        templateUrl: 'testDirective2.html',
+        controller: function($scope, $element, $attrs, $transclude, $log) {
+            var a = $transclude();//$transclude就是嵌入的内容
+            $element.append(a); 
+            // 祖先作用域的值
+             $log.info($scope.title);
+            // 父级作用域的值
+             $log.info($scope.$parent.title);
+            var liColo= $element.find('a');
+            a.text('调用-->父级作用域的值: '+$scope.title+'====>'+'调用-->祖先作用域的值:'+ $scope.$parent.title);
+        }
+    }
+});
+
+// app.directive('customTags', [function () {
+//             return {
+//                 restrict: 'EA',
+//                 templateUrl:'/angular-demo/template.html',
+//                 /*在使用templateUrl时，使用了replace:true，需要在myexam.html文件中有一个顶层容器，即内容可以被<div></div>或其他容器包裹，不然会报错*/
+//                 replace:true,
+//             }
+//         }]);
+ 
+    app.directive('customTags',function ($templateCache) {
+        //console.log($templateCache.get("zippy.html"));
+        return {
+            restrict:'EA',
+            scope:{
+                name:'@'
+            },
+            templateUrl:'/angular-demo/template.html',
+            replace:true, 
+            link: function(scope) {
+                // scope.isContentVisiable = false;
+                // scope.toggleContent = function() {
+                // 	scope.isContentVisiable = !scope.isContentVisiable;
+                // };
+            }
+        }
+    })
+</script> 
+</html>
+

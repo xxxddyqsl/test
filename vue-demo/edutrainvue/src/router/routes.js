@@ -1,0 +1,1 @@
+// import Footbar from '@/components/f'

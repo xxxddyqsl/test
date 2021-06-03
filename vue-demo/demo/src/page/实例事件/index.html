@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>实例事件</title>
+  <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <!-- <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script> -->
+</head>
+
+<body>
+  <div id="app">
+    <!-- vue有实例属性，实例方法，实例事件，前两个跟选项类似，不是很常用，这次只讲实例事件。 -->
+    <div>数字：{{count}}</div>
+    <p><button @click="add">add</button></p>
+    <!-- 1、$on（在构造器外部添加事件） -->
+    <!-- $on接收两个参数，第一个参数是调用时的事件名称，第二个参数是一个匿名方法 -->
+    <!-- 参数： 
+      {string | Array<string>} event (数组只在 2.2.0+ 中支持)
+      {Function} callback -->
+      <!-- app.$on(event, callback) -->
+      <!-- 用法：$on事件需要两个参数，一个是监听的当前实例上的事件名，一个是事件触发的回调函数，回调函数接受的是在事件出发的时候额外传递的参数。 -->
+    <button onclick="reduce()">on调用</button>
+    <button onclick="reduceOnce()">once调用</button>
+    <button onclick="off()">off调用</button>
+
+    <button onclick="test()">on调用 传参</button>
+  </div>
+</body>
+<script>
+ var app = new Vue({
+    el:'#app',
+    data:{
+        count: 1
+    },
+    methods:{
+      add(){
+        this.count++
+      }
+    }
+})
+function test(){
+  app.$emit('test', 'hi'); 
+}
+
+app.$on('test', function (msg) {
+  console.log(msg)
+})
+
+
+// $on 在构造器外部添加事件
+app.$on('reduce',function(){
+    console.log('执行了reduce()');
+    this.count--;
+});
+// 调用
+function reduce() {
+    // 事件调用
+    console.log('emit事件调用');
+    app.$emit('reduce');
+}
+
+// $once执行一次的事件
+app.$once('reduceOnce',function(){
+    console.log('只执行一次的方法');
+    this.count--;
+});
+// 调用
+function reduceOnce() {
+    app.$emit('reduceOnce');
+}
+
+// $off 关闭事件
+function off(){
+    console.log('关闭事件');
+    app.$off('reduce');
+}
+</script>
+
+</html>

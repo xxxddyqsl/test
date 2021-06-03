@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>vueDemo</title>
+  <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+  <div id="app"> 
+    <ol>
+       <!-- 创建一个 todo-item 组件的实例 -->
+        <todo-item v-for='item in groceryList' v-bind:todo='item' ></todo-item>
+    </ol>
+
+
+  </div>
+</body>
+<script>
+  Vue.component('todo-item',{
+    // todo-item 组件现在接受一个  "prop"，类似于一个自定义 attribute。
+    // 这个 prop 名为 todo   todo== v-for 里面的 item
+    props: ['todo'],
+    template:'<li>{{ todo.text }}</li>'
+  })
+  var app=new Vue({
+    el:'#app',
+    data:{
+      groceryList: [
+      { id: 0, text: '蔬菜' },
+      { id: 1, text: '奶酪' },
+      { id: 2, text: '随便其它什么人吃的东西' }
+    ]
+    },
+
+  })
+</script>
+</html>

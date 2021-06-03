@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+</head>
+<style>
+    body,
+    span {
+        margin: 0;
+        font-size: 24px;
+    }
+    
+    body,
+    html,
+    .parent {
+        height: 100%;
+    }
+    
+    .middle {
+        height: calc(100% - 100px);
+    }
+    
+    .middle-container {
+        display: flex;
+        flex-direction: row;
+        height: 100%;
+    }
+    
+    .left {
+        width: 100px;
+        height: 100%;
+    }
+    
+    .right {
+        width: calc(100% - 100px);
+        height: 100%;
+        overflow: auto;
+    }
+    
+    .right-in {
+        height: 1000px;
+    }
+    
+    .top {
+        height: 100px;
+    }
+</style>
+<body>
+    
+<div id="app">
+    <!-- <input type="checkbox" v-model="checkedAll" id="all" @click="selectAll()">
+    <label for="all">全选:</label>
+    <br>
+    <hr/>
+    <template v-for="(item, index) in list">
+        <input type="checkbox" :value="item.value" :id="item.value" v-model="checked" :checked="item.checked"/>
+        <label :for="item.value">{{ item.label }}</label>
+        <br>
+    </template>
+    <br>
+    <p>选择了:{{ checked }}</p> -->
+</div>
+
+<div class="parent" id="parent" style="background-color: lightgrey;">
+    <div class="top" style="background-color: lightblue;">
+        <span>top</span>
+    </div>
+    <div class="middle" style="background-color: pink;">
+        <div class="middle-container">
+            <div class="left" style="background-color: orange;">
+                <span>left</span>
+            </div>
+            <div class="right" style="background-color: lightsalmon;">
+                <div class="right-in">
+                    <span>right</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://unpkg.com/vue/dist/vue.min.js"></script>
+<script>
+    const app = new Vue({
+    el: '#app',
+    data: {
+        checked:[],
+        checkedAll:false,
+        list:[
+            {
+                id:1,
+                value:'javascript',
+                label:'JavaScript',
+                checked: true,
+            },{
+                id:2,
+                value:'html',
+                label:'HTML'
+            },{
+                id:3,
+                value:'css',
+                label:'CSS'
+            }]
+    },
+    mounted() {
+    //默认选中
+    this.list.forEach(item => {
+      //是否有默认选中的
+      if (item.checked) {
+        this.checked.push(item.label)
+      }
+    })
+  },
+    methods:{
+        selectAll:function(){
+            if(this.checkedAll){
+                // 全不选
+                this.checked = [];
+            }else{
+                // 全选
+                this.checked = [];
+                this.list.forEach((item)=>{
+                    this.checked.push(item.value);
+                })
+            }
+        }
+    },
+    watch:{
+        checked: function(){
+            let self = this;
+            if(this.checked.length === this.list.length){
+                self.checkedAll = true;
+            } else{
+                self.checkedAll = false;
+            }
+        }
+    }
+
+})
+</script>
+
+</body>
+</html>

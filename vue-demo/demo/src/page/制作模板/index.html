@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vue入门之制作模板</title>
+  <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <!-- vue中的模板使用template来实现 -->
+    <!-- 1、选项模板 -->
+    <!-- 2、<template>标签模板 -->
+    <template id="demo2">
+      <h2 style="color:rgb(235, 154, 100)">我是template标签模板</h2>
+    </template>
+    <!-- 3、<script>标签模板 -->
+    <script type="x-template" id="demo3">
+      <h2 style="color:red">我是script标签模板</h2>
+    </script>
+    
+  </div>
+</body>
+<script>
+  var app = new Vue({
+    el: '#app',
+    data: {
+      message: 'hello',
+    },
+    // <!-- 1、选项模板 -->
+    template: `<h1 style="color:red">我是选项模板</h1>`,
+    template: '#demo2',
+    template: '#demo3',
+    methods: {
+
+    },
+  });
+</script>
+
+</html>

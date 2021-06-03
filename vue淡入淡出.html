@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <style>
+    .log-wrapper {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      background: #fff none no-repeat center center;
+      background-size: cover;
+    }
+
+    /* 可以设置不同的进入和离开动画 */
+    /* 设置持续时间和动画函数 */
+    .fade-enter-active,
+    .fade-leave-active {
+      transition: opacity 2s
+    }
+
+    .fade-enter,
+    .fade-leave-to
+
+    /* .fade-leave-active, 2.1.8 版本以下 */
+      {
+      opacity: 0
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app" style="text-align:center;">
+    <!-- 动画实例 -->
+    <transition name="fade" v-for="(item,index) in imgList" :key="index">
+      <div class="log-wrapper" v-show="arr.length!=0?arr[index]:true" :data-index='arr[index]'
+        :style="[{backgroundImage: 'url(' + (item) + ')','z-index':imgList.length==0?0:imgList.length-index}]">
+      </div>
+    </transition>
+    <button @click='Post("http://192.168.80.27:8080/#/","1774972")'>测试跳转传参</button>
+  </div>
+  <script src="https://cdn.bootcss.com/vue/2.4.4/vue.min.js"></script>
+  <script>
+    var app = new Vue({
+      el: '#app',
+      data: {
+        arr: [],
+        imgindex: 0,
+        timer: null,  // 定时器名称   
+        imgList: ['https://img.alicdn.com/tps/TB1sXGYIFXXXXc5XpXXXXXXXXXX.jpg', 'https://img.alicdn.com/tps/TB1pfG4IFXXXXc6XXXXXXXXXXXX.jpg', 'https://img.alicdn.com/tps/TB1h9xxIFXXXXbKXXXXXXXXXXXX.jpg'],
+      },
+      methods: {
+        // 显示隐藏
+        imghide() {
+          let that = this;
+          for (var i = 0; i < that.imgList.length; i++) {
+            that.arr[i] = true;
+          };
+          that.timer = setInterval(function () {
+            for (let i in that.arr) {
+              if (i <= that.imgindex) {
+                // Vue方法中修改数组某一项元素而不能响应式更新 第一个参数 修改的数组数据 ，第二个参数 修改的位置 ，第三个参数 要赋的值
+                that.$set(that.arr, i, !that.arr[that.imgindex]);
+              } else {
+                that.$set(that.arr, i, true);
+              }
+            }
+            that.imgindex++;
+            if (that.imgindex > that.imgList.length - 1) {
+              that.imgindex = 0;
+              that.$set(that.arr, 0, true);
+            }
+          }, 4000)
+        },
+       
+         /*
+*功能： 模拟form表单的提交
+*参数： URL 跳转地址 PARAMTERS 参数
+*/
+       Post(URL, PARAMTERS) {
+         //创建form表单
+         var temp_form = document.createElement("form");
+         temp_form.action = URL;
+         //如需打开新窗口，form的target属性要设置为'_blank'
+         temp_form.target = "_self";
+         temp_form.method = "post";
+         temp_form.style.display = "none";
+         //添加参数
+         for (var item in PARAMTERS) {
+             var opt = document.createElement("textarea");
+             opt.name = item;
+             opt.value = PARAMTERS[item];
+             temp_form.appendChild(opt);
+         }
+         document.body.appendChild(temp_form);
+         //提交数据
+         temp_form.submit();
+     }
+
+      },
+      mounted: function () {
+        let that = this;
+        that.imghide();
+      },
+      watch: {
+        arr(val, oldVal) {//监听 data里面 question 值的变化
+          // console.log('new: %s, old: %s', val, oldVal);
+        },
+
+      },
+      // 销毁完成状态
+      destroyed: function () {
+        //清理定时器（释放内存，也可以便于后边代码的判断。）
+        clearInterval(this.timer);
+        this.timer = null;
+      }
+
+    })	
+  </script>
+</body>
+
+</html>

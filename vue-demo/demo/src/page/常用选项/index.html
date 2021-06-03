@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>常用选项</title>
+  <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <!-- 1、computed -->
+    <!-- 计算属性：主要是对原数据进行改造输出。改造输出：包括格式化数据（价格，日期），大小写转换，排序，添加符号 -->
+    <!-- 当其依赖的属性的值发生变化时，计算属性会重新计算，反之，则使用缓存中的属性值。 这样一个特性可以大幅度地优化应用的性能-->
+    <input type="text" placeholder="数量" v-model="quantity">
+    <input type="text" placeholder="单价" v-model="unitPrice">
+    <div>总价： {{newPrice}}</div>
+    <br>
+    <!-- 2、methods -->
+    <!-- 方法属性：用于绑定html中的事件对应的方法 -->
+    <div>数字： {{count}}</div>
+    <div><button @click="add(2)">add</button></div>
+    <br>
+    <!-- 3、watch -->
+    <!-- 数据变化监听器：主要用于监测data中的数据变化，迪v-model生效 -->
+    <div><input placeholder="watch-数据变化监听器" v-model="question"></div>
+<br>
+    <!-- 4、filters -->
+    <!-- 过滤器：通常格式化字符，使用传值 -->
+    <!-- 注意： -->
+    <!-- 1、 当有局部和全局两个名称相同的过滤器时候，会以就近原则进行调用，即：局部过滤器优先于全局过滤器被调用！ -->
+    <!-- 2、 一个表达式可以使用多个过滤器。过滤器之间需要用管道符“|”隔开。其执行顺序从左往右 -->
+    <!-- 第一个参数 filtera 是data里面的值 做为参数 传入过滤器 filterA 和 dataFormat中 -->
+    <div>过滤： {{filtera | filterA | dataFormat}}</div>
+
+  </div>
+</body>
+<script>
+  // 额外临时加入时，用于显示日志
+var addLog={
+    updated:function(){ 
+        console.log("数据放生变化,变化成"+this.count+".");
+    }
+}
+// 扩展 
+var extendObj ={
+    created: function(){
+        console.log("我是被扩展出来的");
+    }
+}
+  var vm = new Vue({
+    el: '#app',
+    data: {
+      message: 'hello Vue!',
+      quantity: '',//数量
+      unitPrice: '',//单价
+      price: '',//总金额
+      count: 100,
+      question: '',
+      filtera: 'abc'
+    },
+    // 计算属性：主要是对原数据进行改造输出。
+    // 改造输出：包括格式化数据（价格，日期），大小写转换，排序，添加符号
+    computed: {
+      newPrice() {
+        return '￥' + (this.price = this.quantity * this.unitPrice) + '元';
+      }
+    },
+    // 方法声明：用于绑定html中的方法
+    methods: {
+      add(num) {
+        this.count += num;
+      }
+    },
+    // data属性监听器, 作用v-model
+    watch: {
+      question(val, oldVal) {//监听 data里面 question 值的变化
+        console.log('new: %s, old: %s', val, oldVal);
+      }
+    },
+    //定义私用局部  过滤器 ，通常格式化字符，使用传值
+    filters: {
+      filterA(value) {
+        return value.toUpperCase();
+      },
+      dataFormat(msg) {
+        return msg + 'xxxxx';
+      }
+    },
+
+// vue的extends和mixins类似，通过暴露一个extends对象到组件中使用。 
+// extends会比mixins先执行。执行顺序：extends  > mixins > 组件 
+// extends只能暴露一个extends对象，暴露多个extends不会执行
+
+    // 混入，作用：减少代码污染、减少代码量、实现代码重用
+    mixins: [addLog],
+    // 扩展
+    extends: extendObj
+  })
+
+</script>
+
+</html>

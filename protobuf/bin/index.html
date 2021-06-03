@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+</head>
+
+<body>
+    <div id="output"></div>
+</body>
+
+<!-- <script src="./chat.js"></script> -->   
+<script src="./client2server_import.js"></script>
+<script type="text/javascript">
+    // socket对象
+    var websocket = {
+        vale: '',// WebSocket 发生的二进制
+        Socket: new WebSocket('ws://172.18.70.236:2400'), // 创建 WebSocket 对象
+    };
+    // pb模块对象
+    var PbModule = {
+        root: '',
+        sn_counter: 0,
+    };
+    // 本地配置
+    var roomid = 'roomid1', userkey = 'userkey2';
+    // js byte字节流和数字，字符串之间的转换，包含无符和有符之间的转换 
+    var NumberUtil = {
+        //int整数转换为2字节的byte数组
+        intToByte2: function (i) {
+            var targets = [];
+            targets[0] = (i & 0xFF);
+            targets[1] = (i >> 8 & 0xFF);
+            return targets;
+        },
+        //int整数转换为4字节的byte数组
+        intToByte4: function (i) {
+            var targets = [];
+            targets[0] = (i & 0xFF);
+            targets[1] = (i >> 8 & 0xFF);
+            targets[2] = (i >> 16 & 0xFF);
+            targets[3] = (i >> 24 & 0xFF);
+            return targets;
+        },
+        //byte数组转换为int整数
+        bytesToInt2: function (bytes, off) {
+            var b3 = bytes[off] & 0xFF;
+            var b2 = bytes[off + 1] & 0xFF;
+            var b1 = bytes[off + 2] & 0xFF;
+            var b0 = bytes[off + 3] & 0xFF;
+            return (b0 << 24) | (b1 << 16) | (b2 << 8) | b3;
+        },
+        // 数组替换
+        ArrSplice: function (starti, arr1, arr2) {
+            arr2.forEach((item, index, array) => {
+                arr1.splice(starti, 1, item);
+                starti++;
+            })
+        },
+        // 字符串转Uint8Array
+        stringToUint8Array: function (str){
+            var arr = [];
+            for (var i = 0, j = str.length; i < j; ++i) {
+                arr.push(str.charCodeAt(i));
+            }
+            var tmpUint8Array = new Uint8Array(arr);
+            return tmpUint8Array;
+        },
+        // Uint8Array 转 字符串
+        Uint8ArrayToString:function (fileData){
+            var dataString = "";
+            for (var i = 0; i < fileData.length; i++) {
+                dataString += String.fromCharCode(fileData[i]);
+            } 
+            return dataString; 
+        },
+        // 对字符串 转 base64
+        encode(str){
+            // 对字符串进行编码
+            var encode = encodeURI(str);
+            // 对编码的字符串转化base64
+            var base64 = btoa(encode);
+            return base64;
+        },
+         // base64转字符串
+        decode(base64){
+            // 对base64转编码
+            var decode = atob(base64);
+            // 编码转字符串
+            var str = decodeURI(decode);
+            return str;
+        },
+        // 解析 Object
+        objParsing(obj){
+            for(let i in obj){
+            // 判断类型 是否是字符串
+                if(Object.prototype.toString.call(obj[i])=="[object String]"){
+                    // base64 转 字符串
+                    var value = NumberUtil.decode(obj[i]);
+                    // 字符串 赋值 给 原Object对象 替换 base64
+                    obj[i]=value;
+                    // console.log(obj[i]);
+                    // 如果 值类型是 对象[object Object]  或者 数组对象[object Array]
+                }else if(Object.prototype.toString.call(obj[i])=="[object Array]"||Object.prototype.toString.call(obj[i])=="[object Object]"){
+                    // console.log(obj[i]);
+                    // 再次调用 objParsing 传入 对象 验证 类型为字符串 base64转字符串
+                    NumberUtil.objParsing(obj[i]);
+                }
+           
+            }
+            //  console.log(obj);
+             return obj;
+        }
+        
+    };
+    var jsonObj = {
+        'cmd_eCmdC2S_none': 0,
+        'cmd_ping': 1, //Ping 
+        'cmd_register': 2, //注册
+        'cmd_add_participant': 3, //添加待加入用户
+        'cmd_setuserattrs': 4, //设置用户属性
+        'cmd_setroomattrs': 5, //设置房间属性	  
+        'cmd_update_media': 6, //请求更新发布的媒体 把所有媒体提交上来，不需要的不要传，客户端释放 
+        'cmd_set_media_attr': 7, //请求更新发布的媒体  
+        'cmd_order_unorder': 8, //订阅或取消订阅
+        'cmd_old_update_media': 10, //请求更新发布的媒体  //把所有媒体提交上来，不需要的不要传，客户端释放 
+        'cmd_request_end': 99,
+        'cmd_notify_user_status': 100, //状态通知
+        'cmd_notify_setuserattrs': 101, //收到设置用户属性通知
+        'cmd_notify_setroomattrs': 102, //收到设置房间属性通知
+        'cmd_notify_media_ctrl': 103, //媒体控制 
+        'cmd_notify_webrtc_command': 104, //webrtc命令 
+        'cmd_notify_error': 250 //通知错误 
+    };
+
+    window.onload = function () {
+        // 解析注册返回数据
+        // ModuleRespond_register() 
+
+        register(roomid, userkey)
+    };
+    // Pbody 协议体
+    function register(roomid, userkey) {
+        // 变长包头
+        send_request(jsonObj['cmd_register'], ModuleRequest_register());
+    }
+    // 变长包头
+    function send_request(cmd, pbody) {
+        PbModule.sn_counter++;
+
+        send_command(cmd, ModuleHeader(), Array.from(pbody));
+    }
+    //  cmd==> jsonObj['cmd_register']  // 发送reqhdr==> pd定义request_client2Server_header模块 // reqbody==> 发送的send_buffer二进制数据 
+    function send_command(cmd, reqheader, reqbody) {
+        //  二进制Uint8Array 转 普通数组
+        var reqheader = Array.from(reqheader);
+        //  定长包头 8字节 创建指定长度数组 //fill:使用固定值(0)填充数组  
+        var array = new Array(8).fill(0);
+        // 请求类型-2-为注册，1字节
+        array[0] = cmd;
+        //  array[1] 是否压缩zip 1字节
+        //变长包头数据长度 占2字节  //int整数转换为2字节的byte二进制流数组
+        let reqhdrLe = NumberUtil.intToByte2(reqheader.length);
+        //2字节的byte数组替换存入普通数组 从下标2开始 替换  变长包头数据长度2字节 插入 定长包头 array
+        NumberUtil.ArrSplice(2, array, reqhdrLe);
+        // Pbody 协议体 占4字节 int整数转换为4字节的byte二进制流数组
+        let reqbodyLe = NumberUtil.intToByte4(reqbody.length);
+        //4字节的byte数组替换存入普通数组 从下标4开始 替换 协议体 数据长度4字节 插入 定长包头 array
+        NumberUtil.ArrSplice(4, array, reqbodyLe);
+        //  cmd+reqhdr+reqbody 数组合并 生成 协议格式： ==》定长包头（8字节）+变长包头+协议体
+        var sendData = array.concat(reqheader, reqbody);
+        //协议格式 普通数组转 Uint8Array
+        websocket.vale = new Uint8Array(sendData);
+        console.log(array)
+        console.log(websocket.vale);
+
+        // 使用 binaryType 属性，显式指定收到的二进制数据类型。
+        // 收到的是 blob 数据
+        // websocket.Socket.binaryType = "blob";
+        // websocket.Socket.onmessage = function(evt) {
+        //   console.log(evt.data.size);
+        //     var reader = new FileReader();
+        //     reader.readAsArrayBuffer(evt.data);
+        //     reader.onload = function (e) {
+        //         // websocket evt.data 返回一是二进制，所以浏览器接收到的是一个blob，这里注意对blob的处理
+        //         let buf = new Uint8Array(reader.result);
+        //     }
+        // };
+        // （idView == buf） 接下来就是一样的 根据 配置的规范 取出对应长度数据 并且解析数据
+        // 收到的是 ArrayBuffer 数据
+        // websocket.Socket.binaryType = "arraybuffer";
+        // websocket.Socket.onmessage = function(evt) {
+        //     console.log(evt.data.byteLength);
+        //     var idView = new Uint8Array(evt.data, 0, evt.data.byteLength);
+        // }; 
+        // websocket 发起 
+        websocketStartUp();
+    }
+    function websocketStartUp() {
+        // // 连接建立时触发 发送数据 数据发送中
+        websocket.Socket.onopen = function (evt) {
+            console.log('连接建立时');
+            console.log(evt);
+            alert(111);
+            onOpen(evt);
+        };
+        // 实例对象的onmessage属性，用于指定收到服务器数据后的回调函数。 
+        websocket.Socket.onmessage = function (evt) {
+            onMessage(evt)
+        };
+        // 实例对象的onclose属性，用于指定连接关闭后的回调函数。
+        websocket.Socket.onclose = function (evt) {
+            onClose(evt)
+        };
+        // error	Socket.onerror	通信发生错误时触发
+        websocket.Socket.onerror = function (evt) {
+            onError(evt)
+        };
+    }
+    // 开始使用连接发送数据
+    function onOpen(evt) {
+        writeToScreen("开始使用连接发送数据");
+        // 使用连接发送数据
+        doSend(websocket.vale);
+    }
+    function doSend(vale) {
+        writeToScreen("正在发送的数据: " + vale);
+        websocket.Socket.send(vale);
+    };
+    // 收到服务器数据
+    function onMessage(evt) { 
+        // websocket.binaryType 查看返回的数据类型 二进制==blob
+        var reader = new FileReader();
+        reader.readAsArrayBuffer(evt.data);
+        reader.onload = function (e) {
+            // websocket evt.data 返回一是二进制，所以浏览器接收到的是一个blob，这里注意对blob的处理
+            let buf = new Uint8Array(reader.result);
+            console.log(buf);
+            // 二进制 转普通数组
+            var intArray = Array.from(buf);
+            // 取出定长包头（8字节）
+            var cmdArray = intArray.slice(0, 8);
+            // cmdArray.slice(2, 4)取出变长包头 占 定长包头2字节 Uint8Array转二进制  bytesToInt2二进制 转int整数 获取 变长包头数据长度
+            var headlegth = NumberUtil.bytesToInt2(new Uint8Array(cmdArray.slice(2, 4)), 0);
+             
+            //cmdArray.slice(4, 8)取出 协议体  占 定长包头 4字节 Uint8Array转二进制  bytesToInt2二进制 转int整数 获取 协议体 数据长度
+            var pbodylegth = NumberUtil.bytesToInt2(new Uint8Array(cmdArray.slice(4, 8)), 0);
+            //8定长包头 固定长度 截取intArray.slice(8, headlegth + 8) 变长包头 数据 反序列化 解析==response_client2Server_header 
+            var headData = proto.snail.media.response_client2Server_header.deserializeBinary(new Uint8Array(intArray.slice(8, headlegth + 8)));
+            console.log(headData);
+            console.log(headData.toObject());
+             // 定长包头 数据 base64转字符串
+             var headDataObj=NumberUtil.objParsing(headData.toObject());
+            console.log(headDataObj); 
+            // 截取intArray.slice(headlegth + 8, headlegth + 8)协议体 数据 解析 
+            var pbodyArr = intArray.slice(headlegth + 8, pbodylegth + headlegth + 8);
+            var pbodyData = proto.snail.media.respond_register.deserializeBinary(new Uint8Array(pbodyArr));
+            console.log(pbodyData.toObject());
+            // 协议体 数据 base64转字符串
+            var pbodyDataObj=NumberUtil.objParsing(pbodyData.toObject());
+            console.log(pbodyDataObj);
+            // writeToScreen('<span style="color: blue;">收到服务器数据: ' + pbodyData.toObject().severCurrentTime + '</span>');
+        }
+    }
+    // 接关闭后
+    function onClose(evt) {
+        console.log(evt);
+        writeToScreen("连接关闭后的回调函数");
+    }
+    function onError(evt) {
+        writeToScreen('<span style="color: red;">通信发生错误时触发:</span> ' + evt.data);
+    }
+    function writeToScreen(message) {
+        var pre = document.createElement("p");
+        pre.style.wordWrap = "break-word";
+        pre.innerHTML = message;
+        $('#output').append(pre);
+        // output.appendChild(pre);
+    }
+ // 发送通知
+    // function send_notify(var cmd,  var pbody){  
+    // 			send_command(cmd, null, pbody);
+    // 	 }
+    // 注意proto文件中的命名方式，经过protol序列化与反序列化后，会对驼峰、下划线进行转换，情况如下：
+    // 字段形式           例子	           set函数	           例子         反序列化解析后形式          例子
+    // 全小写           taskid          set+大写开头        setTaskid           全小写               taskid
+    // 大写开头         Taskid          set+大写开头        setTaskid           全小写	             taskid
+    // 小驼峰           taskId          set+大写开头	    setTaskid           全小写               taskid
+    // 下划线           task_id         set+大驼峰	        setTaskId	        小驼峰               taskId
+    // 连续下划线       task_i_d         set+大驼峰	        setTaskID	        小驼峰               taskID
+
+    // 注册 bytes=='XXX' 字符串   sint32==1 数字 // 操作数据常用方法有4种 setName() getName()  hasName()  clearName()  具体用法参考这里
+    var pbodyObj;
+    var ModuleRequest_register = function () {
+        var request_register = new proto.snail.media.request_register();
+        console.log(request_register);
+
+        // object_user方式 直接引入 唯一值子模块赋值 
+        request_register.setUser(ModuleObject_user());//添加成员
+        // bytes 类型 赋值 字符先串转Uint8Array
+        request_register.setLoginseq(NumberUtil.stringToUint8Array('1'));
+
+        request_register.setVersion(NumberUtil.stringToUint8Array('2'));
+        request_register.setRoomid(NumberUtil.stringToUint8Array('3'));
+        // repeated方式 声明引入子模块
+        request_register.addAttrs(ModuleObject_keyvalue());//添加成员
+        request_register.setOrdermode(NumberUtil.stringToUint8Array('4'));
+        request_register.setNotify(NumberUtil.stringToUint8Array('5'));
+        request_register.setServerdata(NumberUtil.stringToUint8Array('6'));
+        request_register.setServerIp(NumberUtil.stringToUint8Array('172.18.70.236'));
+        // 序列化为字节
+        var bytes = request_register.serializeBinary();
+        console.log(bytes);
+        // 反序列化为对象
+        var data = proto.snail.media.request_register.deserializeBinary(bytes);  
+        console.log(data);
+         // toObject()会将我们的proto对象转换为普通的对象  Object 值字符串为base64。
+         var pbodyObj=data.toObject();
+        // for(let i in pbodyObj){
+        //     // 判断类型 是否是
+        //     // if(Object.prototype.toString.call(pbodyObj[i])){
+
+        //     // }
+        //     console.log(i, pbodyObj[i])
+        // }
+        // pbodyObj 值 base64  转为普通字符串  
+        NumberUtil.objParsing(pbodyObj);
+       // getName() 读到服务器返回的信息
+        // console.log('getServerIp==>' + data.getServerIp());
+        // // 读到服务器返回的信息 转 字符串
+        // console.log('getServerIp==>' +  NumberUtil.Uint8ArrayToString(data.getServerIp()));       
+
+        return bytes;
+    }
+    // 子模块
+    function ModuleObject_user() {
+        var object_user = new proto.snail.media.object_user();
+        // 模块成员变量的访问 赋值
+        object_user.setClientid(NumberUtil.stringToUint8Array('7'));
+        object_user.setClientkey(NumberUtil.stringToUint8Array('8'));
+        //  repeated 引入子模块赋值 object_keyvalue
+        object_user.addAttrs(ModuleObject_keyvalue());//添加成员 
+        // object_user.setStatus(4);
+        // object_user.setJoinTime(5);
+        // object_user.setLeaveTime(6);
+        return object_user;
+    }
+    // 子模块
+    function ModuleObject_keyvalue() {
+        var object_keyvalue = new proto.snail.media.object_keyvalue();
+        // 模块成员变量的访问 赋值
+        object_keyvalue.setKey(NumberUtil.stringToUint8Array('9'));
+        object_keyvalue.setValue(NumberUtil.stringToUint8Array('1'));
+        return object_keyvalue;
+    }
+
+    function ModuleHeader() {
+        var request_header = new proto.snail.media.request_client2Server_header();
+        // 模块成员变量的访问 赋值
+        request_header.setSn(PbModule.sn_counter);
+        request_header.setToken(NumberUtil.stringToUint8Array('1'));
+        var bytes = request_header.serializeBinary();
+        return bytes;
+    }
+// 解析注册返回数据
+// function ModuleRespond_register(){ 
+//     var bytes=new Uint8Array([18, 6, 10, 1, 3, 18, 1, 4, 18, 9, 10, 4, 100, 116, 108, 115, 18, 1, 48, 18, 13, 10, 4, 109, 111, 100, 101, 18, 5, 118, 105, 100, 101, 111, 18, 9, 10, 4, 115, 114, 116, 112, 18, 1, 48, 24, 222, 241, 196, 129, 12, 32, 6]);
+//     //反序列化为对象
+//    var data = proto.snail.media.respond_register.deserializeBinary(bytes); 
+//    console.log("反序列化为对象:"+data); 
+//     console.log("从对象中获取指定属性:"+data.getSeverCurrentTime());
+//     // console.log("对象转化为JSON:"+JSON.stringify(data)); 
+//   //  打印数据 
+//    let protoBuf = data.toObject()
+//       console.log('protoBuf: ', protoBuf) 
+// }
+
+
+</script>
+
+<script type='module'> 
+
+    // 解析注册返回数据
+    // var respond_register = new proto.snail.media.respond_register();
+    // respond_register.setSeverCurrentTime([12]);
+    // var bytes = respond_register.serializeBinary();
+    // console.log("序列化为字节:" + bytes);
+//     var bytes=new Uint8Array([18, 6, 10, 1, 3, 18, 1, 4, 18, 9, 10, 4, 100, 116, 108, 115, 18, 1, 48, 18, 13, 10, 4, 109, 111, 100, 101, 18, 5, 118, 105, 100, 101, 111, 18, 9, 10, 4, 115, 114, 116, 112, 18, 1, 48, 24, 222, 241, 196, 129, 12, 32, 6]);
+// //     // 反序列化为对象
+//    var data = proto.snail.media.respond_register.deserializeBinary(bytes); 
+//    console.log("反序列化为对象:"+data); 
+//     console.log("从对象中获取指定属性:"+data.getSeverCurrentTime());
+//     console.log("对象转化为JSON:"+JSON.stringify(data)); 
+// //     // 打印数据 
+//    let protoBuf = data.toObject()
+//       console.log('protoBuf: ', protoBuf) 
+
+</script>

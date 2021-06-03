@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+</head>
+<body>
+    
+</body>
+<script type="text/javascript">
+    $(function () {
+        const models = [
+            {id: 1, title: 'hello1', parent: 0},
+            {id: 3, title: 'hello2', parent: 1},
+            {id: 4, title: 'hello3', parent: 3},
+            {id: 5, title: 'hello4', parent: 4},
+            {id: 2, title: 'hello5', parent: 0},
+            {id: 6, title: 'hello6', parent: 4},
+            {id: 7, title: 'hello7', parent: 3},
+            {id: 8, title: 'hello8', parent: 10}
+        ];
+        const nestedStructure = getNestedChildren(models, 0);
+        console.log(nestedStructure);
+    })
+ 
+    function getNestedChildren(arr, parent) {
+        var out = []
+        for (var i in arr) {
+            if (arr[i].parent == parent) {
+                var children = getNestedChildren(arr, arr[i].id)
+                if (children.length) {
+                    arr[i].children = children
+                }
+                out.push(arr[i])
+            }
+        }
+        return out
+    }
+    </script>
+</html>

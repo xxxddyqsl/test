@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.staticfile.org/angular.js/1.4.6/angular.min.js"></script> 
+    <script src="//unpkg.com/@uirouter/angularjs@1.0.7/release/angular-ui-router.min.js"></script>
+    <style type="text/css">
+        .active{
+            color:red;
+            font-size: 30px;
+        }
+     
+    </style>
+</head>
+
+<body ng-app="myApp">
+    
+    <div ng-controller="myCtrl">
+        <a ui-sref='page1' href='' ng-click='change(1)' ng-class='{"active":num == 1}'>页面1</a>
+        <!--ui-sref进行状态的跳转，点击后触发page1的状态，状态触发后才会执行控制器函数；-->
+        <a ui-sref='page2' ng-click='change(2)' ng-class='{"active":num == 2}'>页面2</a>
+        <a ui-sref='page3' ng-click='change(3)' ng-class='{"active":num == 3}'>页面3</a>
+        <a ui-sref='page4' ng-click='change(4)' ng-class='{"active":num == 4}'>页面4</a>
+        <a ui-sref='index5' ng-click='change(5)' ng-class='{"active":num == 5}'>本页面index</a>
+        <h1 ng-click='goTo()'>点击进入页面5： go to p5</h1>
+
+        <!-- <h1 ui-view></h1> -->
+        <div ui-view="resetPwdTitle"></div>
+        <!--ui-view 状态跳转的页面会在这里展示 -->
+        <h1>index===>{{num}}</h1>
+
+        <script type="text/ng-template" id="resetPwdTitle.html">
+            <div ng-click='goClickAl()'>本页面index==>resetPwdTitle.html</div>
+        </script>
+    </div>
+</body>
+<script type="text/javascript">
+    var app = angular.module('myApp', ['ui.router']);  //注入ui.router路由模块
+    // app.controller('myCtrl',['$scope',function($scope){
+
+    // }]);
+    app.config(function ($stateProvider, $urlRouterProvider) {
+      //  $urlRouterProvider.when('', '/page1');   //$urlRouterProvider初始化跳转的状态，首先想展示哪一个页面
+        $stateProvider.state('page1', {  //定义状态，出发此状态，将会跳转templateurl页面
+            url: '/page1',       //：id定义参数；定义方式三种 1./page1/：id/：name 2./page1/{id}/{name}/ 3./page1?id&name 在跳转页面用$stateParams接收
+            templateUrl: "../angular-路由-$stateProvider/page1.html",
+        }).state('page2', {
+            url: '/page2',
+            templateUrl: "../angular-路由-$stateProvider/page2.html"
+        }).state('page3', {
+            url: '/page3',
+            templateUrl: "../angular-路由-$stateProvider/page3.html"
+        }).state('page4', {
+            url: '/page4',
+            templateUrl: "../angular-路由-$stateProvider/page4.html"
+        }).state('index5', { 
+            url: "/index5",
+            views:{
+                'resetPwdTitle' : {
+                  templateUrl : 'resetPwdTitle.html'  
+                },
+            }
+            // url: '/page4',
+            // templateUrl: "../angular-路由-$stateProvider/page4.html"
+        }).state('page5', {
+            url: '/page5/{id}/{name}',
+            templateUrl: "../angular-路由-$stateProvider/page5.html",
+            controller: function ($stateParams) {//这里可以写控制器函数。
+              
+                alert($stateParams.id);
+            }
+        });         
+    });
+    app.controller('myCtrl', function ($stateParams, $scope, $state) {
+        console.log($stateParams);
+        $scope.num =1;
+        $scope.change = function (num) {
+            $scope.num = num;
+            
+        };
+        $scope.goTo = function () {
+            $state.go('page5', { id: 10, name: 'wang' }); //$state.go()跳转触发某一状态，并传入一个对象；           
+        }
+        $scope.goClickAl=function(){
+                    alert(1111);
+        }
+    });
+    app.controller('page1', function ($stateParams) {
+        console.log($stateParams);    // 这里将接受到传入的参数对象
+    });
+    app.controller('page2', function ($stateParams) {
+        console.log($stateParams);
+    });
+    app.controller('page3', function ($stateParams) {
+        console.log($stateParams);
+    });
+    app.controller('page4', function ($stateParams) {
+        console.log($stateParams);
+    });
+    app.controller('index5', function ($stateParams) {
+        console.log($stateParams);
+    });
+    app.controller('page5', function ($stateParams) {
+        console.log($stateParams);
+    });
+
+</script>
+
+</html>

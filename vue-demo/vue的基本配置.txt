@@ -1,0 +1,236 @@
+1、使用脚手架或者或者直接copy模板内容
+2、安装需要的依赖
+3、了解目录结构
+  myapp
+    - build   webpack的相关配置
+      build.js 生产环境构建代码
+      check-versions.js  检查 node、npm等的版本
+      logo.png  
+      utils.js  构建工具相关
+      vue-loader.config.js  vue单文件的解析器的相关配置
+      webpack.base.config.js  webpack的基本配置
+      webpack.dev.config.js  webpack的开发配置
+      webpack.prod.config.js  webpack的生产配置
+      webpack.test.config.js  webpack的测试配置
+    - config  vue的基本配置（监听的端口，打包输出等配置）
+      dev.env.js  开发环境下的环境变量
+      index.js  项目的基本配置 (合作开发时将localhost改为0.0.0.0，还可以设置反向代理解决跨域问题)
+      prod.env.js 生产环境下的环境变量
+      test.env.js 测试环境下的环境变量
+    - node_modules 依赖包
+    - src   资源文件夹，以后就在这里写代码
+      - assets 静态资源（css,js）
+      - components 公共组件编写的地方
+      - qunar 去哪网的scss库
+      - pages   页面编写的地方
+      - router  路由文件 控制页面的切换
+        main.js 程序的入口文件
+    - static 静态资源（图片，json数据）
+    - test  单元测试、代码测试
+      .babelrc es6语法的编译配置，浏览器不可以将所有的es6语法解析，需要借助它
+      .editorcofig 定义代码格式
+      .eslintignore  定义哪些文件夹或者文件不需要进行代码格式校验
+      .eslintrc.js    代码校验设置
+      .postcssrc.js  转换css的工具
+      index.html    页面入口
+      package.json    项目的基本信息
+      README.md     项目的说明
+  添加了两个文件夹  src/pages  src/qunar
+  新增了一个模板代码  01添加了scss文件夹和页面文件夹.rar
+4、改造代码
+  components/HelloWorld.vue文件移动到pages/HelloWorld.vue
+  修改router/index.js中对于HelloWorld.vue页面组件的引用路径
+     - import HelloWorld from '@/components/HelloWorld'
+     + import HelloWorld from '@/pages/HelloWorld'
+
+  改造9-26行代码  ---  提取出定义的路由规则，方便后期的维护
+
+  新建router/routes.js ---- 专门定义路由规则
+
+  新建了pages/Home.vue、pages/Kind.vue、pages/Cart.vue、pages/User.vue、pages/Search.vue页面组件
+  router/routes.js中设置路由
+  ----- 02页面地址栏输入切换效果.rar
+5、先构建应用的基本结构
+  修改App.vue文件,形成上（上中）下结构 --- 头部/内容/底部
+    <div id="app">
+      <div class="container">
+        <header class="header">头部</header>
+        <div class="content">内容</div>
+      </div>
+      <footer class="footer">底部</footer>
+    </div>
+  创建main.scss，在main.js中引入main.scss，发现报错，提示需要安装sass-loader模块，但是这个模块又依赖node-sass模块，所以你需要执行以下语句安装所需要的依赖包
+  cnpm i node-sass sass-loader -D 
+6、项目中接入qunar的scss框架 main.scss
+  03项目接入scss库头内容底部.rar
+7、编写页面底部选项，实现点击切换页面效果
+  更改了App.vue文件
+    把div.container结构换成了<router-view />
+    添加了底部选项卡,通过router-link结合to属性完成页面切换，通过tag属性生成目标标签，默认生成为a标签，通过給li设置router-link-active样式，可以显示当前的路由是哪个
+    ---- 04点击底部选项卡切换效果.rar
+8、路由的重定向router/routes.js中一开始添加如下代码
+  {
+    path: '/',
+    redirect: '/home'
+  }
+9、添加数据请求方式  axios
+  cnpm i axios -S  (vue全家桶的依赖都是-S)
+10、创建api/home/index.js用来首页home中的数据请求
+  利用Promise处理异步操作
+  Home组件处调用封装的api.requestList()拿到列表的数据
+  创建了components/home/List.vue组件，用来展示列表数据（利用了弹性盒布局 --- main.scss中调用overflow函数让内容区域可以滚动）
+  pages/Home.vue 调用List.vue组件，利用组件间传值将数据传给List.vue组件，由List.vue组件负责渲染数据
+  点击列表的数据跳转到详情  05首页列表渲染.rar
+11、新建pages/Detail.vue，router/routes.js出配置路由
+  发现当地址栏输入 /detail时，底部选项卡还存在
+  一般情况下详情页面有自己的头部和底部
+  需要借助Vue路由的 命名视图 解决问题  ----  多视图路由
+  将App.vue中的底部单独抽离到components/Footer.vue,App.vue剩余为
+  <div id="app">
+    <router-view />
+    <router-view name = "footer"/>
+  </div>
+  修改路由的配置
+    {
+      path: '',
+      name: '',
+      components: {
+        default: ,
+        footer: Footer // 如果没有底部，那么可以不写他
+      }
+    }
+12、封装了公共的返回组件components/common/Back.vue
+13、完成页面动态传参 详情页面的路由形式为  /detail/131455
+  07跳转到详情.detail.15645654    .代表/
+  修改router/routes.js
+    {
+      path: '/detail/:id',  // :id   id为传递的参数
+      name: 'detail',
+      components: {
+        default: Detail
+      }
+    }
+  List.vue中传递参数即可
+    <router-link tag="li"
+      :to = "{name: 'detail', params: {id: item.id}}"></router-link>
+  补充：
+    页面间跳转的导航分为两类
+      声明式导航
+        <router-link to=""></router-link>
+      编程式导航
+        // this.$router.push('/detail/' + id)
+        this.$router.push({name: 'detail',params: {id}})
+14、完成页面动态传参 详情页面的路由形式为  /detail?id=131455
+  08跳转到详情.detail..id=123564.rar
+  修改router/routes.js
+    {
+      path: '/detail',  
+      name: 'detail',
+      components: {
+        default: Detail
+      }
+    }
+  List.vue中传递参数即可
+    <router-link tag="li"
+      :to = "{name: 'detail', query: {id: item.id}}"></router-link>
+    <router-link tag="li"
+      :to = "{path: '/detail', query: {id: item.id}}"></router-link>
+  编程式导航
+    this.$router.push('/detail?id=' + id)
+    this.$router.push({name: 'detail',query: {id}})
+    this.$router.push({path: '/detail',query: {id}})
+15、详情数据的接收    09详情接受渲染数据.rar
+  如果详情的路由形如  /detail?id=12313
+    在Detail组件中的created钩子函数中通过this.$route.query.id来获取
+  如果详情的路由形如  /detail/12312
+    先修改路由 path: '/detail/:id'
+    修改传参
+    在Detail组件中的created钩子函数中通过this.$route.params.id来获取
+16、給路由起别名 ------------- 了解一下
+  {
+    path: '/home',
+    name: 'home',
+    components: {
+      default: Home,
+      footer: Footer
+    },
+    alias: '/h'
+  }
+17、路由组件传参  ------------- 了解一下
+  {
+    path: '/detail/:id',
+    name: 'detail',
+    components: {
+      default: Detail
+    },
+    props: { // 加上这个就可以直接在组件中结合props选项直接访问{{id}}
+      default: true
+    }
+  }
+  export default {
+    props: ['id'],
+    name: 'detail',
+    ....
+  }
+18、路由的懒加载
+修改router/routes.js
+  const Home = () => import(/* webpackChunkName: "group-footer" */ '@/pages/Home')
+  const Kind = () => import(/* webpackChunkName: "group-footer" */ '@/pages/Kind')
+  const Cart = () => import(/* webpackChunkName: "group-footer" */ '@/pages/Cart')
+  const User = () => import(/* webpackChunkName: "group-footer" */ '@/pages/User')
+  const Search = () => import(/* webpackChunkName: "group-search" */ '@/pages/Search')
+  const Detail = () => import(/* webpackChunkName: "group-detail" */ '@/pages/Detail')
+  const Footer = () => import(/* webpackChunkName: "group-footer" */ '@/components/Footer')
+
+  可以写成
+    components: {
+      default: () => import(/* webpackChunkName: "group-footer" */ '@/pages/Home')
+    }
+19、导航守卫
+  全局导航守卫  router/index.js 添加如下代码
+    router.beforeEach((to, from, next) => {
+      console.log(to)
+      if (to.path === '/cart') {
+        if (localStorage.getItem('isLogin') === 'ok') {
+          next()
+        } else {
+          // alert('小样，没有登录还想进去？')
+          next('/register')
+        }
+      } else {
+        next()
+      }
+    })
+    不适合所有的页面
+  路由独享的： 修改router/routes.js
+    {
+      path: '/cart',
+      name: 'cart',
+      components: {
+        default: Cart,
+        footer: Footer
+      },
+      beforeEnter (to, from, next) {
+        if (localStorage.getItem('isLogin') === 'ok') {
+          next()
+        } else {
+          next('/register')
+        }
+      }
+    }
+    明明是写的路由，却写了一大堆的业务逻辑
+  组件内的守卫   ------  推荐
+    beforeRouteEnter (to, from, next) {
+      if (localStorage.getItem('isLogin') === 'ok') {
+        next()
+      } else {
+        next('/register')
+      }
+    },
+    beforeRouteLeave (to, from, next) {
+      if (localStorage.getItem('pay') === 'ok') {
+        next()
+      } else {
+        alert('买了再走')
+      }
+    }

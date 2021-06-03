@@ -1,0 +1,18 @@
+{
+  "name": "bin",
+  "version": "1.0.0",
+  "description": "",
+  "main": "exports.js",
+  "dependencies": {
+    "bufferhelper": "^0.2.1",
+    "google-protobuf": "^3.14.0",
+    "protocol-buffers": "^4.2.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

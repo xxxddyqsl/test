@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <div id="a" style="width: 100px;">
+
+    </div>
+    <div id="b" style="width: 200px;">
+
+    </div>
+    <p>{{upwidth}}</p>
+    <p>Original message: "{{ message }}"</p>
+    <p>Computed reversed message: "{{ updateMessage }}"</p> 
+  </div>
+  <div id="example">
+    <p>Original message: "{{ message }}"</p>
+    <p>Computed reversed message: "{{ updateMessage }}"</p>
+
+  </div>
+</body>
+<script>
+  //   computed的定义
+  // 当其依赖的属性的值发生变化时，计算属性会重新计算，反之，则使用缓存中的属性值。
+
+  // 为什么要使用computed
+  // 首先，通过vue官方文档的案例，来解释一下，为什么要使用computed。我们都知道，在模板内的表达式非常遍历的，但是，有时候，我们会在模板内的放入太多逻辑的东西。会让模板变重，且难于维护。
+  // <div id="example">
+  //   {{ message.split('').reverse().join('') }}
+  // </div>
+  // 在这模板中的代码中，其实，我们需要花费上一小段时间去理解，这块渲染的是什么---message的翻转字符串。然而，当初模板中使用表达式的初衷时为了简单运算的。所以，从这点出发，
+  // 我们是不是就不建议在模板中使用过于复杂的表达式了。此时，计算属性就横空出世了。计算属性就是当依赖的属性的值发生变化的时候，才会触发他的更改，如果依赖的值，不发生变化的时候，使用的是缓存中的属性值。
+
+  // method每次获取，都会重新计算，而computed是当helloComputed所依赖的a变换了之后，第一次获取才会重新计算，这样一个特性可以大幅度地优化应用的性能；
+
+  var vm = new Vue({
+    el: '#app',
+    data: { message: 'Hello',
+    divwidth:0,
+    witdhtext:''
+   },
+    computed: {
+      // 计算属性的 getter
+      updateMessage() {
+        // `this` 指向 vm 实例
+        console.log('计算属性-#app：', this.message)
+        return this.message.split('').reverse().join('')
+      },
+      upwidth(){
+        let nodeA=document.getElementById('a').offsetWidth;
+        let nodeB=document.getElementById('b').offsetWidth;
+         if(nodeB>nodeA+50){
+          return  this.witdhtext=nodeB+'大于'+nodeA;
+         }else{
+          return  this.witdhtext=nodeA+'小于'+nodeB;
+         }
+      }
+    },  
+  });
+  //   computed的getter函数
+  // 在vue中，computed的属性可以被视为是data一样，可以读取和设值。因此，在computed中可以分为getter(读取)和setter(设值)，一般情况下，是没有setter的，computed只是预设了getter，也就是只能读取，不可以改变设值。所以，computed默认格式（是不表明getter函数的）：
+  // 等价于 
+  // computed: { 
+  //     updateMessage: {
+  //       get: function() {
+  //         console.log('计算属性', this.message)
+  //         return this.message
+  //       }
+  //     }
+  //   },
+  // 当模板中不使用 updateMessage ，即使message发生改变之后，也不会走computed。神奇不神奇？？哈哈哈 
+  // 在这里，就需要我们注意一下，不是说我们更改了getter中使用的变量（即依赖的属性）,就会触发computed的更新，他有一个前提是computed里的值必须要在模板中使用才可以。但是会触发生命周期的updated()
+
+
+  // computed中的setter函数
+  // 当赋值给计算属性的时候，将调用setter函数。多用于在模板组件中需要修改计算属性自身的值的时候。
+  var app = new Vue({
+    el: '#example',
+    data: { message: 'Hello Vue!' },
+    computed: {
+      updateMessage: {
+        get: function () {
+          console.log('计算属性-#example：', this.message)
+          return this.message.split('').reverse().join('');
+        },
+        set: function (newVal) {
+          this.message = newVal
+          console.log('newVal', newVal)
+        }
+      }
+    },
+    mounted() {
+      this.updateMessage = '222777'
+      console.log('测试：', this)
+    },
+  })
+// 只有当计算属性中的属性被直接赋值的时候，才会走setter函数，而且，setter函数和getter函数是相互独立的，不是说，走setter函数，就必须走getter函数。上面的案例，打印结果是
+// newVal: 222,
+// 计算属性： 222
+// 是因为，在setter中触发了message的更改，当message发生改变的时候，getter函数中就会改变。
+</script>
+
+</html>

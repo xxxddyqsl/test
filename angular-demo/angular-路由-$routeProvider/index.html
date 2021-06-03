@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>AngularJS 路由实例 - 菜鸟教程</title>
+<script src="https://cdn.staticfile.org/angular.js/1.7.0/angular.min.js"></script>
+<script src="https://cdn.staticfile.org/angular.js/1.7.0/angular-route.min.js"></script>
+
+<script   src="../angular-路由/index.js">
+//  $routeProvider.when(url,{
+//     template:string, //在ng-view中插入简单的html内容
+//     templateUrl:string, //在ng-view中插入html模版文件
+//     controller:string,function / array, //在当前模版上执行的controller函数
+//     controllerAs:string, //为controller指定别名
+//     redirectTo:string,function, //重定向的地址
+//     resolve:object<key,function> //指定当前controller所依赖的其他模块
+// });
+// angular.module('ngRouteExample', ['ngRoute'])
+// .controller('HomeController', function ($scope, $route) { $scope.$route = $route;})
+// .controller('AboutController', function ($scope, $route) { $scope.$route = $route;})
+// .config(function ($routeProvider) {
+//     $routeProvider.
+//     when('/home', {
+//         templateUrl: 'embedded.home.html',
+//         controller: 'HomeController'
+//     }).
+//     when('/about', {
+//         templateUrl: 'embedded.about.html',
+//         controller: 'AboutController'
+//     }).
+//     otherwise({
+//         redirectTo: '/home'
+//     });
+// });
+</script>
+
+  
+</head> 
+<body ng-app="ngRouteExample" class="ng-scope"  ng-controller='myCtrl as my'>
+  <script type="text/ng-template" id="embedded.home.html">
+      <h1> Home </h1>
+  </script>
+
+  <script type="text/ng-template" id="embedded.about.html">
+      <h1> About </h1>
+  </script>
+
+  <div> 
+    <div id="navigation">  
+      <a href="#!/home">{{my.home}}</a>
+      <a href="#!/about">{{my.about}}</a>
+    </div>
+      
+    <div ng-view="">
+    </div>
+ 
+  </div>
+</body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" Content="text/html; charset=utf-8;">
+    <title>CSS3实现加载的动画效果1</title>
+    <meta name="author" content="rainna" />
+    <meta name="keywords" content="rainna's css lib" />
+    <meta name="description" content="CSS3" />
+    <style>
+        .modal-box {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+
+        @Keyframes animLoading {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading {
+            display: inline-block;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #59a782;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: animLoading 1.2s linear infinite;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="modal-box">
+        <div>
+            <div class="loading"></div>
+            <div>正在加载。。。</div>
+        </div>
+    </div>
+
+</body>
+<script>
+    // 轮询任务
+    var a = 0;
+    var i = 0;
+    var timer = null;
+    var timer2 = null;
+    function setFunction() {
+        timer = setInterval(test, 1000);
+    }
+    function setFunction2() {
+        timer2 = setInterval(test2, 1000);
+    }
+    // window.onload=function(){
+
+
+    // }
+    function test() {
+        console.log(a);
+        if (a <= 9) {
+            a++;
+        } else {
+            clearInterval(timer);//杀掉这个进程
+            timer = null;
+        }
+    }
+    function test2() {
+        console.log("开始执行任务、执行次数=======>" + (i++));
+        //此时就是自己的方法处理方式 比如调用后台或者其他操作
+        if (i <= 4) {//当超过一定时间时
+            setTimeout(() => {
+                test2();
+            }, 1000)
+        }
+    }
+
+    function test3() {
+        var spl = [];
+        var is = false;
+        var aa = [{ id: 'a', name: 'a' }, { id: 'b', name: 'b' }, { id: 'c', name: 'c' }, { id: 'd', name: 'dd' }];
+        var bb = [{ id: 'a', name: 'a' }, { id: 'b', name: 'b' }, { id: 'e', name: 'ee' }, { id: 'f', name: 'ff' }];
+        for (let i in aa) {
+            try {
+                bb.forEach((item, index) => {
+                    if (aa[i].id == item.id) {
+                        is = false;
+                        var a = aaaa;
+                        throw new Error("ending");
+                    } else {
+                        is = true;
+                    }
+                })
+            } catch { };
+            if (is) {
+                spl.push(aa[i])
+            }
+        };
+        return spl;
+    }
+    function test4() {
+        var add = [];
+        var is = false;
+        var aa = [{ id: 'a', name: 'a' }, { id: 'b', name: 'b' }, { id: 'c', name: 'c' }, { id: 'd', name: 'dd' }];
+        var bb = [{ id: 'a', name: 'a' }, { id: 'b', name: 'b' }, { id: 'e', name: 'ee' }, { id: 'f', name: 'ff' }];
+        for (let i in bb) {
+            try {
+                aa.forEach((item, index) => {
+                    if (bb[i].id == item.id) {
+                        is = false;
+                        var a = aaaa;
+                        throw new Error("ending");
+                    } else {
+                        is = true;
+                    }
+                })
+            } catch { }
+            if (is) {
+                add.push(bb[i])
+            }
+        };
+        return add;
+    }
+
+    function checkNull(str) {
+        if (str.replace(/^\s+|\s+$/g, '') == "") {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    function strTrim(str) {
+        return str.replace(/^\s+|\s+$/g, '');
+    }
+    function check(str) {
+        var reg = new RegExp("[\\u4E00-\\u9FFF]+", "g");
+        if (!reg.test(str)) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
+    // function checkNull(str)
+	// 	    if trim(str)="" then
+	// 	        checkNull=true
+	// 	    else
+	// 	        checkNull=false
+	// 	    end if
+	// 	end function 
+	// 	function strTrim(str)
+	// 	   strTrim=trim(str)
+	// 	end function
+
+
+	// 	function strlen(str)
+	// 		dim p_len
+	// 		p_len=0
+	// 		strlen=0
+	// 		if trim(str)<>"" then
+	// 			p_len=len(trim(str))
+	// 			for yy=1 to p_len
+
+	// 				if asc(mid(str,yy,1))<0 then
+	// 					strlen=int(strlen) + 2
+	// 				else
+	// 					strlen=int(strlen) + 1
+	// 				end if
+	// 			next
+	// 		end if
+	// 	end function
+
+	// 	function check(str)
+	// 	    dim p_len
+	// 	    p_len=0
+	// 	    if trim(str)<>"" then
+	// 	       p_len = len(trim(str))
+	// 	       if strlen(str)=p_len then
+	// 	          check=0
+	// 	       else
+	// 	          check=1
+	// 	       end if
+	// 	    end if
+	//    end function
+</script>
+
+</html>

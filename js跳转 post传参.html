@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+</head>
+
+<body>
+    <iframe src="http://localhost:8080/#/" frameborder="0" id="frame" "load()"></iframe>
+    <script type="text/javascript">
+     function load(){
+      let frame = document.querySelector('#frame');
+      console.log(frame);
+      frame.contentWindow.postMessage('我叫俞华','http://localhost:8080')//向端口为4000的域发送内容"我叫俞华"
+     }
+     window.onmessage = function(e){
+      console.log(e.data)
+     }
+    </script>
+</body>
+
+</html>

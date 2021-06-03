@@ -1,0 +1,289 @@
+syntax = "proto3";
+
+package snail.media;
+
+option optimize_for = LITE_RUNTIME;
+
+
+//request和respond的cmd相同，所以这里不定义respond的cmd值
+//	cmd_publish_media	= 6; //请求发布媒体
+//	cmd_release_media	= 7; //请求释放媒体
+enum eCmdC2S
+{  
+	cmd_eCmdC2S_none    = 0; 
+	cmd_ping            = 1; //Ping 
+	cmd_register	    = 2; //注册
+	cmd_add_participant	= 3; //添加待加入用户
+	cmd_setuserattrs	= 4; //设置用户属性
+	cmd_setroomattrs	= 5; //设置房间属性	    
+
+	cmd_update_media	= 6; //请求更新发布的媒体 把所有媒体提交上来，不需要的不要传，客户端释放 
+	cmd_set_media_attr	= 7; //请求更新发布的媒体 
+	
+	cmd_order_unorder	= 8; //订阅或取消订阅
+	cmd_old_update_media = 10; //请求更新发布的媒体  //把所有媒体提交上来，不需要的不要传，客户端释放
+	
+	cmd_request_end     = 99;
+	
+	cmd_notify_user_status      = 100; //状态通知
+	cmd_notify_setuserattrs	    = 101; //收到设置用户属性通知
+	cmd_notify_setroomattrs	    = 102; //收到设置房间属性通知
+	cmd_notify_media_ctrl       = 103; //媒体控制 
+	cmd_notify_webrtc_command   = 104; //webrtc命令
+	
+	cmd_notify_error            = 250; //通知错误 
+};
+
+
+enum eMediaCtrlActs
+{  
+   ctrl_act_none    	= 0; //
+   ctrl_act_sendvideo	= 1; //发送视频
+   ctrl_act_pausevideo	= 2; //暂停发送视频
+   ctrl_act_sendaudio   = 4; //发送语音
+   ctrl_act_pauseaudio	= 3; //暂停发送语音
+};
+     
+	 
+enum eUserStatus
+{  
+   st_wait_join	    = 0; //待加入
+   st_online	    = 1; //在线
+   st_net_broken    = 2; //断线
+   st_left  	    = 3; //离开
+};
+
+message request_client2Server_header
+{
+	 sint32 sn = 1;             //请求序号，代表某次请求
+	 bytes  sessionkey = 2;     //安全key,目前不填 
+	 bytes  token = 3;          //客户端带过来的返回回去的
+}
+ 
+message response_client2Server_header
+{
+	 sint32 sn = 1;
+	 sint32 ec = 2;	 
+	 sint32 subec = 3;
+	 sint32 dbspan = 4;
+	 bytes token = 5;
+}
+
+message notify_error
+{
+	 sint32 ec    = 1;	 
+	 sint32 subec = 2;
+	 sint32 cmd   = 3;
+}
+
+
+
+message object_actions
+{
+	sint32 acttype  = 1;
+	sint32 ssrcids  = 2;
+	bytes  params  = 3;
+}
+
+message object_keyvalue
+{
+	bytes key    = 1;
+	bytes value  = 2; 
+}
+
+
+message object_webrtc_msg
+{
+   bytes mline  = 1;                 
+   sint32 mline_index = 2;             
+   bytes sdp = 3;   
+   bytes peer_params = 4;
+}
+
+
+message object_user
+{
+   bytes clientid  = 1;                 // 用户clientid,在线用户才有该值，离线用户该值为空
+   bytes clientkey = 2;                 // 外部扩展用户ID
+   repeated object_keyvalue attrs = 3;  // 用户属性列表
+   sint32 status = 4;                   // 用户状态 eUserStaus
+   sint32 join_time = 5;                 // 进入时间，从房间开始时间计算 单位秒 
+   sint32 leave_time = 6;		        // 离开时间，从房间开始时间计算 单位秒
+}
+
+message object_media
+{
+   bytes name  = 1;                     // media name	   
+   repeated object_keyvalue attrs = 2;  // 媒体属性列表				    
+}
+
+
+
+//1） Ping命令
+message request_ping
+{ 
+  sint64 timestamp=1;
+}
+
+ 
+message respond_ping
+{ 
+  sint64 timestamp=1;
+}
+
+   
+ //2） 用户注册和上下线通知 
+message request_register
+{
+     object_user user  = 1;     // 用户自己信息
+	 bytes loginseq    = 2;     // 登录seq,由获取配置返回，后面断线+1，最多+9，后面必须重新配置
+	 bytes version     = 3;     // 客户端版本号，用 2020082501
+	 bytes roomid      = 4;     // 房间号
+	 repeated object_keyvalue attrs = 5; // 房间属性，第一个进房间的有效
+	 bytes ordermode   = 6;     // 房间订阅模式
+	 bytes notify      = 7;     // 通知模式，用户列表通知
+	 bytes serverdata  = 8;     // 服务器数据，由获取配置返回
+	 bytes server_ip   = 9;     // 通信IP	   
+}
+ 
+ 
+message respond_register
+{ 
+	 repeated object_user users = 1;       //用户列表
+	 repeated object_keyvalue attrs = 2;   //房间属性列表
+	 sint64 sever_current_time = 3;        //服务器当前时间 绝对时间，单位 秒 
+	 sint32 started_time = 4;		       //房间已经开始了多长时间  单位秒
+}
+ 
+   
+message notify_user_status
+{ 
+	repeated object_user users = 1;  //新加的用户上线或下线 
+} 
+
+
+//3) 添加待加入名单
+message request_add_participant
+{ 
+  repeated object_user users = 1;  
+}
+
+message respond_add_participant
+{ 
+   repeated object_user users = 1;  
+}
+   
+   
+    
+  
+//5）webrtc命令
+message notify_webrtc_command
+{
+	bytes fromid =  1;   //多人忽略
+	bytes toid = 2;      //多人忽略
+	bytes msgtype = 3;   //offer pre_answer answer ice
+	object_webrtc_msg rtcmsg = 4;
+}
+ 
+
+//其中msg根据msgtype有不同定义
+//   当msgtype为offer,pre_answer, answer时，msg为sdp
+//  当msgtype为ice时, msg为:{"mid":"xxxxx"，"mline_index":"1"，"sdp":""}
+//  p2p时候，必须填toid,需要会话的对方的p2pid
+ 
+
+//6) 设置用户属性 
+message request_setuserattrs
+{
+     bytes clientid = 1;   //被设置user的clientid
+	 repeated object_keyvalue attrs = 2;
+}
+
+message respond_setuserattrs
+{   
+}
+
+
+
+
+message notify_setuserattrs
+{
+     bytes clientid = 1;   //被设置user的clientid
+	 repeated object_keyvalue attrs = 2;
+}
+  
+  
+  
+//7) 设置房间属性 
+message request_setroomattrs
+{ 
+	 repeated object_keyvalue attrs = 1;
+}
+
+message respond_setroomattrs
+{ 
+   repeated object_keyvalue attrs = 1;
+}
+
+message notify_setroomattrs
+{ 
+	 repeated object_keyvalue attrs = 1;
+}
+  
+   
+//8) 发布并更新媒体
+message request_update_media
+{ 
+   repeated object_media medias = 1;  
+}
+ 
+message respond_update_media															    
+{  				  
+   repeated object_media medias = 1;    
+}
+
+//9) 更新媒体属性
+message request_set_media_attr
+{ 
+   object_media media = 1; 
+}
+
+message respond_set_media_attr															    
+{  
+   object_media media = 1;    
+}
+
+           
+
+//10) 订阅和取消媒体流
+message request_order_unorder
+{ 
+ repeated bytes orders = 1;     //订阅列表 test001, test002_video
+ repeated bytes unorders = 2;   //取消订阅列表 test001, test002_video
+}
+             
+message respond_order_unorder
+{
+
+} 
+
+
+
+
+//11) 服务端媒体控制
+message notify_media_ctrl
+{ 
+  repeated sint32 actions = 1; //eMediaCtrlActs
+  repeated bytes params = 2;   //参数由actions决定
+}
+
+//12) 发送消息给指定用户
+message notify_send_msg
+{ 
+    bytes fromid =  1;   //谁发的消息
+	bytes toid = 2;      //消息发给谁
+	bytes msgtype = 3;   //offer pre_answer answer ice
+	bytes msg = 4;		 //
+}  
+  
+  

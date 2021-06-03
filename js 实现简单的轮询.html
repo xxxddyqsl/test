@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>js 实现简单的轮询</title> 
+</head>
+
+<body>
+    <button onclick="setTimer()">js 实现简单的轮询</button>
+</body>
+<script type="text/JavaScript">
+       var a = 0; var b = 9; 
+    function setTimer() {
+        let timer; 
+       if (a < b) {a+=1;
+            console.log(a);
+            timer = setInterval(() => {
+                this.setTimer()
+            }, 200)
+        } else {
+            clearTimeout(timer) //清理定时任务
+        }
+
+    };  
+    </script>
+
+</html>
