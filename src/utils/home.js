@@ -1,6 +1,11 @@
 export default {
    // 获取 跳转传的参数 在window.name中 存入 localStorage中
   GetLocaSearch(that) {
+      // 开始 启用 测试数据 查看效果 -url传入的 localStorage.getItem("usermsg")
+      // var data= "{"appKey":"cpj2xarlcm2jn","img":"http://org.jj.woniu.com/IM/avatars/snail_woman.png","roomid":"7113683a-4134-63ab-f721-4d6317379f1e","jjtoken":"TGT-937-UANgZwnFBqgw7dypdc2unpPYefDR7FzcFbYPuJaTboddTmMhJk-oa.sso.woniu.com","phone":"+8617749721923","rytoken":"jmstFomMWQthttTMatk24LHUchUhBtwynZHP4P8JcgmtU4q5wEKBjYN3xp6hnet1OkvaVmbJTC4=@stku.cn.rongnav.com;stku.cn.rongcfg.com","userId":"f43245bd9824430b973fbf57320bb38b","username":"邢鑫"}"
+      // localStorage.setItem("usermsg", JSON.stringify(data));
+      // that.msgData();
+
     var search = location.search; //获取url中"?"符后的字串
     if (search) {
       // 获取 字符串 = 之后的参数
@@ -31,6 +36,14 @@ export default {
   OnMsgData(that){
     if (localStorage.getItem("usermsg") &&localStorage.getItem("usermsg").length > 0) {
       // 获取 存在localStorage里面 url后面的参数
+      // 测试数据 msg:{appKey: "cpj2xarlcm2jn" // 融云 appKey
+      // img: "http://org.jj.woniu.com/IM/avatars/snail_woman.png"
+      // jjtoken: "TGT-937-UANgZwnFBqgw7dypdc2unpPYefDR7FzcFbYPuJaTboddTmMhJk-oa.sso.woniu.com"
+      // phone: "+8617749721923"
+      // roomid: "7113683a-4134-63ab-f721-4d6317379f1e" //视频房间号
+      // rytoken: "jmstFomMWQthttTMatk24LHUchUhBtwynZHP4P8JcgmtU4q5wEKBjYN3xp6hnet1OkvaVmbJTC4=@stku.cn.rongnav.com;stku.cn.rongcfg.com" // 融云token
+      // userId: "f43245bd9824430b973fbf57320bb38b"
+      // username: "邢鑫"};
       that.msg = JSON.parse(localStorage.getItem("usermsg"));
       console.log(that.msg);
       // 个人信息
