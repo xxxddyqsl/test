@@ -5,8 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>生命周期</title>
-    <!-- 开发环境版本，包含了有帮助的命令行警告 -->
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
 
 <body>
@@ -16,58 +16,80 @@
     var app = new Vue({
       el: '#app',
       data: {},
+      // 生命周期- 在实例初始化之后，数据观测和事件配置之前被调用
       beforeCreate: function () {
-        console.group('------beforeCreate创建前状态------');
-        console.log("%c%s", "color:red", "el     : " + this.$el); //undefined
-        console.log("%c%s", "color:red", "data   : " + this.$data); //undefined 
+        //  应用：一般用于vue实例外的属性，方法，事件调用
+        console.group('beforeCreate 创建前状态===============》');
+        console.log("%c%s", "color:red", "el      : " + this.$el); //undefined
+        console.log("%c%s", "color:red", "data    : " + this.$data); //undefined 
         console.log("%c%s", "color:red", "message: " + this.message)
       },
+      // 生命周期- 在实例创建完成后被立即调用，完成数据观测，属性和方法的运算，初始化事件，$el属性未见
       created: function () {
-        console.group('------created创建完毕状态------');
-        console.log("%c%s", "color:red", "el     : " + this.$el); //undefined
-        console.log("%c%s", "color:red", "data   : " + this.$data); //已被初始化 
+        //  应用： 1、 异步数据请求、数据初始化适宜在这个阶段进行调用 2、 如想元素挂载完成后进行操作可以使用this.$nextTick()方法进行回调获取
+        console.group('created 创建完毕状态===============》');
+        console.log("%c%s", "color:red", "el      : " + this.$el); //undefined
+        console.log("%c%s", "color:red", "data    : " + this.$data); //已被初始化 
         console.log("%c%s", "color:red", "message: " + this.message); //已被初始化
       },
+      // 生命周期- 在挂载开始之前被调用：相关的 render 函数首次被调用，只在虚拟DOM生成HTML，该钩子在服务器端渲染期间不被调用。
       beforeMount: function () {
-        console.group('------beforeMount挂载前状态------');
-        console.log("%c%s", "color:red", "el     : " + (this.$el)); //已被初始化
+        console.group('beforeMount 挂载前状态===============》');
+        console.log("%c%s", "color:red", "el      : " + (this.$el)); //已被初始化
         console.log(this.$el);
-        console.log("%c%s", "color:red", "data   : " + this.$data); //已被初始化  
+        console.log("%c%s", "color:red", "data    : " + this.$data); //已被初始化  
         console.log("%c%s", "color:red", "message: " + this.message); //已被初始化  
       },
+      // 生命周期- 在el 被新创建的 vm.$el 替换，并挂载到实例上去之后调用。实例已完成以下的配置：用上面编译好的html内容替换el属性指向的DOM对象。完成模板中的html渲染到html页面中。此过程中进行ajax交互
+      // 初始数据DOM挂载渲染完成，此周期只能操作初始数据所形成的DOM，对于异步数据所挂载的DOM却无法获取
       mounted: function () {
-        console.group('------mounted 挂载结束状态------');
-        console.log("%c%s", "color:red", "el     : " + this.$el); //已被初始化
+        console.group('mounted 挂载结束状态===============》');
+        console.log("%c%s", "color:red", "el      : " + this.$el); //已被初始化
         console.log(this.$el);
-        console.log("%c%s", "color:red", "data   : " + this.$data); //已被初始化
+        console.log("%c%s", "color:red", "data    : " + this.$data); //已被初始化
         console.log("%c%s", "color:red", "message: " + this.message); //已被初始化 
       },
+      // 生命周期 - 数据更新时调用，发生在虚拟 DOM 重新渲染和打补丁之前。你可以在这个钩子中进一步地更改状态，这不会触发附加的重渲染过程。该钩子在服务器端渲染期间不被调用。
       beforeUpdate: function () {
         console.group('beforeUpdate 更新前状态===============》');
-        console.log("%c%s", "color:red", "el     : " + this.$el);
+        console.log("%c%s", "color:red", "el      : " + this.$el);
         console.log(this.$el);
-        console.log("%c%s", "color:red", "data   : " + this.$data);
+        console.log("%c%s", "color:red", "data    : " + this.$data);
         console.log("%c%s", "color:red", "message: " + this.message);
       },
+      // 生命周期- 由于数据更改导致的虚拟 DOM 重新渲染和打补丁，在这之后会调用该钩子。
+      // 当这个钩子被调用时，组件 DOM 已经更新，所以你现在可以执行依赖于 DOM 的操作。然而在大多数情况下，你应该避免在此期间更改状态。如果要相应状态改变，通常最好使用计算属性或 watcher 取而代之。
       updated: function () {
+        // 应用：任何数据的更新，如果要做统一的业务逻辑处理
         console.group('updated 更新完成状态===============》');
-        console.log("%c%s", "color:red", "el     : " + this.$el);
+        console.log("%c%s", "color:red", "el      : " + this.$el);
         console.log(this.$el);
-        console.log("%c%s", "color:red", "data   : " + this.$data);
+        console.log("%c%s", "color:red", "data    : " + this.$data);
         console.log("%c%s", "color:red", "message: " + this.message);
       },
+      // 生命周期- keep-alive 组件激活时调用
+      activated: function () {
+
+      },
+      // 生命周期- keep-alive 组件停用时调用
+      deactivated: function () {
+
+      },
+      // 生命周期- 在实例销毁之前调用。实例仍然完全可用
       beforeDestroy: function () {
         console.group('beforeDestroy 销毁前状态===============》');
-        console.log("%c%s", "color:red", "el     : " + this.$el);
+        console.log("%c%s", "color:red", "el      : " + this.$el);
         console.log(this.$el);
-        console.log("%c%s", "color:red", "data   : " + this.$data);
+        console.log("%c%s", "color:red", "data    : " + this.$data);
         console.log("%c%s", "color:red", "message: " + this.message);
       },
+      // 生命周期- 在实例销毁之后调用。调用后，所有的事件监听器会被移除，所有的子实例也会被销毁。该钩子在服务器端渲染期间不被调用
       destroyed: function () {
+        //应用： 当有多个实例在页面中，其中的1个或者多个实例只触发一次后，后面所操作的数据不打算对其进行实例进行操作时，可销毁实例
         console.group('destroyed 销毁完成状态===============》');
-        console.log("%c%s", "color:red", "el     : " + this.$el);
+        console.log("%c%s", "color:red", "el      : " + this.$el);
         console.log(this.$el);
-        console.log("%c%s", "color:red", "data   : " + this.$data);
+        console.log("%c%s", "color:red", "data    : " + this.$data);
         console.log("%c%s", "color:red", "message: " + this.message)
       }
     })
