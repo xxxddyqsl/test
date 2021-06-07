@@ -13,13 +13,20 @@
   <div id="app">
     <!-- vue中的模板使用template来实现 -->
     <!-- 1、选项模板 -->
+    <div>
+      <select v-model="one">
+        <option v-for="item in shuju" :value="item.val">{{item.name}}</option>
+      </select>
+    </div>
+    <br>
+    <component :is="one==0?'comA':one==1?'comB':one==2?'comC':''"></component>
     <!-- 2、<template>标签模板 -->
-    <template id="demo2">
-      <h2 style="color:rgb(235, 154, 100)">我是template标签模板</h2>
+    <template id="demo2" >
+      <h2 style="color:rgb(235, 154, 100)"> id:demo2 -- 我是template标签模板</h2>
     </template>
     <!-- 3、<script>标签模板 -->
     <script type="x-template" id="demo3">
-      <h2 style="color:red">我是script标签模板</h2>
+      <h2 style="color:red"> id:demo3 -- 我是script标签模板</h2>
     </script>
     
   </div>
@@ -28,12 +35,29 @@
   var app = new Vue({
     el: '#app',
     data: {
+      shuju:[
+        {name:"模板1",val:"0"},
+        {name:"模板2",val:"1"},
+        {name:"模板3",val:"2"}
+      ],
+      one:0,
       message: 'hello',
     },
+    watch:{
+      one(val){
+        console.log(val)
+
+      },
+    },
+    components:{
+      comA:{template:` <div style="border:rgb(235, 154, 100) 1px solid;">组件A</div>` },
+      comB:{template:` <div style="border: 1px solid;">组件B</div>` },
+      comC:{template:` <div style="border: 1px solid yellowgreen;">组件C</div>` },
+    },
     // <!-- 1、选项模板 -->
-    template: `<h1 style="color:red">我是选项模板</h1>`,
-    template: '#demo2',
-    template: '#demo3',
+    template: this.one==0?'<h1 style="color:red">模板1：我是选项模板</h1>':this.one==1? '#demo2':this.one==2? '#demo3':'',
+    // template: '#demo2',
+    // template: '#demo3',
     methods: {
 
     },

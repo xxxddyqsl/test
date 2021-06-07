@@ -21,7 +21,7 @@
     <!--<root> 隐性的根组件,相对于注册的组件button-prop来说，是父组件-->
     <!-- 类似于用 v-bind 绑定 HTML 特性到一个表达式，也可以用 v-bind 动态绑定 props 的值到父组件的数据中。每当父组件的数据变化时，该变化也会传导给子组件： -->
     <!-- 父组件利用v-on为事件绑定onClick处理器 -->
-    <!-- from-here 常规属性传值 -->
+    <!-- from-here 常规属性传值字符串 -->
     <!-- v-bind传值 -->
     <button-props v-bind:msg="mssage" v-bind:digital="digital" v-on:myclick='onClick' from-here="world"></button-props>
     <!--button-prop相对root来说是子组件，而 msg 这个变量是存在于父组件内的，应该属于父组件里的数据，虽然这个变量不是初始化就定义了的-->

@@ -13,14 +13,15 @@
 vue中的自定义指令通过Vue.directive来实现，主要完成内置指令不能完成的一些事情 -->
 <!-- 自定义指令解决的问题或者说使用场景是对普通 DOM 元素进行底层操作，所以不能盲目的胡乱的使用自定义指令。 -->
   <div id="app">
-    <!-- 自定义 指令 v-test -->
+    <!-- 自定义 指令 v-test 可传参数  color data内的值 传参写法 v-test="color"  不传参写法 <div v-test>{{num}}</div>-->
     <div v-test="color">
       {{num}}
     </div>
+
     <button onclick="unbindApp()">解绑</button>
 
     <ul>
-      <li v-for="(item,index) in arr" :key="index" v-myclick="item">{{item}}</li>
+      <li v-for="(item,index) in arr" :key="index" v-myclick="item">自定义指令已绑定点击事件： {{item}}</li>
   </ul>
   </div>
 </body>
@@ -31,24 +32,30 @@ vue中的自定义指令通过Vue.directive来实现，主要完成内置指令�
   }
   // 自定义指令 局部指令的创建。
   let Opt = {
+      // bind 指令第一次绑定到元素时调用，只执行一次。在这里可以进行一次性的初始化设置。
     bind:function(el,binding,vnode){ 
         /** el可以获取当前dom节点，并且进行编译，也可以操作事件 **/
             /** binding指的是一个对象，一般不用 **/
             /** vnode 是 Vue 编译生成的虚拟节点 **/
       // app.arr[5]='pp' 未更新列表数据
+      // el 当前dom节点 绑定点击事件
       el.addEventListener('click',function(){
             console.log(el, binding.value)
         })
     },
+    // 被绑定的元素，插入到父节点的 DOM 中时调用（仅保证父节点存在）。
     inserted:function(el,binding,vnode){
       console.log("2-inserted myclick指令 被插入");
      },
+    //  组件更新时调用。
     update:function(el,binding,vnode){
       console.log("3-update myclick指令 更新");
      },
+    //  组件与子组件更新时调用。
     componentUpdated:function(el,binding,vnode){
       console.log("4-componentUpdated  myclick指令 更新完成");
      },
+    //  指令与元素解绑时调用，只执行一次。
     unbind:function(el,binding,vnode){ console.log("5-unbind myclick指令 解绑"); },
 }
 // 对于局部组件，我们需要在组件的钩子函数directives中进行声明

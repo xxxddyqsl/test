@@ -50,16 +50,17 @@ app.$on('test', function (msg) {
 })
 
 
-// $on 在构造器外部添加事件
-app.$on('reduce',function(){
+// $on 在构造器外部添加事件 接收的参数 num
+app.$on('reduce',function(num){
+    console.log('参数：'+num)
     console.log('执行了reduce()');
-    this.count--;
+    this.count=this.count-num;
 });
-// 调用
+// 点击事件
 function reduce() {
-    // 事件调用
     console.log('emit事件调用');
-    app.$emit('reduce');
+    // 通过 $emit 调用 app内的 $on添加的事件 'reduce'  $emit(函数名，参数)
+    app.$emit('reduce',1);
 }
 
 // $once执行一次的事件
