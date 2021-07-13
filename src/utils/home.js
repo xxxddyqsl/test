@@ -2,6 +2,7 @@ export default {
    // 获取 跳转传的参数 在window.name中 存入 localStorage中
   GetLocaSearch(that) {
     var search = location.search; //获取url中"?"符后的字串
+    // 调试使用 临时参数
     // ?obj=%7B%22appKey%22%3A%22cpj2xarlcm2jn%22%2C%22img%22%3A%22http%3A%2F%2Forg.jj.woniu.com%2FIM%2Favatars%2Fsnail_woman.png%22%2C%22roomid%22%3A%2295f5f3bd-8134-640e-fbb1-e3866d59d7e0%22%2C%22jjtoken%22%3A%22TGT-9642-D7c5ov53vYFZUFoGJu2rVnN5CM2GbbStmhogMuA5BDejWSNm5H-oa.sso.woniu.com%22%2C%22phone%22%3A%22%2B8617749721923%22%2C%22rytoken%22%3A%22jmstFomMWQthttTMatk24LHUchUhBtwynZHP4P8JcgmtU4q5wEKBjYN3xp6hnet1e3U93PvL6RE%3D%40stku.cn.rongnav.com%3Bstku.cn.rongcfg.com%22%2C%22userId%22%3A%22f43245bd9824430b973fbf57320bb38b%22%2C%22username%22%3A%22%E9%82%A2%E9%91%AB%22%7D
     // http://172.18.70.26:8080/?obj=%7B%22appKey%22%3A%22cpj2xarlcm2jn%22%2C%22img%22%3A%22http%3A%2F%2Forg.jj.woniu.com%2FIM%2Favatars%2Fsnail_woman.png%22%2C%22roomid%22%3A%2295f5f3bd-8134-640e-fbb1-e3866d59d7e0%22%2C%22jjtoken%22%3A%22TGT-9642-D7c5ov53vYFZUFoGJu2rVnN5CM2GbbStmhogMuA5BDejWSNm5H-oa.sso.woniu.com%22%2C%22phone%22%3A%22%2B8617749721923%22%2C%22rytoken%22%3A%22jmstFomMWQthttTMatk24LHUchUhBtwynZHP4P8JcgmtU4q5wEKBjYN3xp6hnet1YGjFEx4HKcs%3D%40stku.cn.rongnav.com%3Bstku.cn.rongcfg.com%22%2C%22userId%22%3A%22f43245bd9824430b973fbf57320bb38b%22%2C%22username%22%3A%22%E9%82%A2%E9%91%AB%22%7D#/
     console.log(window.location.href);
