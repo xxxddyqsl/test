@@ -13,7 +13,6 @@ export default {
     phone: null,
     userid: null,//自己的 id
     jjtoken: null,//自己的 token
-    timer: null,// 定时器
     // loginTime: this.getNow(),
     getNow: function () {
         return this.getTime(1);
@@ -484,7 +483,6 @@ export default {
                 that.deptCache[localDepts[i].SDeptId] = localDepts[i];
             }
             mergeing = false;
-            // rootScope.$broadcast('entDataReady',id);
             if (queue.length) {
                 var _temp = queue.shift();
                 that.mergeEntsData(_temp.id, _temp.depts, _temp.emps, _temp.services);

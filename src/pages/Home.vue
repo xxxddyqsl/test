@@ -1,7 +1,7 @@
 <template>
   <div class="home-wrapper">
     <div class="home-header gg-flex-3">
-      <span class="home-header-rtc-title" id="rtc-UserName" v-text="'用户名111:' + UserObj.name"></span>
+      <span class="home-header-rtc-title" id="rtc-UserName" v-text="'用户名:' + UserObj.name"></span>
       <!-- <span class="home-header-rtc-title" id="rtc-UserId">(17749721923_gd85_web)</span> -->
       <span class="home-header-rtc-title home-header-rtc-time"></span>
       <span class="home-header-rtc-title home-header-rtc-room" id="rtc-room">会议室 ID: {{ RoomNumber }}</span>
@@ -140,7 +140,6 @@ export default {
   },
   data() {
     return {
-      color:'red',
       im: null, //RongIMLib 实例对象
       rongRTC: null, // RTC  实例化
       room: null, //房间管理
@@ -457,9 +456,7 @@ export default {
     Onscreenshare() {
       let that = this;
       // 原生 屏幕共享    音频输出的电脑自身的声音 无法输出外部的声音 需特殊处理
-      navigator.mediaDevices
-        .getDisplayMedia({ video: true, audio: true })
-        .then(async function (MediaStream) {
+      navigator.mediaDevices.getDisplayMedia({ video: true, audio: true }).then(async function (MediaStream) {
           that.cutover = true; //资源切换控制器
           // 取消发布的资源 异步等待结果处理
           await that.OnUnpublish();
