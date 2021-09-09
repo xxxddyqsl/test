@@ -36,7 +36,28 @@ export default {
     if (localStorage.getItem("usermsg") &&localStorage.getItem("usermsg").length > 0) {
       // 获取 存在localStorage里面 url后面的参数
       that.msg = JSON.parse(localStorage.getItem("usermsg"));
+      // A用户--测试数据
+      // that.msg={appKey: "cpj2xarlcm2jn",
+      // img: "http://org.jj.woniu.com/IM/avatars/snail_woman.png",
+      // jjtoken: "TGT-10015-HFsGxniYO3nnNcJwbLmOQ6bRX4ywKpvMsrv6p3OgpKmzfYsIUw-oa.sso.woniu.com",
+      // phone: "+8617749721923",
+      // roomid: "1111",
+      // rytoken: "jmstFomMWQthttTMatk24LHUchUhBtwynZHP4P8JcgmtU4q5wEKBjYN3xp6hnet1xcMOlijWD8A=@stku.cn.rongnav.com;stku.cn.rongcfg.com",
+      // userId: "f43245bd9824430b973fbf57320bb38b",
+      // username: "邢鑫"}
+
+      // B用户--测试数据
+      // that.msg={ appKey: "cpj2xarlcm2jn",
+      // img: "http://org.jj.woniu.com/IM/avatars/snail_woman.png",
+      // jjtoken: "TGT-1785-0eeT2sazmCGA0Y0zdbiAytPvhhCHi05DBvuHBgsoQTMcxpnV5s-oa.sso.woniu.com",
+      // phone: "+8613962524322",
+      // roomid: "a1b8f796-d134-64d8-cb48-ae938e858394",
+      // rytoken: "6bcjJPYOosbueBCXx1Jufa0p1EJctiFpOJ/9bZVryHmJtxjUUwl+LoN3xp6hnet1L9fcQwJcNXw=@stku.cn.rongnav.com;stku.cn.rongcfg.com" ,
+      // userId: "5bfcdc99aa55498aa1c5da6be672c136",
+      // username: "123"}
+
       console.log(that.msg);
+
       // 个人信息
       that.UserObj.id = that.msg.userId;
       that.UserObj.name = that.msg.username;
@@ -47,7 +68,7 @@ export default {
       // 融云 appkey token  房间号-RoomNumber
       that.AppKey = that.msg.appKey;
       that.ryToken = that.msg.rytoken;
-      that.RoomNumber = that.msg.roomid;
+      that.RoomNumber =that.msg.roomid;// '888'; 
       //是 会议发起人url后的参数会有(selected) 会传入所有邀请的成员列表 存入本地userList
       if (that.msg.selected) {
         that.msg.selected.map((item, index) => {
