@@ -1,0 +1,8 @@
+module.exports = {
+	NewXMLHttpRequest: function ()  {
+		//return window.XMLHttpRequest ? new window.XMLHttpRequest() : new ActiveXObject('MSXML2.XMLHTTP');
+		//return cc.loader.getXMLHttpRequest();
+
+		return window.XMLHttpRequest ? new window.XMLHttpRequest() : null;
+	}
+}

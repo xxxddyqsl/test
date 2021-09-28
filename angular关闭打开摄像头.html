@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #app {
+            width: 1080px;
+            height: 680px;
+            position: relative;
+            border: 1px solid blue;
+            overflow: hidden;
+        }
+
+        ul {
+            position: absolute;
+            /* left: -100%; */
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* justify-content: flex-start; */
+            list-style: none;
+            flex-wrap: wrap;
+            /* flex-direction: column; */
+        }
+
+        li {
+            height: 50%;
+            width: 50%;
+            background-color: tan;
+        }
+
+        li:nth-child(odd) {
+            background-color: thistle;
+        }
+
+        video {
+            width: 200px;
+            height: 200px;
+        }
+    </style>
+
+</head>
+
+<body ng-app='APP'>
+    <div id="app" ng-controller='myCtrl'>
+        <ul>
+            <li ng-repeat='item in dataList track by $index'>
+                <video-directive my-stream="item.stream"></video-directive>
+            </li>
+        </ul>
+
+        <script type="text/ng-template" id="videoDirective.html">
+            <!--自定义指令directive 内部创建内容 赋过来-->
+        </script>
+    </div>
+    <button ng-click='onsetStream'>关闭打开摄像头</button>
+</body>
+<script src="https://cdn.staticfile.org/angular.js/1.4.6/angular.min.js"></script>
+<script>
+    var app = angular.module('APP', []);
+    // app.controller('myCtrl', ['$scope','$timeout', function ($scope,$timeout) {
+    //     $scope.list =[];
+    //     initData();
+    //     async function initData() {
+    //         let stream = await this.getLocalStream();
+    //         console.log('initData 执行完成');
+    //         $timeout(function () {
+    //             console.log('constructor  执行完成');
+    //             console.log(data);
+    //             $scope.list = [
+    //                 { id: 'a1', name: '小明1', age: 20, stream: stream },
+    //                 { id: 'b', name: '小红2', age: 21 },
+    //                 { id: 'c', name: '小军3', age: 22, stream: stream },
+    //                 { id: 'd', name: '小王4', age: 23 },
+    //                 { id: 'e', name: '小朱5', age: 24, stream: stream }
+    //             ];
+    //             console.log($scope.list)
+    //         })
+    //     }
+    //     // 关闭打开摄像头
+    //     $scope.onsetStream = function () {
+
+    //     }
+
+    // }]);
+
+    app.controller('myCtrl', ['$scope', '$timeout', function ($scope, $timeout) {
+        
+        initData();
+        async function initData() {
+        let data = await this.getLocalStream();
+        console.log('initData 执行完成');
+        $timeout(function () {
+                console.log('constructor  执行完成');
+                console.log(data);
+                $scope.dataList = [
+                    { 'name': 'aa1', 'stream': data }, { 'name': 'aa2'  }, { 'name': 'aa3', 'stream': data },
+                ];
+                console.log($scope.dataList)
+            }) 
+    }
+      
+    }]);
+    app.directive('videoDirective', [function () {
+        return {
+            restrict: 'EAC',
+            templateUrl: 'videoDirective.html',
+            replace: true,
+            //scope，通常用于创建可复用的指令，也就是它不用管父scope中的model。然而虽然说是“隔离”，但通常我们还是需要让这个子scope跟父scope中的变量进行绑定。绑定的策略有3种：
+            // @：单向绑定，外部scope能够影响内部scope，但反过来不成立
+            // =：双向绑定，外部scope和内部scope的model能够相互改变
+            // &：把内部scope的函数的返回值和外部scope的任何属性绑定起来
+            scope: {
+                myStream: '@',
+            },
+            controller: function ($scope, $element, $attrs, $transclude, $log) {
+                console.log()
+                console.log($scope, $element, $attrs, $transclude)
+                $transclude($scope, function (clone) {
+                    // 创建 video 标签
+                    var v = angular.element('<video>');
+                    $element.append(v);
+                })
+            },
+            link: function ($scope) {
+
+            }
+        }
+    }]);
+    function getLocalStream() {
+        // var constraints =  { video:{width:  {  min: w , ideal: w , max: w }, height:  { min: h , ideal: h , max: h },   frameRate: 2000, }, audio: true };
+        return new Promise(function (resolve) {
+            // 获取本地的 视频数据和音频数据
+            navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
+                resolve(stream);
+            }).catch(Error => {
+                console.log(Error);
+            });
+        })
+    }
+</script>
+
+</html>

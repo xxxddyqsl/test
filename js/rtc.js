@@ -67,15 +67,18 @@
 		//
 		async initPeer() {
 			// 创建PeerConnection的对象： 创建时需要传入打洞服务器的配置信息(iceServer)，如果不穿入打洞服务器的配置信息，则只可以在内网中使用实时音频通讯
-			window.RTCPeerConnection =
-				window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
+			window.RTCPeerConnection = window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
 			webRtc.peerConnection = new RTCPeerConnection(webRtc.iceServer);
 			if (RTCPeerConnection) {
 				// 这里面可以做其他操作
 				console.log('浏览器支持实时音频通讯');
 				// 向PeerConnection中加入需要发送的流
-				webRtc.peerConnection.addStream(webRtc.localStream); // 添加本地流
-
+				// webRtc.peerConnection.addStream(webRtc.localStream); // 添加本地流
+			for (const track of webRtc.localStream.getTracks()) {
+				console.log(track);
+				
+							webRtc.peerConnection.addTrack(track,webRtc.localStream);
+						}
 				// 发送ICE候选到其他客户端
 				webRtc.peerConnection.addEventListener('icecandidate', (e) =>
 					webRtc.onIceCandidate(webRtc.peerConnection, e)

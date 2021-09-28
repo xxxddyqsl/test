@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <style>
+        html,
+        body {
+            margin: 0;
+        }
+
+        .gg-flex-1 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .gg-flex-2 {
+            flex-direction: column;
+        }
+
+        .gg-flex-3 {
+            display: flex;
+            align-items: center;
+            justify-items: flex-start;
+        }
+
+        .gg-flex-4 {
+            display: flex;
+            align-items: flex-start;
+            justify-items: flex-start;
+        }
+
+        /* 清除 ul  默认样式 */
+        ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        #wrapper {
+            margin: 0 auto;
+            position: relative;
+            width: 1000px;
+            border: 1px solid black;
+        }
+
+        .main {
+            width: 100%;
+            height: 800px;
+            /* margin: 20px; */
+            /* border: red 1px solid; */
+        }
+
+        .main-list-box {
+            flex-wrap: wrap;
+        }
+
+        .main-list-item {
+            width: 50%;
+            height: 400px;
+            transition: width 2s linear 200ms, background 2s linear 200ms;
+
+            background-color: black;
+        }
+
+        .main-list-item:nth-child(1) {
+            background-color: thistle;
+        }
+
+        .main-list-item:nth-child(4) {
+            background-color: thistle;
+        }
+
+        #BisectorMode {}
+
+        #MasterMode {
+            display: none;
+            height: 100%;
+
+        }
+
+        .Master-box {
+            width: 100%;
+            height: 100%;
+        }
+
+        .Master-main {
+            width: 100%;
+            height: 600px;
+            margin-bottom: 10px;
+            background-color: brown;
+        }
+
+        .Master-fotter {
+            flex: 1;
+            width: 100%;
+            background-color: black;
+        }
+
+        .Master-fotter-box {
+            width: 100%;
+            height: 100%;
+        }
+
+        .Master-fotter-list-item {
+            width: 200px;
+            height: 100%;
+            background-color: black;
+        }
+
+        .Master-fotter-list-item:nth-child(even) {
+            background-color: thistle;
+        }
+
+        /* .main-list-item:nth-child(even){
+            background-color: thistle;
+        } */
+    </style>
+</head>
+
+<body>
+    <div id="wrapper">
+        <div class="main">
+            <div id="BisectorMode">
+                <ul class="main-list-box gg-flex-1">
+                    <li id="a" class="main-list-item" data-index="0"></li>
+                    <li id="b" class="main-list-item" data-index="1"></li>
+                    <li id="c" class="main-list-item" data-index="2"></li>
+                    <!-- <li id="d" class="main-list-item" data-index="3"></li> -->
+                </ul>
+            </div>
+
+
+            <div id="MasterMode">
+                <div class="Master-box gg-flex-1 gg-flex-2">
+                    <div class="Master-main" id="M"></div>
+                    <div class="Master-fotter">
+                        <ul class="Master-fotter-box gg-flex-1">
+                            <li id="a" class="Master-fotter-list-item" data-index="0"></li>
+                            <li id="b" class="Master-fotter-list-item" data-index="1"></li>
+                            <li id="c" class="Master-fotter-list-item" data-index="2"></li>
+                            <li id="d" class="Master-fotter-list-item" data-index="3"></li>
+                            <li id="e" class="Master-fotter-list-item" data-index="4"></li>
+                        </ul>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+</body>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    $(function () {
+        // 默认  获取 平分模式 li 的x y坐标 宽高
+        init.getCoordinate(init.BisectorModeobj, 'BisectorMode');
+    })
+    // 切换 模式
+    $(".main").dblclick(function () {
+        // 切换 显示模式
+        init.OnModeSwitch($(this));
+    })
+    var init = {
+        BisectorModeobj: [],// 平分模式li 的x y坐标 宽高对象
+        MasterMode: [],
+        //  获取 两种模式 的x y坐标 宽 高 信息
+        getCoordinate(arr, id) {
+            let that = this;
+            $("#" + id).find('ul').find('li').each(function () {
+                let obj = init.getObjXY($(this)[0]);
+                arr.push(obj);
+            })
+            console.log(arr)
+        },
+        //得到元素的左上角绝对坐标
+        getObjXY(node) {
+            // console.log(node.getClientRects()[0]);
+            let id = node.id;
+            let x = node.getClientRects()[0].x;
+            let y = node.getClientRects()[0].y;
+            let w = node.getClientRects()[0].width;
+            let h = node.getClientRects()[0].height;
+            return { 'id': id, 'x': x, 'y': y, 'w': w, 'h': h };
+        },
+        // 切换 显示模式
+        OnModeSwitch(node) {
+            let that = this;
+            let Bisector = node.find('#BisectorMode');
+            let Master = node.find('#MasterMode');
+            // console.log(Bisector.is(":hidden"));
+            // 平分模式是否隐藏
+            if (!Bisector.is(":hidden")) {
+                // 1大5小模式 显示
+                Master.show();
+                // 平分模式 隐藏
+                Bisector.hide();
+                // 获取 1大5小模式 的x y坐标 宽高
+                that.MasterMode = [];
+                let m = init.getObjXY($('.Master-main')[0]);
+                that.MasterMode.push(m);
+                that.getCoordinate(that.MasterMode, 'MasterMode');
+            } else {
+                // 平分模式  显示
+                Bisector.show();
+                // 1大5小模式 隐藏
+                Master.hide();
+                // 获取 平分模式 的x y坐标 宽高
+                that.BisectorModeobj = [];
+                that.getCoordinate(that.BisectorModeobj, 'BisectorMode');
+            }
+        },
+    };
+</script>
+
+</html>

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #app {
+            width: 1080px;
+            height: 680px;
+            position: relative;
+            border: 1px solid blue;
+            overflow: hidden;
+        }
+
+        ul {
+            position: absolute;
+            /* left: -100%; */
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* justify-content: flex-start; */
+            list-style: none;
+            flex-wrap: wrap;
+            /* flex-direction: column; */
+        }
+
+        li {
+            height: 50%;
+            width: 50%;
+            background-color: tan;
+        }
+
+        li:nth-child(odd) {
+            background-color: thistle;
+        }
+
+        .Bisector-list-item-stream {
+            width: 200px;
+            height: 200px;
+        }
+    </style>
+
+</head>
+
+<body ng-app='APP'>
+    <div id="app" ng-controller='myCtrl'>
+        <ul>
+            <!-- <li>1</li>
+            <li>2</li>
+            <li>3</li>
+            <li>4</li>
+            <li>5</li>
+            <li>6</li>
+            <li>7</li>
+            <li>8</li> -->
+        </ul>
+
+
+    </div>
+    <!-- <iframe src="https://webrtc.github.io/samples/src/content/getusermedia/getdisplaymedia/" frameborder="0"></iframe> -->
+    <button id="next">下一张</button>
+    <button id="last">上一张</button>
+    <button ng-click='onsetStream'>关闭打开摄像头</button>
+</body>
+<script src="https://cdn.staticfile.org/angular.js/1.4.6/angular.min.js"></script>
+<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script>
+    var app = angular.module('APP', []);
+    app.controller('myCtrl', ['$scope', function ($scope) {
+        $scope.getClick = function ($event) {
+            alert(111);
+        }
+        // 关闭打开摄像头
+        $scope.onsetStream = function () {
+
+        }
+    }]);
+    window.onload = async () => {
+        //    let arr=[1,2,3,4,5,6,7,8,9];
+        let stream = await getLocalStream();
+        console.log(stream)
+        var arr = [
+            { id: 'a1', name: '小明1', age: 20, stream: stream },
+            { id: 'b', name: '小红2', age: 21 },
+            { id: 'c', name: '小军3', age: 22, stream: stream },
+            { id: 'd', name: '小王4', age: 23 },
+            { id: 'e', name: '小朱5', age: 24, stream: stream },
+            // { name: '小刘6', age: 25 },
+            // { name: '小张', age: 26 },
+            // { name: '小庞', age: 27 },
+            // { name: '小米', age: 28 },
+            // { name: '小华', age: 29 },
+            // { name: '小郑', age: 30 },
+            // { name: '小蓝', age: 31 },
+            // { name: '小绿', age: 32 },
+            // { name: '小青', age: 33 },
+            // { name: '小白', age: 34 },
+            // { name: '小黑', age: 35 },
+            // { name: '小橙', age: 36 },
+            // { name: '小紫', age: 37 },
+            // { name: '小山', age: 38 },
+            // { name: '小一', age: 39 },
+            // { name: '小鹏', age: 40 },
+            // { name: '小丛', age: 41 },
+            // { name: '小鱼', age: 42 },
+            // { name: '小李', age: 43 },
+            // { name: '小英', age: 44 },
+            // { name: '小杰', age: 45 },
+            // { name: '小金', age: 46 },
+            // { name: '小窗', age: 47 },
+            // { name: '小叶', age: 48 },
+            // { name: '小文', age: 49 },
+            // { name: '小龙', age: 50 },
+            // { name: '小纯', age: 51 },
+            // { name: '小伟', age: 52 },
+            // { name: '小佳', age: 53 },
+            // { name: '小吴', age: 54 },
+            // { name: '小枚', age: 55 },
+            // { name: '小原', age: 56 },
+            // { name: '小书', age: 57 },
+            // { name: '小江', age: 58 },
+            // { name: '小砚', age: 59 },
+            // { name: '小然', age: 60 }
+        ];
+
+        let x = 0;
+        if (arr.length > 4) {
+            var newdata = dataHandling([], 4, arr);
+            console.log(newdata);
+            console.log(newdata[x])
+            // html(newdata[x]);
+            demo(newdata[x])
+        } else {
+            demo(arr)
+            // html(arr);
+        }
+
+        //    下一页
+        $('#next').click(function () {
+            if (x >= (newdata.length - 1)) {
+                // x = newdata.length;
+                alert('已至尾页');
+            } else {
+                x++;
+                console.log(newdata[x])
+            }
+            demo(newdata[x])
+        });
+        //    上一页
+        $('#last').click(function () {
+            if (x <= 0) {
+                x = 0;
+                alert('已至首页');
+            } else {
+                x--
+                console.log(newdata[x])
+            }
+            demo(newdata[x])
+
+        });
+    }
+    function demo(data) {
+        var oUl = document.getElementById('app').getElementsByTagName('ul')[0];
+        // 清空子元素
+        oUl.innerHTML = "";
+        console.log(data);
+        data.forEach(function (item) {
+            console.log(item)
+            let node = document.createElement("li");
+            node.setAttribute("ng-click", 'getClick($event)');// 绑定点击事件
+            let nodeV = document.createElement("video");
+            nodeV.id = item.id;
+            nodeV.className = 'Bisector-list-item-stream';
+            nodeV.innerHTML = item.name;
+            if (item.stream) {
+                nodeV.autoplay = true;
+                // 兼容写法：
+                try {
+                    nodeV.srcObject = item.stream;
+                } catch (e) {
+                    nodeV.src = window.URL.createObjectURL(stream);
+                }
+            }
+            node.appendChild(nodeV);
+            oUl.appendChild(node)
+        })
+        // $('#app').find('ul').html(h);
+    }
+    function html(data) {
+        $('#app').find('ul').html();
+        let h = "";
+        data.forEach(function (item) {
+            //   attachMediaStream = function (id,stream) {
+            // 	element.srcObject = stream;
+            // 	return element;
+            //     };
+            // console.log(item.stream)
+            h += `<li>${item.name}
+                <video class="Bisector-list-item-stream"  id='${item.id}'></video>
+                </li> `;
+
+        })
+        console.log(h)
+        $('#app').find('ul').html(h);
+        data.forEach(function (item) {
+            if (item.stream) {
+                console.log(item.stream)
+                let node = document.getElementById(item.id);
+                node.autoplay = true;
+                console.log(node)
+                node.srcObject = item.stream;
+            }
+        })
+    }
+    //    切割数组对象 翻页使用
+    function dataHandling(newArr, numb, arr) {
+        newArr = [];
+        let arrLength = arr.length; // 数组长度
+        let num = numb;  // 每页显示 10 条
+        let index = 0;
+        for (let i = 0; i < arrLength; i++) {
+            if (i % num === 0 && i !== 0) { // 可以被 10 整除
+                newArr.push(arr.slice(index, i));
+                index = i;
+            };
+            if ((i + 1) === arrLength) {
+                newArr.push(arr.slice(index, (i + 1)));
+            }
+        };
+        return newArr;
+        //    console.log(newArr)
+    }
+    function getLocalStream() {
+        // var constraints =  { video:{width:  {  min: w , ideal: w , max: w }, height:  { min: h , ideal: h , max: h },   frameRate: 2000, }, audio: true };
+        return new Promise(function (resolve) {
+            // 获取本地的 视频数据和音频数据
+            navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
+                resolve(stream);
+            }).catch(Error => {
+                console.log(Error);
+            });
+        })
+    }
+</script>
+
+</html>

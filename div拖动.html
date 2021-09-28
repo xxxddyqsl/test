@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        #box {
+            width: 500px;
+            height: 500px;
+            position: relative;
+            border: 1px solid;
+            margin: 0 auto;
+        }
+
+        #dv {
+            display: flex;
+            width: 100px;
+            height: 100px;
+            background-color: blue;
+            /* border-radius: 50%; */
+            position: absolute;
+            cursor: se-resize;
+        }
+
+        #moveBarBox {
+            width: 14px;
+            height: 14px;
+            position: absolute;
+            z-index: 9;
+            right: 0;
+            bottom: 0;
+            background-color: red;
+            cursor: se-resize;
+
+        }
+
+        #moveBarBox:hover {
+            cursor: default;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="box">
+        <div id="dv">
+            <div id="moveBarBox">
+
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+
+    var div = document.getElementById('dv');
+    var key = 0;//设置一个开关变量
+    var x;
+    var y;
+    //  按下 固定的拖动标签
+    div.onmousedown = function (evt)//鼠标按下时事件
+    {
+        console.log(dragable);
+        // 设置鼠标样式
+        div.style.cursor = "move";
+        key = 1;//开关打开
+        var e = evt || window.event;
+        x = e.clientX - div.offsetLeft;//鼠标点击的位置距元素边界的距离,用来固定鼠标与元素的相对位置不变
+        y = e.clientY - div.offsetTop;
+    }
+    // 监听 鼠标在整个窗口屏幕上 松开时拖动开个 关闭
+    document.onmouseup = function ()//鼠标松开时事件
+    {
+        div.style.cursor = "";
+        key = 0;//开关关闭
+
+        dragable = false;
+        finalheight = he;
+        finalwidth = wi;
+    }
+    // 鼠标移动
+    document.onmousemove = function (evt) {
+        // 位置拖动开启
+        if (key == 1) {
+            var e = evt || window.event;
+            var left = e.clientX - x;//鼠标移动时物体边界距离屏幕边界的距离
+            var top = e.clientY - y;
+
+            if (left <= 0)//左右边界限定
+            {
+                left = 0;
+            }
+            else if (left >= getInner('box').w - div.offsetWidth)//元素在最右边时的判定，父节点（屏幕）的宽度减去元素自身的宽度
+            {
+                console.log(left, getInner('box').w, div.offsetWidth)
+                left = getInner('box').w - div.offsetWidth;
+            }
+            if (top <= 0)//上下边界限定
+            {
+                top = 0;
+            }
+            else if (top >= getInner('box').h - div.offsetHeight)//元素在最下边时的判定，父节点（屏幕）的高度减去元素自身的高度
+            {
+                top = getInner('box').h - div.offsetHeight;
+            }
+            div.style.left = left + 'px';
+            div.style.top = top + 'px';
+        }
+        // 放大缩小 开启
+        if (dragable) {
+
+            divSize(evt)
+
+        };
+    }
+    // 获取容器的 宽度 高度 禁止超出
+    function getInner(id) {
+        return {
+            w: document.getElementById(id).clientWidth,
+            h: document.getElementById(id).clientHeight
+        }
+    }
+
+
+    var dragable = false;//默认不可拖拽
+    var oldY = '';//记录第一次的鼠标位置
+    var oldX = '';
+    var finalheight,finalwidth;
+    var he = parseInt(getInner('dv').h); //初始高度
+    var wi = parseInt(getInner('dv').w);
+    var moveBarBox = document.getElementById('moveBarBox');
+    // 鼠标按下时
+    moveBarBox.onmousedown = function (event) {
+        finalheight = parseInt(getInner('dv').h); //当前元素的宽度高度
+        finalwidth = parseInt(getInner('dv').w);
+        dragable = true;
+        var e = event ? event : window.event;
+        // 阻止冒泡
+        window.event ? window.event.cancelBubble = true : e.stopPropagation();
+        oldY = e.pageY; //记录第一次的鼠标位置
+        oldX = e.pageX;
+
+    };
+
+
+    function divSize(evt) {
+        var e = evt ? evt : window.event;
+
+        var box = document.getElementById('dv');
+
+        console.log( e.pageX, oldX,e.pageY, oldY, parseInt(getInner('dv').h));
+
+        he = e.pageY - oldY + parseInt(finalheight);
+        wi = e.pageX - oldX + parseInt(finalwidth);
+        if (dragable) {
+        // 自身 放大的宽度 + 距离左侧的距离 大于 父容器的宽度时 父元素宽度 减去 子元素距离左侧的距离 等于剩余最大宽度
+            if(wi + div.offsetLeft>= parseInt(getInner('box').w)){
+                box.style.width =  (parseInt(getInner('box').w)- div.offsetLeft) + 'px';wi =  (parseInt(getInner('box').w)- div.offsetLeft);
+                return;
+            }
+              // 自身 放大的高度 + 距离顶部的距离 大于 父容器的高度时 父元素高度 减去 子元素距离顶部的距离 等于剩余最大高度
+            if(he + div.offsetTop>= parseInt(getInner('box').h)){
+                box.style.height =  (parseInt(getInner('box').h) - div.offsetTop) + 'px';he = (parseInt(getInner('box').h) - div.offsetTop);
+                return;
+            }
+            if (he <= 120 || wi <= 120) {//div最低高度
+
+            box.style.height = '120px'; he = 120;
+            box.style.width = '120px'; wi = 120;
+            return;
+
+            }
+            if (he >= 400 || wi >= 400) {//div最高高度
+                box.style.width = '400px'; wi = 400;
+                box.style.height = '400px'; he = 400;
+                return;
+
+            }
+         
+            box.style.width = wi + 'px';
+            box.style.height = he + 'px';
+
+        };
+    }
+</script>
+
+</html>

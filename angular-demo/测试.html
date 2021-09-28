@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.staticfile.org/angular.js/1.4.6/angular.min.js"></script>
+    <style>
+        video {
+            width: 400px;
+            height: 400px;
+            margin: 20px;
+            border: 1px solid ;
+        }
+    </style>
+</head>
+
+<body ng-app="myApp">
+    <div ng-controller="myController">
+        <button ng-click='cs()'>关闭摄像头</button>
+
+        <p ng-repeat='item in list track by $index'>{{item}}
+
+            <video-directive  color-attr="{{item.stream}}"  ng-init='item'></video-directive>
+        </p>
+        <!-- <test-directive> </test-directive> -->
+        <script type="text/ng-template" id="videoDirective.html">
+            <div> 
+                <!--自定义指令directive 内部创建内容 赋过来-->
+
+            </div>
+        </script>
+<!--外部-->
+<input type="text" ng-model="list">
+ 
+<!--内部-->
+<!--在自定义directive里面写上属性，属性名是我们的scope里面的，引用值是外面的，这种的外部会影响里面的，但里面的不会影响外面的-->
+<my-directive my-name="{{item}}" ng-init='item' ng-repeat='item in list track by $index' ng-object-src='{{item.stream}}' id="{{item.stream.id}}"></my-directive>
+    </div>
+</body>
+<script type="text/javascript">
+    let app = angular.module('myApp', []);
+    app.controller('myController', function ($rootScope,$scope, $timeout) {
+        $rootScope.list = [{ id: 'aa', name: '测试1' ,stream:null}, { id: 'bb', name: '测试22',stream:null}, { id: 'cc', name: '测试33' ,stream:null}]
+        $scope.name = '你好，我是听风是风!!';
+
+        // initData({ video: true, audio: true })
+
+               async function initData(constraints) {
+                let stream = await this.getLocalStream(constraints);
+                console.log('initData 执行完成');
+                $rootScope.list = [{ id: 'aa', name: 'aa' ,stream:stream}, { id: 'bb', name: 'bb',stream:null}, { id: 'cc', name: 'cc' ,stream:stream}];
+            // $scope.$apply();
+            console.log($rootScope.list)
+
+            $scope.$applyAsync();
+
+            }
+        $scope.cs = function () {
+            initData({ video: true, audio: true });
+          
+            // setTimeout(function(){
+            // $scope.list[0].name = '测试';
+
+            // $scope.$apply();//必需手动进行脏值检测,否则数据无法刷新到界面
+            // },1000);
+            //         $scope.$apply(function () {
+            //             $scope.list[0].name ='测试';
+            //                 console.log( $scope.list) 
+
+            //   });
+
+            // $scope.$applyAsync();
+        }
+
+
+
+    });
+
+app.directive('myDirective', function () {
+    return {
+        restrict: 'E',
+        replace: true,
+        template: '<video autoplay muted ></video>',
+        scope: {
+            myName: '@'    
+            //这里名字使用驼峰命名，在html使用时也要像directive的名字一样使用-分隔开
+        },
+        link(scope, element, attrs, ngModelCtrl) {
+            var data=angular.fromJson(attrs.myName);
+            scope.$watch(scope.myName, function (value) {
+                alert(111)
+                element[0].srcObject=data.stream;
+
+            })
+            // alert(111)
+            // element[0].srcObject=data.stream
+            // if(data.stream){
+            //     element[0].autoplay = true;
+            // element[0].muted='muted';
+            // }else{
+            //     element[0].autoplay= false;
+            // }
+            
+                console.log(scope)
+            
+            console.log(angular.fromJson(attrs.myName) )
+            // scope.apply();
+            // console.log(scope, element, attrs, ngModelCtrl)
+        }
+    }
+});
+    app.directive('videoDirective', [function () {
+        return {
+            restrict: 'EA',
+            transclude: true,
+            replace: false,//如果此配置为true则替换指令所在的元素 如果为false或者不指定 则把当前指令追加到所在元素的内部
+            scope: {
+                color: '@colorAttr',
+            },
+            templateUrl: 'videoDirective.html',
+            controller: function ( $rootScope,$scope, $element, $attrs, $transclude, $log) {
+                // console.log($scope, $element, $attrs, $transclude)
+                console.log($attrs)
+                console.log($attrs.$$observers.colorAttr.$$scope.item.stream)
+                if($attrs.$$observers.colorAttr.$$scope.item.stream){
+                     // 创建 video 标签
+                 var v = angular.element('<video>');
+                    v[0].autoplay = true;
+                    v[0].muted='muted'
+                    v[0].srcObject=$attrs.$$observers.colorAttr.$$scope.item.stream;
+                }else{
+                    var v = angular.element('<p>');
+                        v.text($attrs.$$observers.colorAttr.$$scope.item.name);
+                }
+                $element.append(v); 
+            },
+            link(scope, element, attrs, ngModelCtrl) {
+                console.log(ngModelCtrl)
+                
+                }
+        }
+    }])
+    // .directive('echo',function(){
+    //     return{
+    //         restrict: 'EACM',
+    //         // replace:true,
+    //         scope: {
+    //             attr:'@'
+    //         },
+    //         transclude: true,//若想使用$transclude方法请设置为true
+    //         template:'video.html',
+    //         controller: function ($scope, $element, $attrs, $transclude) {  
+    //             $transclude(function (clone) {
+    //                 // console.log($attrs.$$observers.attr.$$scope)
+    //                 console.log($scope.$parent.item)
+    //                 var a = angular.element('<a>');
+    //                     a.text($scope.$parent.item.name);
+    //                     // var reg = /^["|'](.*)["|']$/g;
+    //                     // testStr.replace(reg,"$1");
+    //                     // console.log(JSON.parse(testStr))
+    //                 // a.attr('href',$attrs.attr);//取得div上的attr属性并设置给a
+    //                 // a.text(clone.text());// 通过clone属性可以获取指令嵌入内容，包括文本，元素名等等，已经过JQ封装，这里获取文本并添加给a
+    //                 $element.append(a); // 将a添加到指令所在元素内
+    //             }) 
+    //         }
+    //     }     
+    // });
+    //     async function initData() {
+    //     let stream = await this.getLocalStream();
+    //     console.log('initData 执行完成');
+    //     return stream;
+    // }
+    function getLocalStream(constraints) {
+        return new Promise(function (resolve) {
+            navigator.mediaDevices.getUserMedia(constraints).then(stream => {
+                console.log('getLocalStream 执行完成');
+                resolve(stream);
+            }).catch(Error => {
+                console.log(Error);
+            });
+        })
+    };
+</script>
+
+</html>

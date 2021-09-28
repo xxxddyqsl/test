@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>字符串的扩展</title>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div id='list'></div>
+    </div>
+</body>
+<script>
+    window.onload = () => {
+        addlist()
+    }
+    function addlist() {
+        let x = 99;
+        function foo(p = x + 1) {
+        console.log(p);
+        };
+        x = 200;
+        foo();
+        let x=1;
+
+        $('#list').html(`
+            <ul>
+            <li>first</li>
+            <li>second</li>
+            </ul>
+            `);
+        let template = `
+        <ul>
+        <% for(let i=0; i < data.supplies.length; i++) { %>    
+            <li><%= data.supplies[i] %></li>
+        <% } %>
+        </ul>
+        `;
+        //         let parse = eval(compile(template));
+        // div.innerHTML = parse({ supplies: [ "broom", "mop", "cleaner" ] });
+        let data = { supplies: ["broom", "mop", "cleaner"] };
+        let parse = eval(compile(template));
+        $('#app').append(parse(data));
+    }
+    function compile(template) {
+        const evalExpr = /<%=(.+?)%>/g;
+        const expr = /<%([\s\S]+?)%>/g;
+
+        template = template
+            .replace(evalExpr, '`); \n  echo( $1 ); \n  echo(`')
+            .replace(expr, '`); \n $1 \n  echo(`');
+
+        template = 'echo(`' + template + '`);';
+
+        let script =
+            `(function parse(data){
+                let output = "";
+
+                function echo(html){
+                output += html;
+                }
+
+                ${template}
+
+                return output;
+            })`;
+
+        return script;
+    }
+</script>
+
+</html>

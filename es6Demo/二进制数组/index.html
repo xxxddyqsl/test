@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+</head>
+<body>
+    <input type="text" name="" id="digit">
+    <button onclick="createArrayBuf()">创建二进制数组</button>
+</body>
+<script>
+    //     二进制数组由三类对象组成。
+
+    // （1）ArrayBuffer对象：代表内存之中的一段二进制数据，可以通过“视图”进行操作。“视图”部署了数组接口，这意味着，可以用数组的方法操作内存。
+
+    // （2）TypedArray视图：共包括9种类型的视图，比如Uint8Array（无符号8位整数）数组视图, Int16Array（16位整数）数组视图, Float32Array（32位浮点数）数组视图等等。
+
+    // （3）DataView视图：可以自定义复合格式的视图，比如第一个字节是Uint8（无符号8位整数）、第二、三个字节是Int16（16位整数）、第四个字节开始是Float32（32位浮点数）等等，此外还可以自定义字节序。
+
+    // 简单说，ArrayBuffer对象代表原始的二进制数据，TypedArray视图用来读写简单类型的二进制数据，DataView视图用来读写复杂类型的二进制数据。
+
+    // TypedArray视图支持的数据类型一共有9种（DataView视图支持除Uint8C以外的其他8种）。
+
+    // 数据类型	字节长度	含义	对应的C语言类型
+    // Int8	1	8位带符号整数	signed char
+    // Uint8	1	8位不带符号整数	unsigned char
+    // Uint8C	1	8位不带符号整数（自动过滤溢出）	unsigned char
+    // Int16	2	16位带符号整数	short
+    // Uint16	2	16位不带符号整数	unsigned short
+    // Int32	4	32位带符号整数	int
+    // Uint32	4	32位不带符号的整数	unsigned int
+    // Float32	4	32位浮点数	float
+    // Float64	8	64位浮点数	double
+    class arrDemo{
+        buff(digit){
+            // 创建ArrayBuffer对象代表原始的二进制数据 ArrayBuffer对象代表储存二进制数据的一段内存，它不能直接读写，只能通过视图（TypedArray视图和DataView视图)来读写，视图的作用是以指定格式解读二进制数据。
+            return new  ArrayBuffer(digit);
+        }
+        Uint8(buffer){
+            // TypedArray视图的构造函数 8位不带符号整数（Uint8Array构造函数） 除了接受ArrayBuffer实例作为参数，还可以接受普通数组作为参数，直接分配内存生成底层的ArrayBuffer实例，并同时完成对这段内存的赋值。
+            return new  Uint8Array(buffer);
+        }
+        Assignment(buf,index,arr){
+            var j=0;
+            for (let i in buf ){
+                if(index&&i>index){
+                    for (let k in arr){
+                        buf[i]=arr[j];
+                        j++;
+                        // 跳出 当前循环
+                        break;
+                    }
+                }
+            }
+            return buf;
+        }
+    }
+    function createArrayBuf(){
+        let create  = new arrDemo;
+        //获取创建的字节大小  原始的二进制数据的多少（如32）字节的内存区域 如let digit=32; var buf = new ArrayBuffer(32);
+        let  digit  = $('#digit').val();
+        // 创建  原始的二进制数据 传入字节大小
+        let  buffer = create.buff(digit);
+        // 传入（buffer）ArrayBuffer实例作为参数 创建 8位不带符号整数（Uint8Array构造函数）
+        let  typedArray  = create.Uint8(buffer);
+
+        let newarr=create.Assignment(typedArray,2,[3,4,5,6,7]);
+        // console.log(typedArray,typedArray.length);
+        console.log(newarr)
+    }
+</script>
+</html>

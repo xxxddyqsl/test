@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <script src="https://cdn.staticfile.org/angular.js/1.4.6/angular.min.js"></script>
+    <script src="https://cdn.staticfile.org/angular.js/1.5.0-beta.0/angular-sanitize.min.js"></script>
+</head>
+
+<body>
+
+    <div ng-app="myApp" ng-controller="myCtrl">
+        <button ng-click='cs( )'>关闭摄像头</button>
+     
+     
+        <p ng-bind-html="trustHtml"></p>
+        <input ng-model='body' /> 
+        <video id="cs" change-color='list' autoplay></video>
+        {{list}}
+    </div>
+
+    <script>
+        var a=null;
+        var app = angular.module("myApp", ['ngSanitize']);
+        // app.controller('ctrl',function($scope,$sce){
+        //     // $scope.myHtml = '<p style="color:blue">an html\n' +
+        //     // '<em onclick="this.textContent=\'code_bunny\'">click here</em>\n' +
+        //     // 'snippet</p>';
+        //     $scope.myHtml = document.createElement("video");
+        //     console.log($sce)
+        //     $scope.trustHtml = $sce.trustAsHtml($scope.myHtml)
+        // });
+        app.controller("myCtrl", function ($rootScope, $scope, $timeout) {
+            $scope.myText = "My name is: <h1>John Doe</h1>";
+            $rootScope.list = [{ id: 'aa', name: '测试1', stream: null }, { id: 'bb', name: '测试22', stream: null }, { id: 'cc', name: '测试33', stream: null }]
+            $scope.name = '你好，我是听风是风!!';
+            $scope.is=false;
+            async function initData(constraints) {
+                let stream = await this.getLocalStream(constraints);
+                console.log('initData 执行完成');
+                $rootScope.list = [{ id: 'aa', name: 'aa', stream: stream }, { id: 'bb', name: 'bb', stream: null }, { id: 'cc', name: 'cc', stream: stream }];
+                $scope.$apply();
+                console.log($rootScope.list)
+
+                // $scope.$applyAsync();
+
+            }
+            $scope.cs = function ( ) {
+                $scope.is=!$scope.is;
+                console.log($scope.is)
+                initData({ video: $scope.is, audio:true}); 
+            }
+
+        });
+
+        app.directive('changeColor', function () {
+            return function (scope, ele, attrs) {
+                scope.$watch(attrs.changeColor, function (value) {
+                    if (value) {
+                        ele[0].srcObject=value[0].stream;
+                        // console.log(value[0].stream.getAudioTracks()[0])
+                        console.log(value);
+                        a=value[0].stream ;
+                        // ele.css('background',   'green' );
+                    }
+                });
+            }
+        });
+        // app.filter('trustHtml', function ($sce) {
+        //     return function (input) {
+        //       return $sce.trustAsHtml(input);
+        //     };
+        //   });
+
+
+        function getLocalStream(constraints) {
+            return new Promise(function (resolve) {
+                navigator.mediaDevices.getUserMedia(constraints).then(stream => {
+                    console.log('getLocalStream 执行完成');
+                    resolve(stream);
+                }).catch(Error => {
+                    console.log(Error);
+                });
+            })
+        };
+    </script>
+
+</body>
+
+</html>

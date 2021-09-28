@@ -129,7 +129,7 @@
     <!-- 可以通过以下方式来调用指令： 元素名 属性 类名 注释 -->
     <!-- 元素名 -->
     <!-- 使用驼峰法来命名一个指令， runoobDirective, 但在使用它时需要以 - 分割, runoob-directive: -->
-    <!-- <runoob-directive></runoob-directive> -->
+    <runoob-directive></runoob-directive>
     <!-- 属性 -->
     <!-- <div runoob-directive></div> -->
     <span>
@@ -236,6 +236,7 @@
                     title:"=speak"//定义一个speak属性供html页面的自定义指令用。如果写成title:"="格式，则自定义指令里的属性名就是title。
                 },
                 link: function postLink(scope, iElement, iAttrs) {
+                  console.log(iElement)
                     console.log(scope.title)//这里打印的值与控制器里的值一样
                 }
             };

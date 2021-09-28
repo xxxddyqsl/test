@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+         video {
+      width: 640px;
+      height: 480px;
+      border: 1px solid;
+    }
+    </style>
+</head>
+<body>
+    <video  id="LocalStream"></video>
+    <button id="dk" onclick="get( { audio: true,video:true})">启动</button>
+    <button id="gb" onclick="get( { audio: true,video:false})">关闭</button>
+</body>
+<script>
+    window.onload=()=>{
+
+    }
+    function get(constraints){
+        navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
+            console.log(stream)
+        // 创建本地视频流 容器 或者 切换容器视频流
+        let node=document.getElementById('LocalStream');
+            // node.muted = true;
+        // node.controls = true;
+        node.autoplay = true; 
+        // node.playsinline = true;
+        node.srcObject = stream;
+      }).catch(function (err) {
+        console.log(err.name + ": " + err.message);
+      });
+    }
+</script>
+</html>

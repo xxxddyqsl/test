@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #wrapper {
+            margin: 0 auto;
+            position: relative;
+            width: 1040px;
+            height: 300px;
+            border: 1px solid black;
+        }
+
+        #demo {
+            width: 200px;
+            height: 100px;
+            border: 1px solid red;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrapper">
+        <div id="demo"></div>
+    </div>
+</body>
+<script>
+    window.onload = function () {
+        let node = document.getElementById('demo');
+        console.log(getElementViewTop(node))
+    }
+    // 网页元素的相对位置，指该元素左上角相对于浏览器窗口左上角的坐标。
+    // 有了绝对位置以后，获得相对位置就很容易了，只要将绝对坐标减去页面的滚动条滚动的距离就可以了。滚动条滚动的垂直距离，是document对象的scrollTop属性；滚动条滚动的水平距离是document对象的scrollLeft属性。
+    function getElementViewTop(element) {
+        var actualTop = element.offsetTop;
+        var current = element.offsetParent;
+
+        while (current !== null) {
+            actualTop += current.offsetTop;
+            current = current.offsetParent;
+        }
+
+        if (document.compatMode == "BackCompat") {
+            var elementScrollTop = document.body.scrollTop;
+        } else {
+            var elementScrollTop = document.documentElement.scrollTop;
+        }
+
+        return actualTop - elementScrollTop;
+    }
+</script>
+
+</html>

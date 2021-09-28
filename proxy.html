@@ -1,13 +1,29 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <style>
+    #aaa {
+      width: 100px;
+      height: 100px;
+      background: blue;
+      transition: width 2s;
+      -moz-transition: width 2s; /* Firefox 4 */
+      -webkit-transition: width 2s; /* Safari and Chrome */
+      -o-transition: width 2s; /* Opera */
+    }
+  </style>
+  <script>
+    function big() {
+      document.getElementById("aaa").style.width = "300px";
+    }
+    function small() {
+      document.getElementById("aaa").style.width = "100px";
+    }
+  </script>
 </head>
 <body>
-    
+  <button onclick="big()">Big</button>
+  <button onclick="small()">Small</button>
+  <div id="aaa"></div>
 </body>
 </html>

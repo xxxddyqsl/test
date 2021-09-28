@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../js/bundle.js"></script>
+</head>
+<body>
+    <ul>
+        <li><span>房间号：</span><input type="text" value="8888" id="roomid"></li>
+        <li><span>用户id：</span><input type="text" name="" id="useid"></li>
+    </ul>
+    <button id="submit">提交</button>
+    <button id="logout">退出</button>
+</body>
+<script>
+    class rtctest {
+    // users 返回在线成员
+    onRegisteRsp(startAt, serverTime, roomAttrs, users) {
+        console.log( ' onRegisteRsp : ==> ');
+    //    return console.log(startAt, serverTime, roomAttrs, 'users:==>'+users);
+       return console.log(users);
+    };
+    onSetRoomAttrRsp(attrs) {
+        console.log( ' onSetRoomAttrRsp :==> ');
+       return console.log(attrs);
+    };
+    onSetMediaAttrRsp(media) {
+        console.log( ' onSetMediaAttrRsp :==> ');
+       return console.log(media);
+    };
+    onSetUserAttrRsp() {
+        return console.log( ' onSetUserAttrRsp :==> '); 
+    }; 
+    onAddParticipantRsp(users) {
+        console.log( ' onAddParticipantRsp :==> ');
+       return console.log(users);
+    };
+    onOrderStreamRsp() {
+        return console.log( ' onOrderStreamRsp :==> '); 
+    }; 
+    onUpdateMediaRsp(medias) {
+        console.log( ' onUpdateMediaRsp :==> ');
+       return console.log(medias);
+    };
+
+    notifyRoomAttr(attrs) {
+        console.log( ' notifyRoomAttr :==> ');
+       return console.log(attrs);
+    };
+    notifyUserAttr(clientId, attrs) {
+        console.log( ' notifyUserAttr :==> ');
+       return console.log(clientId, attrs);
+    };
+    notifyUserStatus(users) {
+        console.log( ' notifyUserStatus  :==> ');
+       return console.log(users);
+    };
+    notifyAddParticipant() {
+        return console.log( ' notifyAddParticipant :==> '); 
+    };
+    notifyBindStream(attrs) {
+        console.log( ' notifyBindStream :==> ');
+       return console.log(attrs);
+    };
+    notifyRelogin(reason) {
+        console.log( ' notifyRelogin :==> ');
+       return console.log(reason);
+    };
+    notifyError(errCode, subErrCode, command) {
+        console.log( ' notifyError :==> ');
+       return console.log(errCode, subErrCode, command);
+    };
+    notifyMediaCtrl(actions, params) {
+        console.log( ' notifyMediaCtrl :==> ');
+       return console.log(actions, params);
+    };
+    notifyRtcCmd(fromId, toId, msgType, mline, mlineIndex, sdp, peerParam) {
+        console.log( ' notifyRtcCmd :==> ');
+       return console.log(fromId, toId, msgType, mline, mlineIndex, sdp, peerParam);
+    };
+}
+
+window.onload = () => {
+    var object_user = new proto.snail_video.media.object_user();
+    console.log(object_user);
+    console.log(window.rtcname);
+    document.getElementById('submit').addEventListener('click',function(){
+        // 初始化 
+        init();
+    });
+    // 退出
+    document.getElementById('logout').addEventListener('click',function(){
+        logout();
+    })
+    
+};
+
+function init(){
+    let roomVal =  document.getElementById('roomid').value;
+    let useVal =  document.getElementById('useid').value;
+//    alert(roomVal);
+//    alert(useVal);
+ // 获取底层调用的回调class函数
+ var rtcdemo=new rtctest;
+ console.log(rtcdemo)
+ // 调用setObserver函数 把 函数变量名 传入底层 方便底层调用 触发回调
+ window.rtcname.setObserver(rtcdemo);
+ // 测试调用底层函数 login 登录 查看 底层是否调用 上层回调函数
+//  window.rtcname.login('3344','8888',{});
+ window.rtcname.login(useVal,roomVal,{});
+  // 设置房间属性
+//   window.rtcname.setRoomAttr(value,value);
+  // 设置用户属性
+//   window.rtcname.setUserAttr(value,value,"某某某-123");
+// console.log( window.rtcname.getNetStatus())
+
+}
+
+// 退出
+function logout(){
+    window.rtcname.logout()
+}
+</script>
+</html>
