@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>第一个three.js文件_WebGL三维场景</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            /* 隐藏body窗口区域滚动条 */
+        }
+    </style>
+    <script src="./js/three.js"></script>
+    <!-- 加载obj文件中的几何信息 -->
+    <script src="./js/OBJLoader.js"></script>
+    <!--  加载材质文件.mtl -->
+    <!-- <script src="./js/MTLLoader.js"></script> -->
+</head>
+
+<body>
+    <!-- <canvas id="scene"></canvas> -->
+</body>
+<script type="module">
+    import {OrbitControls} from "./js/OrbitControls.js";
+    /**
+  * 创建场景对象Scene
+  */
+    var scene = new THREE.Scene();
+
+    /**
+   * 相机设置
+   */
+    var width = window.innerWidth, //窗口宽度
+        height = window.innerHeight; //窗口高度
+    // var k = width / height; //窗口宽高比
+    // var s = 200; //三维场景显示范围控制系数，系数越大，显示的范围越大
+   //照相机配置
+   var fov = 45,//拍摄距离  视野角值越大，场景中的物体越小
+                near = 1,//最小范围
+                far = 10000;//最大范围
+    //创建相机对象
+    var camera = new THREE.PerspectiveCamera(fov, width / height, near, far );
+    camera.position.set(0, 0, 500);; //设置相机位置
+    camera.lookAt(scene.position); //设置相机方向(指向的场景对象)
+
+    /**
+     * 光源设置
+     */
+    //   DirectionalLight 平行光
+    var directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    directionalLight.position.set(0, 0, 350);
+    directionalLight.lookAt(new THREE.Vector3(0, 0, 0));
+    // 添加到场景中
+    scene.add(directionalLight);
+
+    /**
+       * 创建渲染器对象
+       */
+    var renderer = new THREE.WebGLRenderer();
+    renderer.setSize(width, height);//设置渲染区域尺寸
+    renderer.setClearColor(0xb9d3ff, 1); //设置背景颜色
+    document.body.appendChild( renderer.domElement );//body元素中插入canvas对象  renderer.domElement
+    var banana;
+
+    var render = function () {
+        requestAnimationFrame(render);//执行渲染操作 
+        // banana.rotateY(0.01);//每次绕y轴旋转0.01弧度
+        //执行渲染操作   指定场景、相机作为参数
+        renderer.render(scene, camera);//请求再次执行渲染函数render
+
+    };
+
+    console.log(OrbitControls )
+    //  创建  鼠标操作三维场景 对象
+    var controls =new OrbitControls(camera,renderer.domElement);//创建控件对象
+    controls.target.set( 0, 0.5, 0 );
+			controls.update();
+			controls.enablePan = false;
+			controls.enableDamping = true;
+
+
+
+    var loadOBJ = function () {
+        // 创建 资源加载器 LoadingManager
+        var manager = new THREE.LoadingManager();
+        // 创建 obj格式模型加载器
+        var loader = new THREE.OBJLoader(manager);
+
+        /**
+ * OBJ文件加载  只加载obj文件中的几何信息，不加载材质文件.mtl
+ */
+        loader.load('./models/tree.obj', function (object) {
+            // 返回结构：包含一个网格模型Mesh的组Group
+            banana = object;
+            //Move the banana in the scene
+            // banana.rotation.x = Math.PI / 2;
+            // banana.position.y = -200;
+            // banana.position.z = 50;
+          // 加载后的一些编辑操作
+            object.traverse(function (child) {
+                //This allow us to check if the children is an instance of the Mesh constructor
+                if (child instanceof THREE.Mesh) {
+                    //设置材质颜色
+                    child.material.color = new THREE.Color(0xff0000);
+                    //网格模型的几何体居中
+                    child.geometry.center();
+                    // child.geometry.computeVertexNormals();
+                }
+            });
+            // 加载后的一些编辑操作
+            object.scale.set(200, 200, 200); //放大obj组对象 //网格模型缩放
+            scene.add(banana); //网格模型添加到场景中
+            render(); 
+        });
+         //监听鼠标滚动事件
+         document.body.addEventListener('mousewheel', mousewheel, false);
+    };
+
+    loadOBJ();
+   
+      //鼠标滑轮-鼠标上下滑轮实现放大缩小效果
+      function mousewheel(e) {
+        console.log(renderer.domElement)
+   
+            // e.preventDefault();
+            if (e.wheelDelta) {  //判断浏览器IE，谷歌滑轮事件
+                if (e.wheelDelta > 0) { //当滑轮向上滚动时
+                    fov -= (near < fov ? 1 : 0);
+                }
+                if (e.wheelDelta < 0) { //当滑轮向下滚动时
+                    fov += (fov < far ? 1 : 0);
+                }
+            } else if (e.detail) {  //Firefox滑轮事件
+                if (e.detail > 0) { //当滑轮向上滚动时
+                    fov -= 1;
+                }
+                if (e.detail < 0) { //当滑轮向下滚动时
+                    fov += 1;
+                }
+            }
+            // console.info('camera.fov:'+camera.fov);
+            // console.info('camera.x:'+camera.position.x);
+            // console.info('camera.y:'+camera.position.y);
+            // console.info('camera.z:'+camera.position.z);
+            //改变fov值，并更新场景的渲染
+            camera.fov = fov;
+            // 手动更新相机的投影矩阵的。
+            camera.updateProjectionMatrix();
+            // renderer.render(scene, camera);
+            render(); 
+            //updateinfo();
+        }
+</script>
+
+</html>

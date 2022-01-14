@@ -1,37 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
 </head>
+
 <body>
-  
+
 </body>
 <script src="./js/webpack打包文件调用测试.js"></script>
 <script>
-  // webpack 打包输出的对象 绑定在finalModule上 
-  window.onload=()=>{
-    class WebRtc {
-        constructor(){
-            this.sdk = finalModule;
-        };
-        setUrl(){
-            // cfgUri   //eType
-            this.sdk.MakeRtcClient().setUrl("http://120.132.99.205:24002",1);
-            this.login();
-        };
-        login(){
-            this.sdk.MakeRtcClient().login('111','222','{true,true,true,true,true}')
+    // webpack 打包输出的对象 绑定在finalModule上 
+    window.onload = () => {
+        class WebRtc {
+            constructor() {
+                this.sdk = finalModule;
+            };
+            setUrl() {
+                // cfgUri   //eType
+                this.sdk.MakeRtcClient().setUrl("http://120.132.99.205:24002", 1);
+                this.login();
+            };
+            login() {
+                this.sdk.MakeRtcClient().login('111', '222', '{true,true,true,true,true}')
+            }
         }
+        const webRtc = new WebRtc();
+        console.log(webRtc.sdk);
+        console.log(webRtc.sdk.MakeRtcClient());
+        webRtc.setUrl();
+        window.showModalDialog("javascript:document.write('Write by script');");
+        // webRtc.MakeRtcClient().setUrl("http://120.132.99.205:24002",1)
     }
-    const webRtc= new WebRtc();
-    console.log(webRtc.sdk);
-    console.log(webRtc.sdk.MakeRtcClient());
-    webRtc.setUrl();
 
-    // webRtc.MakeRtcClient().setUrl("http://120.132.99.205:24002",1)
-}
+    window.onbeforeunload = function () {
+
+        var n = window.event.screenX - window.screenLeft;
+
+        var b = n > document.documentElement.scrollWidth - 20;
+
+        if (b && window.event.clientY < 0 || window.event.altKey) {  //页面关闭
+            console.log('页面关闭')
+
+            alert('页面关闭')
+        } else {
+
+            // 页面刷新   
+            console.log('页面刷新')
+
+            alert('页面刷新')
+        }
+
+    }
 </script>
+
 </html>

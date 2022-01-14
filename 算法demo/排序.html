@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id=""></div>
+</body>
+<script>
+    // 算法概述
+    //     算法分类
+    //     十种常见排序算法可以分为两大类： 
+    //     非线性时间比较类排序：通过比较来决定元素间的相对次序，由于其时间复杂度不能突破O(nlogn)，因此称为非线性时间比较类排序。
+    //     线性时间非比较类排序：不通过比较来决定元素间的相对次序，它可以突破基于比较排序的时间下界，以线性时间运行，因此称为线性时间非比较类排序。
+    let arrB = [9, 4, 8, 1, 7, 0, 5, 2, 6, 3];
+    let arr = [
+        { "id": "FFF", "name": "测试FFF", "img": "../images/man.png", "status": "3", "medias": "v", },
+        { "id": "f43245bd9824430b973fbf57320bb38b", "name": "邢鑫", "img": "../images/man.png", "status": "0", "medias": "", },
+        { "id": "5bfcdc99aa55498aa1c5da6be672c136", "name": "123", "img": "http://org.jj.woniu.com/IM/avatars/snail_woman.png", "status": "1",  "mode": "video", "medias": "av",  },
+        { "id": "CCCC", "name": "测试CCC", "img": "http://org.jj.woniu.com/IM/avatars/snail_woman.png", "status": "1",  "mode": "video", "medias": "",  },
+        { "id": "BBB", "name": "测试BBB", "img": "../images/man.png", "status": "0",  "mode": "video", "medias": "", },
+        { "id": "AAA", "name": "测试AAA", "img": "../images/man.png", "status": "2",  "mode": "video", "medias": "", "orderSwitch": false, "master": "5bfcdc99aa55498aa1c5da6be672c136", "manager": "", "ClientKey": "AAA", "ClientId": "AAA", "Zoom": 0 },
+        { "id": "DDD", "name": "测试DDD", "img": "../images/man.png", "status": "1", "medias": "v", },
+        { "id": "EEE", "name": "测试EEE", "img": "../images/man.png", "status": "3", "medias": "v", },
+        { "ClientKey": "debug001", "ClientId": "debug001", "id": "debug001", "img": "http://org.jj.woniu.com/IM/avatars/snail_woman.png", "name": "debug001张三", "status": "1", "master": "5bfcdc99aa55498aa1c5da6be672c136", "manager": "", "mode": "video",  "medias": "av", "Zoom": 0, "orderSwitch": true },
+    ];
+    window.onload = () => {
+        function str_substr(start, end, str) {
+
+temp = str.split(start, 2);
+content = temp[1].split(end, 2);
+return content[0];
+};
+
+var str='1234;56;a789b;321';//初始字符串
+
+var newstr= str_substr('5',';', str );//截取a b之间的字符串
+
+alert( newstr );//输出789
+
+        setHtml('执行排序算法前：', arr, '');
+       
+        //排序规则： 在线status：1(有画面 流包含v) > 在线status：1(无画面 没有流或者流不包含v) > 断线（status：2）> 待加入 （status：0）
+        function OnsortKey(a, b) {
+            //   包含对sort 函数的理解
+            // status  状态 ： 0, //待加入   1, //在线  2, //断线   3, //离开
+            // 返回小于 0（如 return -1） ，那么 a 会被排列到 b 之前； 等于 0 （如 return 0） ， a 和 b 的相对位置不变；  大于 0（如 return 1） ， b 会被排列到 a 之前。
+            // a（ 后一条数据 ） b（前一条数据） 都是在线时
+            if (a.status == '1' && b.status == '1') {
+                // a 数据里参数medias 有包含视频流（indexOf('v')>=1） b数据里参数medias 没有不包含视频流（indexOf('v')<0） 时 a>b 返回一个小于0的结果  a则和b互相换位置 a排在b数据的前面
+                if (a.medias.indexOf('v') > b.medias.indexOf('v')) {
+                    return -1;
+                    // a 数据里参数medias 没有不包含视频流（indexOf('v')<0） b数据里参数medias 有包含视频流（indexOf('v')>=1） 时 a<b 返回一个大于0的结果  a则和b不换位置 b数据不动还是排在a数据的前面  （b本身就是在a数据的前面）
+                } else if (a.medias.indexOf('v') < b.medias.indexOf('v')) {
+                    return 1;
+                }
+                // a，b都是在线状态 参数medias  都是有包含视频    位置不动返回 return 0；
+                return 0;
+            } else {
+                // 只有 a 数据是在线状态  并且有包含视频流（indexOf('v')>=1） 直接返回一个小于0的结果  return -1; ； a则和b互相换位置 a排在b数据的前面
+                if (Number(a.status) == 1 && a.medias.indexOf('v') >= 0) {
+                    return -1;
+                    // 只有 b 数据是在线状态  并且有包含视频流（indexOf('v')>=1） 直接返回一个大于0的结果  return 1; ； b 会被排列到 a 之前
+                } else if (Number(b.status) == 1 && b.medias.indexOf('v') >= 0) {
+                    return 1;
+                    //   a 数据是在线状态  并且 b数据不是在线状态 直接返回一个小于0的结果  return -1; ； a则和b互相换位置 a排在b数据的前面
+                } else if (Number(a.status) == 1 && Number(b.status) != 1) {
+                    return -1;
+                    //   b 数据是在线状态  并且 a 数据不是在线状态 直接返回一个大于0的结果  return 1; ；  b 会被排列到 a 之前
+                } else if (Number(a.status) != 1 && Number(b.status) == 1) {
+                    return 1;
+                    //  a 数据不是在线状态    b数据也不是在线状态  a数据status是断线（2）并且  b数据status是待加入状态（0）  直接返回一个小于0的结果  return -1; ； a则和b互相换位置 a排在b数据的前面
+                } else if (Number(a.status) == 2 && Number(b.status) == 0) {
+                    return -1;
+                    //  a 数据不是在线状态    b数据也不是在线状态  a数据status是待加入状态（0） 并且 b数据status是断线（2）  直接返回一个大于0的结果  return 1; ； b 会被排列到 a 之前
+                } else if (Number(a.status) == 0 && Number(b.status) == 2) {
+                    return 1;
+                    // a 数据status在线状态（是0, //待加入或者 是2, //断线 ）   并且  b数据status在线状态（是 3, //离开）    直接返回一个小于0的结果  return -1; ； a则和b互相换位置 a排在b数据的前面
+                } else if ((Number(a.status) == 0 || Number(a.status) == 2) && Number(b.status) == 3) {
+                    return -1;
+                    //  b 数据status在线状态（是0, //待加入或者 是2, //断线 ）   并且  a数据status在线状态（是 3, //离开））  直接返回一个大于0的结果  return 1; ； b 会被排列到 a 之前
+                } else if ((Number(b.status) == 0 || Number(b.status) == 2) && Number(a.status) == 3) {
+                    return 1;
+                }
+                // a，b都不是在线状态  并且在线状态 status 相同 时 位置不动返回 return 0；
+                return 0;
+            };
+        };
+
+        // console.log(arr);
+        // 延迟触发
+        setTimeout(() => {
+            // 使用console.time这个方法，这个方法最高精确到微秒，大部分情况下都能满其中console.time是记录一个开始时间点，1代表这个时间点的标志，可以多个时间点交叉记录，使用不同的标志。
+            // console.timeEnd是记录结束时间点并输出与开始时间点的时间差。
+           // 启动计时器
+            console.time('执行自己写的排序算法后：');
+            arr.sort(OnsortKey);
+            
+            console.log(arr);
+            // 停止计时，输出时间
+            console.timeEnd('执行自己写的排序算法后：');
+            // let time = '  函数执行花费时长：'+a;
+            // setHtml('执行自己写的排序算法后：', JSON.stringify(arr), '');
+ 
+            setCustomizeFu(arrB);
+            // console.log(end - start);
+            bubbleSort(arrB);
+            shellSort(arrB);
+        }, 1000);
+    }
+    // 自己写的 排序
+    function setCustomizeFu(arr) {
+
+        // Date.now() 返回 标准时间的 毫秒数 这个办法有时不够精确，例如时间不到1毫秒，就测不出来了。
+        let start = Date.now();
+        for (let i in arr) {
+            let k = Number(i) + 1;
+            for (k in arr) {
+                // 排序 从小到大
+                if (arr[i] < arr[k]) {
+                    // if (arr[i] > arr[k]) { // 排序 从大到小
+                    let temp = arr[k];
+                    arr[k] = arr[i];
+                    arr[i] = temp;
+                }
+            }
+        }
+        console.log(arr);
+        let end = Date.now();
+        let time = '  函数执行花费时长：' + (end - start);
+        setHtml('执行自己写的排序算法后：', arr, time);
+        return arr;
+    }
+    // 非线性时间比较类排序 通过比较来决定元素间的相对次序
+    function bubbleSort(arr) {
+        let start = Date.now(); //开始
+        var len = arr.length;
+        // 冒泡排序
+        for (var i = 0; i < len - 1; i++) {
+
+            for (var j = 0; j < len - 1 - i; j++) {
+
+                if (arr[j] > arr[j + 1]) {       // 相邻元素两两对比
+
+                    var temp = arr[j + 1];       // 元素交换
+
+                    arr[j + 1] = arr[j];
+
+                    arr[j] = temp;
+
+                }
+
+            }
+
+        }
+        let end = Date.now(); //结束
+        let time = '  函数执行花费时长：' + (end - start);
+        setHtml('执行冒泡排序算法后：', arr, time);
+        return arr;
+    };
+    // 希尔排序算法后：
+    function shellSort(arr) {
+        let start = Date.now();
+        var len = arr.length,
+
+            temp,
+
+            gap = 1;
+
+        while (gap < len / 3) {         // 动态定义间隔序列
+
+            gap = gap * 3 + 1;
+
+        }
+
+        for (gap; gap > 0; gap = Math.floor(gap / 3)) {
+
+            for (var i = gap; i < len; i++) {
+
+                temp = arr[i];
+
+                for (var j = i - gap; j >= 0 && arr[j] > temp; j -= gap) {
+
+                    arr[j + gap] = arr[j];
+
+                }
+
+                arr[j + gap] = temp;
+
+            }
+
+        }
+        let end = Date.now();
+        let time = '  函数执行花费时长：' + (end - start);
+        setHtml('执行希尔排序算法后：', arr, time);
+        return arr;
+
+    }
+    function setHtml(name, text, time) {
+        // 创建元素
+        let node = document.createElement('div');
+        node.innerText = name + text + time;
+        document.body.appendChild(node);
+    }
+</script>
+
+</html>

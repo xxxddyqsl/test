@@ -271,7 +271,7 @@
         $scope.title = "CHILDREN TIGER";
         alert('父级作用域的值' + $scope.name);
     }])
-    app.directive('testDirective2', function () {
+    app.directive('testDirective2', function () {   
         return {
             transclude: true,
             replace: true,//如果此配置为true则替换指令所在的元素 如果为false或者不指定 则把当前指令追加到所在元素的内部

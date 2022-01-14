@@ -1,40 +1,166 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-         video {
-      width: 640px;
-      height: 480px;
-      border: 1px solid;
-    }
+        video {
+            width: 640px;
+            height: 480px;
+            border: 1px solid;
+        }
     </style>
 </head>
+
 <body>
-    <video  id="LocalStream"></video>
+    <video id="LocalStream"></video>
     <button id="dk" onclick="get( { audio: true,video:true})">启动</button>
     <button id="gb" onclick="get( { audio: true,video:false})">关闭</button>
 </body>
 <script>
-    window.onload=()=>{
-
+    window.onload = () => {
+        var arr = [];
+        // for (let i in res.Data) {
+        //     var data = that.cefMsgToFrontMsg(res.Data[i]);
+        //     if (arr.length > 0) {
+        //         for (let k in arr) {
+        //             if (data.msgObj.voiceRoomKey == arr[k].msgObj.voiceRoomKey) {
+        //                 if (data.msgObj.voiceMeetingType != 'invite' && data.msgObj.voiceMeetingType != arr[k].msgObj.voiceMeetingType) {
+        //                     arr[k] = data
+        //                     break;
+        //                 }
+        //             } else {
+        //                 arr.push(data)
+        //             }
+        //         }
+        //     } else {
+        //         arr.push(data)
+        //     }
+        // }
+        // console.log(arr)
+        var arrb = [];
+        var a = [{ id: 'a', name: 'aa', s: 'refuse' }, { id: 'a', name: 'a1', s: 'invite' }, { id: 'b', name: 'b1', s: 'invite' }, { id: 'a', name: 'aa', s: 'destroy' }, { id: 'a', name: 'aa', s: 'refuse' },];
+        for (let i in a) {
+            if (arrb.length > 0) {
+                for (let k in arrb) {
+                    if (a[i].id == arrb[k].id) {
+                        if (a[i].s != 'invite' && a[i].s != arrb[k].s) {
+                            arrb[k] = a[i]
+                            break;
+                        }
+                    } else {
+                        arrb.push(a[i])
+                    }
+                }
+            } else {
+                arrb.push(a[i])
+            }
+        }
+        console.log(arrb);
+        var cs1 = '{"sender":{"Name":"123","Avatar":"D:/JJ/JJ/img/HeadImg/man.png","IMStatus":1,"Id":"5bfcdc99aa55498aa1c5da6be672c136"},"chatId":"5bfcdc99aa55498aa1c5da6be672c136","chatType":1000,"type":"service","msgType":10,"content":"{\\"b_ISINDENTITY\\":false,\\"chatRoomId\\":\\"f43245bd9824430b973fbf57320bb38b\\",\\"message\\":\\"视频会议邀请\\",\\"n_TYPE\\":10,\\"type\\":0,\\"voiceMeetingType\\":\\"invite\\",\\"voiceRoomKey\\":\\"4767d5e4-2134-659f-cd44-57070f43a687\\"}","fileLength":0,"filePath":"","fileStatus":0,"fileUrl":"","messageid":"5bfcdc99aa55498aa1c5da6be672c1361637127923762","senderId":"5bfcdc99aa55498aa1c5da6be672c136","status":1,"timeStamp":1637127925817,"name":null,"sendDate":"2021-11-17","inGroup":false,"showTime":false,"speed":0,"transProgess":0,"msgObj":{"b_ISINDENTITY":false,"chatRoomId":"f43245bd9824430b973fbf57320bb38b","message":"视频会议邀请==>测试数据","n_TYPE":10,"type":0,"voiceMeetingType":"invite","voiceRoomKey":"ccccc88888888"}}';
+        var cs2 = '{"sender":{"Name":"123","Avatar":"D:/JJ/JJ/img/HeadImg/man.png","IMStatus":1,"Id":"5bfcdc99aa55498aa1c5da6be672c136"},"chatId":"5bfcdc99aa55498aa1c5da6be672c136","chatType":1000,"type":"service","msgType":10,"content":"{\\"b_ISINDENTITY\\":false,\\"chatRoomId\\":\\"f43245bd9824430b973fbf57320bb38b\\",\\"message\\":\\"视频会议邀请\\",\\"n_TYPE\\":10,\\"type\\":0,\\"voiceMeetingType\\":\\"invite\\",\\"voiceRoomKey\\":\\"4767d5e4-2134-659f-cd44-57070f43a687\\"}","fileLength":0,"filePath":"","fileStatus":0,"fileUrl":"","messageid":"5bfcdc99aa55498aa1c5da6be672c1361637127923762","senderId":"5bfcdc99aa55498aa1c5da6be672c136","status":1,"timeStamp":1637127925817,"name":null,"sendDate":"2021-11-17","inGroup":false,"showTime":false,"speed":0,"transProgess":0,"msgObj":{"b_ISINDENTITY":false,"chatRoomId":"f43245bd9824430b973fbf57320bb38b","message":"视频会议邀请==>测试数据","n_TYPE":10,"type":0,"voiceMeetingType":"invite","voiceRoomKey":"ccccc88888888"}}';
+        var cs = '{"sender":{"Name":"123","Avatar":"D:/JJ/JJ/img/HeadImg/man.png","IMStatus":1,"Id":"5bfcdc99aa55498aa1c5da6be672c136"},"chatId":"5bfcdc99aa55498aa1c5da6be672c136","chatType":1000,"type":"service","msgType":10,"content":"{\\"b_ISINDENTITY\\":false,\\"chatRoomId\\":\\"f43245bd9824430b973fbf57320bb38b\\",\\"message\\":\\"视频会议邀请\\",\\"n_TYPE\\":10,\\"type\\":0,\\"voiceMeetingType\\":\\"invite\\",\\"voiceRoomKey\\":\\"4767d5e4-2134-659f-cd44-57070f43a687\\"}","fileLength":0,"filePath":"","fileStatus":0,"fileUrl":"","messageid":"5bfcdc99aa55498aa1c5da6be672c1361637127923762","senderId":"5bfcdc99aa55498aa1c5da6be672c136","status":1,"timeStamp":1637127925817,"name":null,"sendDate":"2021-11-17","inGroup":false,"showTime":false,"speed":0,"transProgess":0,"msgObj":{"b_ISINDENTITY":false,"chatRoomId":"f43245bd9824430b973fbf57320bb38b","message":"视频会议邀请==>测试数据","n_TYPE":10,"type":0,"voiceMeetingType":"invite","voiceRoomKey":"99999999"}}';
+        var newcs = '{"sender":{"Name":"123","Avatar":"D:/JJ/JJ/img/HeadImg/man.png","IMStatus":1,"Id":"5bfcdc99aa55498aa1c5da6be672c136"},"chatId":"5bfcdc99aa55498aa1c5da6be672c136","chatType":1000,"type":"service","msgType":10,"content":"{\\"b_ISINDENTITY\\":false,\\"chatRoomId\\":\\"f43245bd9824430b973fbf57320bb38b\\",\\"message\\":\\"视频会议邀请\\",\\"n_TYPE\\":10,\\"type\\":0,\\"voiceMeetingType\\":\\"invite\\",\\"voiceRoomKey\\":\\"4767d5e4-2134-659f-cd44-57070f43a687\\"}","fileLength":0,"filePath":"","fileStatus":0,"fileUrl":"","messageid":"5bfcdc99aa55498aa1c5da6be672c1361637127923762","senderId":"5bfcdc99aa55498aa1c5da6be672c136","status":1,"timeStamp":1637127925817,"name":null,"sendDate":"2021-11-17","inGroup":false,"showTime":false,"speed":0,"transProgess":0,"msgObj":{"b_ISINDENTITY":false,"chatRoomId":"f43245bd9824430b973fbf57320bb38b","message":"已取消视频会议邀请==>测试数据","n_TYPE":10,"type":0,"voiceMeetingType":"destroy","voiceRoomKey":"99999999"}}';
+        var data = [JSON.parse(cs1), JSON.parse(cs2), JSON.parse(cs), JSON.parse(newcs), { "sender": { "Name": "123", "Avatar": "D:/JJ/JJ/img/HeadImg/man.png", "IMStatus": 1, "Id": "5bfcdc99aa55498aa1c5da6be672c136" }, "chatId": "5bfcdc99aa55498aa1c5da6be672c136", "chatType": 1000, "type": "text", "msgType": 0, "content": "1", "fileLength": 0, "filePath": "", "fileStatus": 0, "fileUrl": "", "messageid": "5bfcdc99aa55498aa1c5da6be672c1361637140079643", "senderId": "5bfcdc99aa55498aa1c5da6be672c136", "status": 1, "timeStamp": 1637140081724, "name": null, "sendDate": "2021-11-17", "inGroup": false, "showTime": false, "speed": 0, "transProgess": 0 }, { "sender": { "Name": "123", "Avatar": "D:/JJ/JJ/img/HeadImg/man.png", "IMStatus": 1, "Id": "5bfcdc99aa55498aa1c5da6be672c136" }, "chatId": "5bfcdc99aa55498aa1c5da6be672c136", "chatType": 1000, "type": "text", "msgType": 0, "content": "1", "fileLength": 0, "filePath": "", "fileStatus": 0, "fileUrl": "", "messageid": "5bfcdc99aa55498aa1c5da6be672c1361637140017294", "senderId": "5bfcdc99aa55498aa1c5da6be672c136", "status": 1, "timeStamp": 1637140019373, "name": null, "sendDate": "2021-11-17", "inGroup": false, "showTime": false, "speed": 0, "transProgess": 0 }, { "sender": { "Name": "123", "Avatar": "D:/JJ/JJ/img/HeadImg/man.png", "IMStatus": 1, "Id": "5bfcdc99aa55498aa1c5da6be672c136" }, "chatId": "5bfcdc99aa55498aa1c5da6be672c136", "chatType": 1000, "type": "text", "msgType": 0, "content": "1", "fileLength": 0, "filePath": "", "fileStatus": 0, "fileUrl": "", "messageid": "5bfcdc99aa55498aa1c5da6be672c1361637139955059", "senderId": "5bfcdc99aa55498aa1c5da6be672c136", "status": 1, "timeStamp": 1637139957141, "name": null, "sendDate": "2021-11-17", "inGroup": false, "showTime": false, "speed": 0, "transProgess": 0 },
+        { "sender": { "Name": "123", "Avatar": "D:/JJ/JJ/img/HeadImg/man.png", "IMStatus": 1, "Id": "5bfcdc99aa55498aa1c5da6be672c136" }, "chatId": "5bfcdc99aa55498aa1c5da6be672c136", "chatType": 1000, "type": "service", "msgType": 10, "content": "{\"b_ISINDENTITY\":false,\"chatRoomId\":\"f43245bd9824430b973fbf57320bb38b\",\"message\":\"已取消视频会议邀请\",\"n_TYPE\":10,\"voiceMeetingType\":\"destroy\",\"voiceRoomKey\":\"4767d5e4-2134-659f-cd44-57070f43a687\"}", "fileLength": 0, "filePath": "", "fileStatus": 0, "fileUrl": "", "messageid": "5bfcdc99aa55498aa1c5da6be672c1361637127938177", "senderId": "5bfcdc99aa55498aa1c5da6be672c136", "status": 1, "timeStamp": 1637127940233, "name": null, "sendDate": "2021-11-17", "inGroup": false, "showTime": false, "speed": 0, "transProgess": 0, "msgObj": { "b_ISINDENTITY": false, "chatRoomId": "f43245bd9824430b973fbf57320bb38b", "message": "已取消视频会议邀请", "n_TYPE": 10, "voiceMeetingType": "destroy", "voiceRoomKey": "4767d5e4-2134-659f-cd44-57070f43a687" } }, { "sender": { "Name": "123", "Avatar": "D:/JJ/JJ/img/HeadImg/man.png", "IMStatus": 1, "Id": "5bfcdc99aa55498aa1c5da6be672c136" }, "chatId": "5bfcdc99aa55498aa1c5da6be672c136", "chatType": 1000, "type": "service", "msgType": 10, "content": "{\"b_ISINDENTITY\":false,\"chatRoomId\":\"f43245bd9824430b973fbf57320bb38b\",\"message\":\"视频会议邀请\",\"n_TYPE\":10,\"type\":0,\"voiceMeetingType\":\"invite\",\"voiceRoomKey\":\"4767d5e4-2134-659f-cd44-57070f43a687\"}", "fileLength": 0, "filePath": "", "fileStatus": 0, "fileUrl": "", "messageid": "5bfcdc99aa55498aa1c5da6be672c1361637127923762", "senderId": "5bfcdc99aa55498aa1c5da6be672c136", "status": 1, "timeStamp": 1637127925817, "name": null, "sendDate": "2021-11-17", "inGroup": false, "showTime": false, "speed": 0, "transProgess": 0, "msgObj": { "b_ISINDENTITY": false, "chatRoomId": "f43245bd9824430b973fbf57320bb38b", "message": "视频会议邀请", "n_TYPE": 10, "type": 0, "voiceMeetingType": "invite", "voiceRoomKey": "4767d5e4-2134-659f-cd44-57070f43a687" } }, { "sender": { "Name": "123", "Avatar": "D:/JJ/JJ/img/HeadImg/man.png", "IMStatus": 1, "Id": "5bfcdc99aa55498aa1c5da6be672c136" }, "chatId": "5bfcdc99aa55498aa1c5da6be672c136", "chatType": 1000, "type": "service", "msgType": 10, "content": "{\"b_ISINDENTITY\":false,\"chatRoomId\":\"f43245bd9824430b973fbf57320bb38b\",\"message\":\"拒绝视频邀请\",\"n_TYPE\":10,\"type\":0,\"voiceMeetingType\":\"refuse\",\"voiceRoomKey\":\"a14f4fa5-5134-659f-cd29-377dfb5c5730\"}", "fileLength": 0, "filePath": "", "fileStatus": 0, "fileUrl": "", "messageid": "5bfcdc99aa55498aa1c5da6be672c1361637127902691", "senderId": "5bfcdc99aa55498aa1c5da6be672c136", "status": 1, "timeStamp": 1637127904745, "name": null, "sendDate": "2021-11-17", "inGroup": false, "showTime": false, "speed": 0, "transProgess": 0, "msgObj": { "b_ISINDENTITY": false, "chatRoomId": "f43245bd9824430b973fbf57320bb38b", "message": "拒绝视频邀请", "n_TYPE": 10, "type": 0, "voiceMeetingType": "refuse", "voiceRoomKey": "a14f4fa5-5134-659f-cd29-377dfb5c5730" } }, { "sender": { "Name": "邢鑫", "Avatar": "D:/JJ/JJ/img/HeadImg/man.png", "IMStatus": 1, "Id": "f43245bd9824430b973fbf57320bb38b" }, "chatId": "5bfcdc99aa55498aa1c5da6be672c136", "chatType": 1000, "type": "service", "msgType": 10, "content": "{\"b_ISINDENTITY\":false,\"chatRoomId\":\"5bfcdc99aa55498aa1c5da6be672c136\",\"message\":\"a14f4fa5-5134-659f-cd29-377dfb5c5730\",\"n_TYPE\":10,\"type\":0,\"voiceMeetingType\":\"invite\",\"voiceRoomKey\":\"a14f4fa5-5134-659f-cd29-377dfb5c5730\"}", "fileLength": 0, "filePath": "", "fileStatus": 4, "fileUrl": "", "messageid": "f43245bd9824430b973fbf57320bb38b_1637127894320", "senderId": "f43245bd9824430b973fbf57320bb38b", "status": 1, "timeStamp": 1637127896545, "name": null, "sendDate": "2021-11-17", "inGroup": false, "showTime": false, "speed": 0, "transProgess": 0, "msgObj": { "b_ISINDENTITY": false, "chatRoomId": "5bfcdc99aa55498aa1c5da6be672c136", "message": "a14f4fa5-5134-659f-cd29-377dfb5c5730", "n_TYPE": 10, "type": 0, "voiceMeetingType": "invite", "voiceRoomKey": "a14f4fa5-5134-659f-cd29-377dfb5c5730" } }, { "sender": { "Name": "123", "Avatar": "D:/JJ/JJ/img/HeadImg/man.png", "IMStatus": 1, "Id": "5bfcdc99aa55498aa1c5da6be672c136" }, "chatId": "5bfcdc99aa55498aa1c5da6be672c136", "chatType": 1000, "type": "service", "msgType": 10, "content": "{\"b_ISINDENTITY\":false,\"chatRoomId\":\"f43245bd9824430b973fbf57320bb38b\",\"message\":\"拒绝了您的会议邀请\",\"n_TYPE\":10,\"voiceMeetingType\":\"refuse\",\"voiceRoomKey\":\"4af842d7-d134-659f-adba-71d2eb720ac2\"}", "fileLength": 0, "filePath": "", "fileStatus": 0, "fileUrl": "", "messageid": "5bfcdc99aa55498aa1c5da6be672c1361637120344689", "senderId": "5bfcdc99aa55498aa1c5da6be672c136", "status": 1, "timeStamp": 1637120345644, "name": null, "sendDate": "2021-11-17", "inGroup": false, "showTime": false, "speed": 0, "transProgess": 0, "msgObj": { "b_ISINDENTITY": false, "chatRoomId": "f43245bd9824430b973fbf57320bb38b", "message": "拒绝了您的会议邀请", "n_TYPE": 10, "voiceMeetingType": "refuse", "voiceRoomKey": "4af842d7-d134-659f-adba-71d2eb720ac2" } }, { "sender": { "Name": "123", "Avatar": "D:/JJ/JJ/img/HeadImg/man.png", "IMStatus": 1, "Id": "5bfcdc99aa55498aa1c5da6be672c136" }, "chatId": "5bfcdc99aa55498aa1c5da6be672c136", "chatType": 1000, "type": "service", "msgType": 10, "content": "{\"b_ISINDENTITY\":false,\"chatRoomId\":\"f43245bd9824430b973fbf57320bb38b\",\"message\":\"视频会议邀请\",\"n_TYPE\":10,\"type\":0,\"voiceMeetingType\":\"invite\",\"voiceRoomKey\":\"4af842d7-d134-659f-adba-71d2eb720ac2\"}", "fileLength": 0, "filePath": "", "fileStatus": 0, "fileUrl": "", "messageid": "5bfcdc99aa55498aa1c5da6be672c1361637120334577", "senderId": "5bfcdc99aa55498aa1c5da6be672c136", "status": 1, "timeStamp": 1637120335532, "name": null, "sendDate": "2021-11-17", "inGroup": false, "showTime": false, "speed": 0, "transProgess": 0, "msgObj": { "b_ISINDENTITY": false, "chatRoomId": "f43245bd9824430b973fbf57320bb38b", "message": "视频会议邀请", "n_TYPE": 10, "type": 0, "voiceMeetingType": "invite", "voiceRoomKey": "4af842d7-d134-659f-adba-71d2eb720ac2" } }, { "sender": { "Name": "123", "Avatar": "D:/JJ/JJ/img/HeadImg/man.png", "IMStatus": 1, "Id": "5bfcdc99aa55498aa1c5da6be672c136" }, "chatId": "5bfcdc99aa55498aa1c5da6be672c136", "chatType": 1000, "type": "service", "msgType": 10, "content": "{\"b_ISINDENTITY\":false,\"chatRoomId\":\"f43245bd9824430b973fbf57320bb38b\",\"message\":\"拒绝视频邀请\",\"n_TYPE\":10,\"voiceMeetingType\":\"refuse\",\"voiceRoomKey\":\"rtc_722411637120305106.635010\"}", "fileLength": 0, "filePath": "", "fileStatus": 0, "fileUrl": "", "messageid": "5bfcdc99aa55498aa1c5da6be672c1361637120321403", "senderId": "5bfcdc99aa55498aa1c5da6be672c136", "status": 1, "timeStamp": 1637120322357, "name": null, "sendDate": "2021-11-17", "inGroup": false, "showTime": false, "speed": 0, "transProgess": 0, "msgObj": { "b_ISINDENTITY": false, "chatRoomId": "f43245bd9824430b973fbf57320bb38b", "message": "拒绝视频邀请", "n_TYPE": 10, "voiceMeetingType": "refuse", "voiceRoomKey": "rtc_722411637120305106.635010" } }, { "sender": { "Name": "123", "Avatar": "D:/JJ/JJ/img/HeadImg/man.png", "IMStatus": 1, "Id": "5bfcdc99aa55498aa1c5da6be672c136" }, "chatId": "5bfcdc99aa55498aa1c5da6be672c136", "chatType": 1000, "type": "service", "msgType": 10, "content": "{\"b_ISINDENTITY\":false,\"chatRoomId\":\"f43245bd9824430b973fbf57320bb38b\",\"message\":\"拒绝视频邀请\",\"n_TYPE\":10,\"voiceMeetingType\":\"refuse\",\"voiceRoomKey\":\"rtc_463301637119063832.583984\"}", "fileLength": 0, "filePath": "", "fileStatus": 0, "fileUrl": "", "messageid": "5bfcdc99aa55498aa1c5da6be672c1361637119066320", "senderId": "5bfcdc99aa55498aa1c5da6be672c136", "status": 1, "timeStamp": 1637119067272, "name": null, "sendDate": "2021-11-17", "inGroup": false, "showTime": false, "speed": 0, "transProgess": 0, "msgObj": { "b_ISINDENTITY": false, "chatRoomId": "f43245bd9824430b973fbf57320bb38b", "message": "拒绝视频邀请", "n_TYPE": 10, "voiceMeetingType": "refuse", "voiceRoomKey": "rtc_463301637119063832.583984" } }, { "sender": { "Name": "123", "Avatar": "D:/JJ/JJ/img/HeadImg/man.png", "IMStatus": 1, "Id": "5bfcdc99aa55498aa1c5da6be672c136" }, "chatId": "5bfcdc99aa55498aa1c5da6be672c136", "chatType": 1000, "type": "service", "msgType": 10, "content": "{\"b_ISINDENTITY\":false,\"chatRoomId\":\"f43245bd9824430b973fbf57320bb38b\",\"message\":\"拒绝了您的会议邀请\",\"n_TYPE\":10,\"voiceMeetingType\":\"refuse\",\"voiceRoomKey\":\"20fe4779-7134-659f-aa75-9fa72ef79863\"}", "fileLength": 0, "filePath": "", "fileStatus": 0, "fileUrl": "", "messageid": "5bfcdc99aa55498aa1c5da6be672c1361637119036221", "senderId": "5bfcdc99aa55498aa1c5da6be672c136", "status": 1, "timeStamp": 1637119037174, "name": null, "sendDate": "2021-11-17", "inGroup": false, "showTime": false, "speed": 0, "transProgess": 0, "msgObj": { "b_ISINDENTITY": false, "chatRoomId": "f43245bd9824430b973fbf57320bb38b", "message": "拒绝了您的会议邀请", "n_TYPE": 10, "voiceMeetingType": "refuse", "voiceRoomKey": "20fe4779-7134-659f-aa75-9fa72ef79863" } }, { "sender": { "Name": "123", "Avatar": "D:/JJ/JJ/img/HeadImg/man.png", "IMStatus": 1, "Id": "5bfcdc99aa55498aa1c5da6be672c136" }, "chatId": "5bfcdc99aa55498aa1c5da6be672c136", "chatType": 1000, "type": "service", "msgType": 10, "content": "{\"b_ISINDENTITY\":false,\"chatRoomId\":\"f43245bd9824430b973fbf57320bb38b\",\"message\":\"视频会议邀请\",\"n_TYPE\":10,\"type\":0,\"voiceMeetingType\":\"invite\",\"voiceRoomKey\":\"20fe4779-7134-659f-aa75-9fa72ef79863\"}", "fileLength": 0, "filePath": "", "fileStatus": 0, "fileUrl": "", "messageid": "5bfcdc99aa55498aa1c5da6be672c1361637119032319", "senderId": "5bfcdc99aa55498aa1c5da6be672c136", "status": 1, "timeStamp": 1637119033273, "name": null, "sendDate": "2021-11-17", "inGroup": false, "showTime": false, "speed": 0, "transProgess": 0, "msgObj": { "b_ISINDENTITY": false, "chatRoomId": "f43245bd9824430b973fbf57320bb38b", "message": "视频会议邀请", "n_TYPE": 10, "type": 0, "voiceMeetingType": "invite", "voiceRoomKey": "20fe4779-7134-659f-aa75-9fa72ef79863" } }, { "sender": { "Name": "123", "Avatar": "D:/JJ/JJ/img/HeadImg/man.png", "IMStatus": 1, "Id": "5bfcdc99aa55498aa1c5da6be672c136" }, "chatId": "5bfcdc99aa55498aa1c5da6be672c136", "chatType": 1000, "type": "service", "msgType": 10, "content": "{\"b_ISINDENTITY\":false,\"chatRoomId\":\"f43245bd9824430b973fbf57320bb38b\",\"message\":\"现在不能加入您的会议：他正在另一个会议中\",\"n_TYPE\":10,\"voiceMeetingType\":\"refuse\",\"voiceRoomKey\":\"8e9a3a09-b134-659f-aa02-b9f01ca1541c\"}", "fileLength": 0, "filePath": "", "fileStatus": 0, "fileUrl": "", "messageid": "5bfcdc99aa55498aa1c5da6be672c1361637119006871", "senderId": "5bfcdc99aa55498aa1c5da6be672c136", "status": 1, "timeStamp": 1637119007825, "name": null, "sendDate": "2021-11-17", "inGroup": false, "showTime": false, "speed": 0, "transProgess": 0, "msgObj": { "b_ISINDENTITY": false, "chatRoomId": "f43245bd9824430b973fbf57320bb38b", "message": "现在不能加入您的会议：他正在另一个会议中", "n_TYPE": 10, "voiceMeetingType": "refuse", "voiceRoomKey": "8e9a3a09-b134-659f-aa02-b9f01ca1541c" } }, { "sender": { "Name": "123", "Avatar": "D:/JJ/JJ/img/HeadImg/man.png", "IMStatus": 1, "Id": "5bfcdc99aa55498aa1c5da6be672c136" }, "chatId": "5bfcdc99aa55498aa1c5da6be672c136", "chatType": 1000, "type": "service", "msgType": 10, "content": "{\"b_ISINDENTITY\":false,\"chatRoomId\":\"f43245bd9824430b973fbf57320bb38b\",\"message\":\"视频会议邀请\",\"n_TYPE\":10,\"type\":0,\"voiceMeetingType\":\"invite\",\"voiceRoomKey\":\"8e9a3a09-b134-659f-aa02-b9f01ca1541c\"}", "fileLength": 0, "filePath": "", "fileStatus": 0, "fileUrl": "", "messageid": "5bfcdc99aa55498aa1c5da6be672c1361637118858176", "senderId": "5bfcdc99aa55498aa1c5da6be672c136", "status": 1, "timeStamp": 1637118859130, "name": null, "sendDate": "2021-11-17", "inGroup": false, "showTime": false, "speed": 0, "transProgess": 0, "msgObj": { "b_ISINDENTITY": false, "chatRoomId": "f43245bd9824430b973fbf57320bb38b", "message": "视频会议邀请", "n_TYPE": 10, "type": 0, "voiceMeetingType": "invite", "voiceRoomKey": "8e9a3a09-b134-659f-aa02-b9f01ca1541c" } }, { "sender": { "Name": "123", "Avatar": "D:/JJ/JJ/img/HeadImg/man.png", "IMStatus": 1, "Id": "5bfcdc99aa55498aa1c5da6be672c136" }, "chatId": "5bfcdc99aa55498aa1c5da6be672c136", "chatType": 1000, "type": "service", "msgType": 10, "content": "{\"b_ISINDENTITY\":false,\"chatRoomId\":\"f43245bd9824430b973fbf57320bb38b\",\"message\":\"现在不能加入您的会议：他正在另一个会议中\",\"n_TYPE\":10,\"voiceMeetingType\":\"refuse\",\"voiceRoomKey\":\"369cad73-f134-659f-a9dd-f2ca366a22cf\"}", "fileLength": 0, "filePath": "", "fileStatus": 0, "fileUrl": "", "messageid": "5bfcdc99aa55498aa1c5da6be672c1361637118814301", "senderId": "5bfcdc99aa55498aa1c5da6be672c136", "status": 1, "timeStamp": 1637118815254, "name": null, "sendDate": "2021-11-17", "inGroup": false, "showTime": false, "speed": 0, "transProgess": 0, "msgObj": { "b_ISINDENTITY": false, "chatRoomId": "f43245bd9824430b973fbf57320bb38b", "message": "现在不能加入您的会议：他正在另一个会议中", "n_TYPE": 10, "voiceMeetingType": "refuse", "voiceRoomKey": "369cad73-f134-659f-a9dd-f2ca366a22cf" } }, { "sender": { "Name": "123", "Avatar": "D:/JJ/JJ/img/HeadImg/man.png", "IMStatus": 1, "Id": "5bfcdc99aa55498aa1c5da6be672c136" }, "chatId": "5bfcdc99aa55498aa1c5da6be672c136", "chatType": 1000, "type": "service", "msgType": 10, "content": "{\"b_ISINDENTITY\":false,\"chatRoomId\":\"f43245bd9824430b973fbf57320bb38b\",\"message\":\"视频会议邀请\",\"n_TYPE\":10,\"type\":0,\"voiceMeetingType\":\"invite\",\"voiceRoomKey\":\"369cad73-f134-659f-a9dd-f2ca366a22cf\"}", "fileLength": 0, "filePath": "", "fileStatus": 0, "fileUrl": "", "messageid": "5bfcdc99aa55498aa1c5da6be672c1361637118804025", "senderId": "5bfcdc99aa55498aa1c5da6be672c136", "status": 1, "timeStamp": 1637118804978, "name": null, "sendDate": "2021-11-17", "inGroup": false, "showTime": false, "speed": 0, "transProgess": 0, "msgObj": { "b_ISINDENTITY": false, "chatRoomId": "f43245bd9824430b973fbf57320bb38b", "message": "视频会议邀请", "n_TYPE": 10, "type": 0, "voiceMeetingType": "invite", "voiceRoomKey": "369cad73-f134-659f-a9dd-f2ca366a22cf" } }, { "sender": { "Name": "123", "Avatar": "D:/JJ/JJ/img/HeadImg/man.png", "IMStatus": 1, "Id": "5bfcdc99aa55498aa1c5da6be672c136" }, "chatId": "5bfcdc99aa55498aa1c5da6be672c136", "chatType": 1000, "type": "service", "msgType": 10, "content": "{\"b_ISINDENTITY\":false,\"chatRoomId\":\"f43245bd9824430b973fbf57320bb38b\",\"message\":\"现在不能加入您的会议：他正在另一个会议中\",\"n_TYPE\":10,\"voiceMeetingType\":\"refuse\",\"voiceRoomKey\":\"7867bd60-8134-659f-a997-7d506c583dd2\"}", "fileLength": 0, "filePath": "", "fileStatus": 0, "fileUrl": "", "messageid": "5bfcdc99aa55498aa1c5da6be672c1361637118709364", "senderId": "5bfcdc99aa55498aa1c5da6be672c136", "status": 1, "timeStamp": 1637118710315, "name": null, "sendDate": "2021-11-17", "inGroup": false, "showTime": false, "speed": 0, "transProgess": 0, "msgObj": { "b_ISINDENTITY": false, "chatRoomId": "f43245bd9824430b973fbf57320bb38b", "message": "现在不能加入您的会议：他正在另一个会议中", "n_TYPE": 10, "voiceMeetingType": "refuse", "voiceRoomKey": "7867bd60-8134-659f-a997-7d506c583dd2" } }, { "sender": { "Name": "123", "Avatar": "D:/JJ/JJ/img/HeadImg/man.png", "IMStatus": 1, "Id": "5bfcdc99aa55498aa1c5da6be672c136" }, "chatId": "5bfcdc99aa55498aa1c5da6be672c136", "chatType": 1000, "type": "service", "msgType": 10, "content": "{\"b_ISINDENTITY\":false,\"chatRoomId\":\"f43245bd9824430b973fbf57320bb38b\",\"message\":\"视频会议邀请\",\"n_TYPE\":10,\"type\":0,\"voiceMeetingType\":\"invite\",\"voiceRoomKey\":\"7867bd60-8134-659f-a997-7d506c583dd2\"}", "fileLength": 0, "filePath": "", "fileStatus": 0, "fileUrl": "", "messageid": "5bfcdc99aa55498aa1c5da6be672c1361637118703656", "senderId": "5bfcdc99aa55498aa1c5da6be672c136", "status": 1, "timeStamp": 1637118704608, "name": null, "sendDate": "2021-11-17", "inGroup": false, "showTime": false, "speed": 0, "transProgess": 0, "msgObj": { "b_ISINDENTITY": false, "chatRoomId": "f43245bd9824430b973fbf57320bb38b", "message": "视频会议邀请", "n_TYPE": 10, "type": 0, "voiceMeetingType": "invite", "voiceRoomKey": "7867bd60-8134-659f-a997-7d506c583dd2" } }, { "sender": { "Name": "123", "Avatar": "D:/JJ/JJ/img/HeadImg/man.png", "IMStatus": 1, "Id": "5bfcdc99aa55498aa1c5da6be672c136" }, "chatId": "5bfcdc99aa55498aa1c5da6be672c136", "chatType": 1000, "type": "service", "msgType": 10, "content": "{\"b_ISINDENTITY\":false,\"chatRoomId\":\"f43245bd9824430b973fbf57320bb38b\",\"message\":\"已取消视频会议邀请\",\"n_TYPE\":10,\"voiceMeetingType\":\"destroy\",\"voiceRoomKey\":\"88888888\"}", "fileLength": 0, "filePath": "", "fileStatus": 0, "fileUrl": "", "messageid": "5bfcdc99aa55498aa1c5da6be672c1361637118682062", "senderId": "5bfcdc99aa55498aa1c5da6be672c136", "status": 1, "timeStamp": 1637118683016, "name": null, "sendDate": "2021-11-17", "inGroup": false, "showTime": false, "speed": 0, "transProgess": 0, "msgObj": { "b_ISINDENTITY": false, "chatRoomId": "f43245bd9824430b973fbf57320bb38b", "message": "已取消视频会议邀请", "n_TYPE": 10, "voiceMeetingType": "destroy", "voiceRoomKey": "88888888" } }]
+        console.log(data);
+        // unique([], data);
+        deWeight(data);
     }
-    function get(constraints){
+    // 递归去重
+    function unique(arr, data) {
+        let is = false;
+        for (let i in data) {
+            if (arr.length != 0 && data[i].type == "service") {
+                for (let k in arr) {
+                    if (arr[k].type == "service") {
+                        if (data[i].msgObj.voiceRoomKey == arr[k].msgObj.voiceRoomKey) {
+                            if (data[i].msgObj.voiceMeetingType != 'invite' && data[i].msgObj.voiceMeetingType != arr[k].msgObj.voiceMeetingType) {
+                                arr[k] = data[i];
+                                is = false;
+                            } else {
+                                // is=false;
+                                break;
+                            }
+                        } else {
+                            arr.push(data[i]);
+                        }
+                    } else {
+                        is = true;
+                    }
+
+                }
+                if (is) {
+                    arr.push(data[i]);
+                }
+            } else {
+                arr.push(data[i])
+            }
+        }
+        console.log(arr);
+        // for (let i in data) {
+        //     if (arr.length <= 0) {
+        //         arr.push(data[i]);
+        //     }
+
+        // }
+    }
+
+    //     var arr = [{name: 'a',id: 1}, {name: 'a',id: 2}, {name: 'b',id: 3}, {name: 'c',id: 4},
+    //  {name: 'c',id: 6}, {name: 'b',id: 6}, {name: 'd',id: 7}];
+    // 去重 同一个 房间id  房间取消 关闭 拒绝之后的状态 覆盖 邀请加入的 消息数据
+    function deWeight(arr) {
+        for (var i = 0; i < arr.length - 1; i++) {
+            for (var j = i + 1; j < arr.length; j++) {
+                if (arr[i].type == "service" && arr[j].type == "service" && arr[i].msgObj.voiceRoomKey == arr[j].msgObj.voiceRoomKey) {
+                    // arr.splice(j, 1);
+                    //因为数组长度减小1，所以直接 j++ 会漏掉一个元素，所以要 j--
+                    //     j--;
+                    if (arr[i].msgObj.voiceMeetingType == 'invite') {
+                        arr.splice(j, 1);
+                        //因为数组长度减小1，所以直接 j++ 会漏掉一个元素，所以要 j--
+                        j--;
+                    } else if (arr[j].msgObj.voiceMeetingType == 'invite') {
+                        arr.splice(i, 1);
+                        //因为数组长度减小1，所以直接 j++ 会漏掉一个元素，所以要 j--
+                        j--;
+                    } else if (arr[i].msgObj.voiceMeetingType != 'invite') {
+                        arr.splice(j, 1);
+                        //因为数组长度减小1，所以直接 j++ 会漏掉一个元素，所以要 j--
+                        j--;
+                    } else if (arr[j].msgObj.voiceMeetingType != 'invite') {
+                        arr.splice(i, 1);
+                        //因为数组长度减小1，所以直接 j++ 会漏掉一个元素，所以要 j--
+                        j--;
+                    }
+
+                }
+            }
+        }
+        // 根据时间戳 数组排序 从早 到 晚
+        // arr.sort((a,b)=>a.timeStamp - b.timeStamp)
+        console.log('%c%s', 'color:red;', '方法一：es5,newArr', arr);
+        return arr;
+    }
+    // var newArr = deWeight();
+    // console.log('%c%s', 'color:red;', '方法一：es5,newArr', newArr);
+    function get(constraints) {
         navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
             console.log(stream)
-        // 创建本地视频流 容器 或者 切换容器视频流
-        let node=document.getElementById('LocalStream');
+            // 创建本地视频流 容器 或者 切换容器视频流
+            let node = document.getElementById('LocalStream');
             // node.muted = true;
-        // node.controls = true;
-        node.autoplay = true; 
-        // node.playsinline = true;
-        node.srcObject = stream;
-      }).catch(function (err) {
-        console.log(err.name + ": " + err.message);
-      });
+            // node.controls = true;
+            node.autoplay = true;
+            // node.playsinline = true;
+            node.srcObject = stream;
+        }).catch(function (err) {
+            console.log(err.name + ": " + err.message);
+        });
     }
 </script>
+
 </html>

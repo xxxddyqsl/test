@@ -82,7 +82,26 @@
 
         }
     }]);
+    function getlog() {
+        alert(11)
+        
+        $.ajax({
+            type: "get",//必须是get请求
+            url: "http://log.woniu.com/query",
+            data: {},
+            dataType: "jsonp",//请求的数据类型
+            jsonp: "callback",//请求类型是回调
+            // jsonpCallback: "callbackFunction",//数据请求成功时回调的方法
+            success: function (response) {
+            console.log(response);
+            },error:function(err){
+                console.log(err)
+            }
+        });
+        
+    }
     window.onload = async () => {
+        getlog()
         //    let arr=[1,2,3,4,5,6,7,8,9];
         let stream = await getLocalStream();
         console.log(stream)

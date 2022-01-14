@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      background: #2d303a;
+      overflow-y: hidden;
+    }
+
+    .bounce {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      color: white;
+      height: 100%;
+      font: normal bold 6rem "Product Sans", sans-serif;
+      white-space: nowrap;
+    }
+
+    .letter {
+      animation: bounce 0.75s cubic-bezier(0.05, 0, 0.2, 1) infinite alternate;
+      display: inline-block;
+      transform: translate3d(0, 0, 0);
+      margin-top: 0.5em;
+      text-shadow: rgba(255, 255, 255, 0.4) 0 0 0.05em;
+      font: normal 500 3rem 'Varela Round', sans-serif;
+    }
+
+    /* .letter:nth-child(1) {
+  animation-delay: 0s;
+} */
+    /* .letter:nth-child(2) { */
+    /* animation-delay: 0.0833333333s; */
+    /* animation-delay: 0.08s;
+} */
+    /* .letter:nth-child(3) { */
+    /* animation-delay: 0.1666666667s; */
+    /* animation-delay: 0.16s;
+} */
+    /* .letter:nth-child(4) { */
+    /* animation-delay: 0.25s; */
+    /* animation-delay: 0.24s;
+} */
+    /* .letter:nth-child(5) { */
+    /* animation-delay: 0.3333333333s; */
+    /* animation-delay:  0.32s;
+} */
+    /* .letter:nth-child(6) { */
+    /* animation-delay: 0.4166666667s; */
+    /* animation-delay: 0.4s;
+} */
+
+
+    @keyframes bounce {
+      0% {
+        transform: translate3d(0, 0, 0);
+        /* text-shadow: rgba(255, 255, 255, 0.4) 0 0 0.05em; */
+      }
+
+      100% {
+        transform: translate3d(0, -1em, 0);
+        /* text-shadow: rgba(255, 255, 255, 0.4) 0 1em 0.35em; */
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bounce">
+    <!-- <span class="letter">登</span>
+        <span class="letter">录</span>
+        <span class="letter">异</span>
+        <span class="letter">常</span>
+        <span class="letter">c</span>
+        <span class="letter">a</span>
+        <span class="letter">i</span> -->
+  </div>
+</body>
+<script>
+  window.onload = async () => {
+    let string = '登录异常cai';
+    string.split('').map((item, index) => {
+      let node = document.createElement('span');
+      // node.className ='letter';
+      node.className = 'letter';
+      // document.getElementsByClassName('letter')[0]
+      node.innerText = item;
+      node.style.animationDelay = 0.08 * index + 's';
+      document.getElementsByClassName('bounce')[0].appendChild(node);
+    })
+    // let message =chatService.createMessage(1);
+    // let message = createMessage(1);
+      await new Promise((resolve) => {
+    setTimeout(() => {
+      console.log(3333)
+      resolve ();
+    }, 2000);
+  });
+    console.log(222)
+    console.log(1111)
+    // if(typeof message.then == 'function' )
+    // message.then(e=>{
+    //   alert(e)
+    // })
+    // console.log('message===》', message)
+    var  obj={'id':'测试id'};
+    let key=Object.keys(obj)[0];
+   let newKey= key.replace(/''|""/g,"");
+    console.log(typeof newKey ,newKey)
+  }
+
+// function test(){
+//   return  new Promise((resolve) => {
+//     setTimeout(() => {
+      
+//       resolve (bb);
+//     }, 2000);
+//   })
+// }
+  // var  chatService={
+  //     createMessage: (function(){
+  //       return function (val){
+  //         let key = undefined;
+  //         if(key == undefined){
+  //           (async () => {  // 声明即执行的 async 函数表达式
+  //             await new Promise((resolve) => {
+  //               setTimeout(() => {
+  //                 alert(222)
+  //                   val = 100;
+  //                   console.log('异步输出===》', val);
+  //                   // resolve(val)
+  //                   }, 2000);
+  //                   resolve(val)
+  //                 })
+  //                 alert(111)
+  //           })();
+  //         }
+  //         console.log(key +'==='+ val);
+  //         return (key +'==='+ val);
+  //       }
+  //     })(),
+  // }
+  //   function createMessage(val) {
+  //   if (val == 1) {
+  //     // var a = yield yb(val);
+  //     var cc=  await yb(val);
+  //     // yb(val).then(res=>{
+  //     //   cc=res;
+  //     // })
+  //     console.log('var == 1 最后===》',  cc);
+  //     return cc;
+  //   }else{
+  //     console.log('var != 1 最后===》', val);
+  //     return { msg: val, now: '测试'};
+  //   }
+  // }
+  // function yb(val) {
+  // return  new Promise((resolve) => {
+  //   setTimeout(() => {
+  //     alert(222)
+  //     val = 100;
+  //     console.log('异步输出===》', val);
+  //     var bb={ msg: val, now: '测试'};
+  //     resolve (bb);
+  //   }, 2000);
+  // })
+  // }
+//   let sleep = (timeountMS) => new Promise((resolve) => {
+//     setTimeout(resolve, timeountMS);
+// });
+
+// (async () => {  // 声明即执行的 async 函数表达式
+//     for (var i = 0; i < 5; i++) {
+//         await sleep(1000);
+//         console.log(i);
+//     }
+//     await sleep(1000);
+//     console.log(i);
+// })();
+</script>
+
+</html>

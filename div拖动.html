@@ -80,9 +80,9 @@
         div.style.cursor = "";
         key = 0;//开关关闭
 
-        dragable = false;
-        finalheight = he;
-        finalwidth = wi;
+        // dragable = false;
+        // finalheight = he;
+        // finalwidth = wi;
     }
     // 鼠标移动
     document.onmousemove = function (evt) {
@@ -136,58 +136,58 @@
     var wi = parseInt(getInner('dv').w);
     var moveBarBox = document.getElementById('moveBarBox');
     // 鼠标按下时
-    moveBarBox.onmousedown = function (event) {
-        finalheight = parseInt(getInner('dv').h); //当前元素的宽度高度
-        finalwidth = parseInt(getInner('dv').w);
-        dragable = true;
-        var e = event ? event : window.event;
-        // 阻止冒泡
-        window.event ? window.event.cancelBubble = true : e.stopPropagation();
-        oldY = e.pageY; //记录第一次的鼠标位置
-        oldX = e.pageX;
+    // moveBarBox.onmousedown = function (event) {
+    //     finalheight = parseInt(getInner('dv').h); //当前元素的宽度高度
+    //     finalwidth = parseInt(getInner('dv').w);
+    //     dragable = true;
+    //     var e = event ? event : window.event;
+    //     // 阻止冒泡
+    //     window.event ? window.event.cancelBubble = true : e.stopPropagation();
+    //     oldY = e.pageY; //记录第一次的鼠标位置
+    //     oldX = e.pageX;
 
-    };
+    // };
 
 
-    function divSize(evt) {
-        var e = evt ? evt : window.event;
+    // function divSize(evt) {
+    //     var e = evt ? evt : window.event;
 
-        var box = document.getElementById('dv');
+    //     var box = document.getElementById('dv');
 
-        console.log( e.pageX, oldX,e.pageY, oldY, parseInt(getInner('dv').h));
+    //     console.log( e.pageX, oldX,e.pageY, oldY, parseInt(getInner('dv').h));
 
-        he = e.pageY - oldY + parseInt(finalheight);
-        wi = e.pageX - oldX + parseInt(finalwidth);
-        if (dragable) {
-        // 自身 放大的宽度 + 距离左侧的距离 大于 父容器的宽度时 父元素宽度 减去 子元素距离左侧的距离 等于剩余最大宽度
-            if(wi + div.offsetLeft>= parseInt(getInner('box').w)){
-                box.style.width =  (parseInt(getInner('box').w)- div.offsetLeft) + 'px';wi =  (parseInt(getInner('box').w)- div.offsetLeft);
-                return;
-            }
-              // 自身 放大的高度 + 距离顶部的距离 大于 父容器的高度时 父元素高度 减去 子元素距离顶部的距离 等于剩余最大高度
-            if(he + div.offsetTop>= parseInt(getInner('box').h)){
-                box.style.height =  (parseInt(getInner('box').h) - div.offsetTop) + 'px';he = (parseInt(getInner('box').h) - div.offsetTop);
-                return;
-            }
-            if (he <= 120 || wi <= 120) {//div最低高度
+    //     he = e.pageY - oldY + parseInt(finalheight);
+    //     wi = e.pageX - oldX + parseInt(finalwidth);
+    //     if (dragable) {
+    //     // 自身 放大的宽度 + 距离左侧的距离 大于 父容器的宽度时 父元素宽度 减去 子元素距离左侧的距离 等于剩余最大宽度
+    //         if(wi + div.offsetLeft>= parseInt(getInner('box').w)){
+    //             box.style.width =  (parseInt(getInner('box').w)- div.offsetLeft) + 'px';wi =  (parseInt(getInner('box').w)- div.offsetLeft);
+    //             return;
+    //         }
+    //           // 自身 放大的高度 + 距离顶部的距离 大于 父容器的高度时 父元素高度 减去 子元素距离顶部的距离 等于剩余最大高度
+    //         if(he + div.offsetTop>= parseInt(getInner('box').h)){
+    //             box.style.height =  (parseInt(getInner('box').h) - div.offsetTop) + 'px';he = (parseInt(getInner('box').h) - div.offsetTop);
+    //             return;
+    //         }
+    //         if (he <= 120 || wi <= 120) {//div最低高度
 
-            box.style.height = '120px'; he = 120;
-            box.style.width = '120px'; wi = 120;
-            return;
+    //         box.style.height = '120px'; he = 120;
+    //         box.style.width = '120px'; wi = 120;
+    //         return;
 
-            }
-            if (he >= 400 || wi >= 400) {//div最高高度
-                box.style.width = '400px'; wi = 400;
-                box.style.height = '400px'; he = 400;
-                return;
+    //         }
+    //         if (he >= 400 || wi >= 400) {//div最高高度
+    //             box.style.width = '400px'; wi = 400;
+    //             box.style.height = '400px'; he = 400;
+    //             return;
 
-            }
+    //         }
          
-            box.style.width = wi + 'px';
-            box.style.height = he + 'px';
+    //         box.style.width = wi + 'px';
+    //         box.style.height = he + 'px';
 
-        };
-    }
+    //     };
+    // }
 </script>
 
 </html>

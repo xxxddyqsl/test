@@ -33,6 +33,7 @@
         let node = document.getElementById('demo');
         console.log(getElementViewTop(node))
     }
+  
     // 网页元素的相对位置，指该元素左上角相对于浏览器窗口左上角的坐标。
     // 有了绝对位置以后，获得相对位置就很容易了，只要将绝对坐标减去页面的滚动条滚动的距离就可以了。滚动条滚动的垂直距离，是document对象的scrollTop属性；滚动条滚动的水平距离是document对象的scrollLeft属性。
     function getElementViewTop(element) {

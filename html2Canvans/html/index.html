@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../js/html2Canvans.js"></script>
+    <style>
+        #yourcssselector {
+            /* height: 100px;
+            width: 100px; */
+            border: 1px solid skyblue;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="yourcssselector">
+        <img src="../../image/Loading.png" alt="">
+    </div>
+
+</body>
+<script>
+
+    //     let height = parseInt(dom.style.height) + 50 + 'px';
+    //     window.d = dom;
+    //     let that = this;
+    //     setTimeout(function() {
+    //       html2canvas(dom,{
+    //         backgroundColor:'red',
+    //         useCORS : true,//保证跨域图片的显示
+    //         allowTaint :false,
+    //         height: height, //canvas 窗口的高度
+    //         windowHeight: height, // 获取y方向滚动条中的内容
+    //         y: height, // 页面在垂直方向的滚动距离
+    //     }).then(function(canvas) {
+    //        let  imgBlobData = canvas.toDataURL('image/jpeg');
+    //         console.log(imgBlobData)
+    //         var node = document.createElement("img");
+    //         node.src=imgBlobData;
+    //         node.width=100;
+    //         node.height= 100;
+    //         dom.appendChild(node)
+    //       });
+    //     }, 1000); 
+    window.onload = async () => {
+        let dom = document.querySelector('#yourcssselector');
+        // 生成快照
+        const convertToImage = (container, options = {}) => {
+            // 设置放大倍数
+            const scale = window.devicePixelRatio;
+
+            // 传入节点原始宽高
+            const _width = container.offsetWidth+50;
+            const _height = container.offsetHeight+50;
+
+            let { width, height } = options;
+            width = width || _width;
+            height = height || _height;
+
+            // html2canvas配置项
+            const ops = {
+                backgroundColor: 'red',
+                scale,
+                // width,
+                // height,
+                useCORS: true,
+                allowTaint: false,
+                ...options
+            };
+
+            return html2canvas(container, ops).then(canvas => {
+                // 返回图片的二进制数据
+                return canvas.toDataURL("image/png");
+            });
+        }
+
+        // 调用函数，取到截图的二进制数据，对图片进行处理（保存本地、展示等）
+        const imgBlobData = await convertToImage(dom);
+        console.log(imgBlobData)
+        var node = document.createElement("img");
+        node.src = imgBlobData;
+        // node.width = 100;
+        // node.height = 100;
+        document.body.appendChild(node)
+    }
+
+</script>
+
+</html>
