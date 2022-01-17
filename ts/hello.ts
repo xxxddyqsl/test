@@ -26,7 +26,7 @@ export function  Addup(a:number,b:number){
 // Initialize it
 x = ['hello', 10]; 
 console.log(x[0].substr(1)); 
-console.log(x[1].substr(1));
+// console.log(x[1].substr(1));
 // export class Animal {
 //     area(shape: string, width: number, height: number) {
 //         var area = width * height;
