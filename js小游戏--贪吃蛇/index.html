@@ -1,0 +1,39 @@
+<!doctype html>  
+<html>  
+<body>  
+    <canvas id="can" width="400" height="400" style="background: Black"></canvas>  
+    <script> 
+    // 首先声明canvas的上下文，然后声明绘制单元格函数
+        var sn = [ 42, 41 ], dz = 43, fx = 1, n, ctx = document.getElementById("can").getContext("2d");
+
+        // 这里的函数draw是整个游戏绘制蛇体，食物的基础函数。执行一次绘制一个小方块，敲黑板了，功能设计关键的地方之一：
+        // 用一个数组表示蛇体，数组的一项代表蛇体的一块，通过draw绘制；
+        // 蛇体移动，通过数组头部增加一项，尾部去除一项实现；
+        // 蛇吃到食物，蛇体长度增加一块，通过数组增加一项实现；
+        function draw(t, c) {
+            // fillStyle 是颜色属性
+            ctx.fillStyle = c;
+            // fillRect绘制一个矩形，四个参数，分别是：1.离原点的x方向距离；2.离原点的y方向的距离；3.长；4.宽。
+            // 长和宽只有18，不是20，是为了单元格之间流出1个长度的空隙，400个小块从左到右，从上到下依次对应0-399。 
+            ctx.fillRect(t % 20 * 20 + 1, ~~(t / 20) * 20 + 1, 18, 18);
+        }
+        document.onkeydown = function(e) {  
+            fx = sn[1] - sn[0] == (n = [ -1, -20, 1, 20 ][(e || event).keyCode - 37] ) ? fx : n  
+        };  
+        !function() {  
+            sn.unshift(n = sn[0] + fx);
+            //  n 小于或者大于 最大值399 说明蛇体触碰到墙壁
+            if (sn.indexOf(n, 1) > 0 || n<0||n>399 || fx == 1 && n % 20 == 0 || fx == -1 && n % 20 == 19)  
+                return alert("GAME OVER");  
+            draw(n, "Lime");  
+            if (n == dz) {  
+                while (sn.indexOf(dz = ~~(Math.random() * 400)) >= 0);  
+                draw(dz, "Yellow");  
+            } else  {
+                draw(sn.pop(), "Black");  
+            }
+            setTimeout(arguments.callee, 1000);  
+        }();  
+    </script>  
+</body>  
+</html> 

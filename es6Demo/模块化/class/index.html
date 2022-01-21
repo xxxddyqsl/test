@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+</body>
+<script type="module">
+    //调用 export 导出的东西需要在 import 导入的时候加{}  import {Main} from './main.js'; 
+    //调用  export default 导出的东西不需要在 import 导入的时候加{}  import Main from './main.js'; 
+    import { Main } from './js/main.js';
+    var main = new Main();
+    console.log(main);
+    main.add(1, 2);
+    main.setTestBAge(40)
+</script>
+
+</html>
