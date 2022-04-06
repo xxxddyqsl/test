@@ -1,0 +1,51 @@
+.log-wrapper { 
+  height: 100%; 
+}
+
+.log-header {
+  width: 100%;
+  /* border: 1px solid; */
+}
+
+.log-header-search {
+  flex-wrap: wrap;
+}
+
+.log-header-search-item {
+  /* width: 25%; */
+  flex: 0 0 22%;
+  margin:8px 10px;
+}
+ 
+.log-header-search-item-title {
+
+  min-width: 132px;
+  text-align: right;
+  vertical-align: middle;
+  /* float: left; */
+  font-size: 14px;
+  color: #606266;
+  line-height: 35px;
+  padding: 0 12px 0 0;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.log-header-search-btn{
+  margin: 0 10px;
+}
+/* .log-header-search-Submit {
+  margin: 0 10px;
+} */
+.log-filter-table{
+  width: 100%;
+}
+.log-main {
+  flex: 1;
+  width: 100%;
+  min-height: 110px;
+  /* border: 1px solid red; */
+}
+.log-footer{
+  width: 100%;
+  margin-bottom: 20px;
+}
