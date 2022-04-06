@@ -377,7 +377,7 @@
 
 		function extractQuery() {
 
-			const search = window.location.search;
+			const search = window.encodeURIComponent;
 
 			if ( search.indexOf( '?q=' ) !== - 1 ) {
 

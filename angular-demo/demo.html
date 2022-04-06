@@ -20,6 +20,11 @@
     </div>
 
     <script>
+        let arr=[1];
+        for(let k in arr){
+            arr.splice(k,1)
+        }
+        console.log(arr)
         var a=null;
         var app = angular.module("myApp", ['ngSanitize']);
         // app.controller('ctrl',function($scope,$sce){
@@ -54,8 +59,9 @@
         });
 
         app.directive('changeColor', function () {
-            return function (scope, ele, attrs) {
+            return function (scope, ele, attrs) { 
                 scope.$watch(attrs.changeColor, function (value) {
+                     console.log(scope, ele, attrs,value)
                     if (value) {
                         ele[0].srcObject=value[0].stream;
                         // console.log(value[0].stream.getAudioTracks()[0])

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    // 实例1：百度 - https
+    // var domainA = 'https://www.baidu.com/'; var myPopupA = window.open(domain);
+    // 实例1：蜗牛OA - http
+    var domainB = 'http://sso.mysnail.com'; var myPopupB = window.open(domain+'/login');
+    // 设置测试消息 只能发送字符串 对象需要转
+    var message = '测试Hello!  The time is: ' + (new Date().getTime())+JSON.stringify({id:'测试测试'}); 
+    myPopupB.postMessage(message,domain);
+
+    // 在通过  window.open 打开的页面 - 控制台打印 输出 接收到的消息
+    window.addEventListener("message", receiveMessage, false);
+    function receiveMessage(event){
+        console.log(event)
+    }
+</script>
+</html>

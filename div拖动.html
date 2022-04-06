@@ -58,34 +58,86 @@
     </div>
 </body>
 <script>
-
+// 兼容PC 移动端
     var div = document.getElementById('dv');
     var key = 0;//设置一个开关变量
     var x;
     var y;
-    //  按下 固定的拖动标签
-    div.onmousedown = function (evt)//鼠标按下时事件
+    var goPAGEis=true;//默认pc端
+function goPAGE() {
+    if ((navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i))) {
+        /*window.location.href="你的手机版地址";*/
+        // alert("mobile")
+        goPAGEis=false;
+        // 移动端- 鼠标按下时事件
+        div.addEventListener('touchstart', function () {
+            down();
+            //绑定 鼠标移动 
+            document.addEventListener('touchmove', function () {
+                move()
+            });
+        })
+        // 鼠标松开
+        div.addEventListener('touchend', function () {
+            seup();
+            // 去除document 鼠标移动 事件
+            document.removeEventListener("touchmove", defaultEvent);
+        });
+         // 鼠标移动
+        //  document.addEventListener('touchmove', function () {
+        //     move()
+        // });
+    }
+    else {
+        goPAGEis=true;
+        /*window.location.href="你的电脑版地址";    */
+        // pc- 鼠标按下时事件
+        div.addEventListener('mousedown', function () {
+            down();
+             // document绑定 鼠标移动
+            document.addEventListener('mousemove', function () {
+                move()
+            });
+        })
+        // 鼠标松开
+        document.addEventListener('mouseup', function () {
+            seup();
+            document.removeEventListener("mousemove", defaultEvent);
+        })
+        // 鼠标移动
+        // document.addEventListener('mousemove', function () {
+        //     move()
+        // })
+    }
+}
+goPAGE();
+ 
+//  按下 固定的拖动标签
+function down(evt)//鼠标按下时事件
     {
         console.log(dragable);
         // 设置鼠标样式
         div.style.cursor = "move";
         key = 1;//开关打开
         var e = evt || window.event;
+        // 移动端时触发
+            if(!goPAGEis){
+                e= e.targetTouches[0];
+            }
         x = e.clientX - div.offsetLeft;//鼠标点击的位置距元素边界的距离,用来固定鼠标与元素的相对位置不变
         y = e.clientY - div.offsetTop;
+// 阻止冒泡
+        defaultEvent()
     }
-    // 监听 鼠标在整个窗口屏幕上 松开时拖动开个 关闭
-    document.onmouseup = function ()//鼠标松开时事件
+// 监听 鼠标在整个窗口屏幕上 松开时拖动开个 关闭
+function seup()//鼠标松开时事件
     {
         div.style.cursor = "";
         key = 0;//开关关闭
-
-        // dragable = false;
-        // finalheight = he;
-        // finalwidth = wi;
+        defaultEvent()
     }
-    // 鼠标移动
-    document.onmousemove = function (evt) {
+// 鼠标移动
+function move(evt) {
         // 位置拖动开启
         if (key == 1) {
             var e = evt || window.event;
@@ -112,12 +164,13 @@
             div.style.left = left + 'px';
             div.style.top = top + 'px';
         }
+        defaultEvent()
         // 放大缩小 开启
-        if (dragable) {
+        // if (dragable) {
 
-            divSize(evt)
+        //     divSize(evt)
 
-        };
+        // };
     }
     // 获取容器的 宽度 高度 禁止超出
     function getInner(id) {
@@ -126,7 +179,12 @@
             h: document.getElementById(id).clientHeight
         }
     }
-
+//阻止默认事件
+function defaultEvent() {
+    var e =   window.event;
+    // pC 阻止冒泡preventDefault 移动端阻止冒泡stopImmediatePropagation
+    goPAGEis?e.preventDefault():window.event.stopImmediatePropagation();
+   }
 
     var dragable = false;//默认不可拖拽
     var oldY = '';//记录第一次的鼠标位置

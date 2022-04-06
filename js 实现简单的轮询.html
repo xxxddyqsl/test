@@ -8,16 +8,117 @@
 
 <body>
     <button onclick="setTimer()">js 实现简单的轮询</button>
+    <button onclick="startTimer()">开始 js 计算 两个时间戳 之间的 时长</button>
+    <button onclick="endTimer()">结束 js 计算 两个时间戳 之间的 时长</button>
 </body>
 <script type="text/JavaScript">
-       var a = 0; var b = 9; 
+       let a = 0; var b = 9;
+let i=0;
+// var aa = function  () {
+//    return {
+
+//    }
+// }
+// if(i>=3){
+//         alert("1111");
+//     }else{
+//         setTimeout(() => {
+//             i+=1;
+//             console.log(i)
+//             aa();
+//         }, 100);
+      
+//     }
+    var self = setTimeout(() => {
+    if(i>=3){
+        alert("1111");
+    }else{
+        i+=1;
+        console.log(i);
+        self;
+    }
+}, 100);
+// }
+//心跳检测
+// var heartCheck = {
+//     timeout: 540000,        //9分钟发一次心跳
+//     timeoutObj: null,
+//     serverTimeoutObj: null,
+//     reset: function(){
+//         clearTimeout(this.timeoutObj);
+//         clearTimeout(this.serverTimeoutObj);
+//         return this;
+//     },
+//     start: function(){
+//         var self = this;
+//         this.timeoutObj = setTimeout(function(){
+//             //这里发送一个心跳，后端收到后，返回一个心跳消息，
+//             //onmessage拿到返回的心跳就说明连接正常 
+//             console.log("ping!")
+//             self.serverTimeoutObj = setTimeout(function(){//如果超过一定时间还没重置，说明后端主动断开了
+//                 ws.close();     //如果onclose会执行reconnect，我们执行ws.close()就行了.如果直接执行reconnect 会触发onclose导致重连两次
+//             }, self.timeout)
+//         }, this.timeout)
+//     }
+// }
+    //当前时间与2018-05-10的时间差
+var startTime = "2022-02-13 16:40"; 
+    //    var startTime = new Date();
+       let calculateTimer; 
+       function startTimer() {
+        calculateTimer =  setInterval(() => {
+            getRemainderTime ()
+            },1000) 
+    }; 
+function  endTimer() {
+    
+    clearTimeout(calculateTimer) //清理定时任务
+}
+// 计算 两个时间戳 之间的 时长
+function getRemainderTime (){
+    var s1 = new Date(startTime.replace(/-/g, "/"));
+    // var s1=startTime;
+    var  s2 = new Date(),
+    runTime = parseInt((s2.getTime() - s1.getTime()) / 1000);
+    // var year = Math.floor(runTime / 86400 / 365);
+    // runTime = runTime % (86400 * 365);
+    // var month = Math.floor(runTime / 86400 / 30);
+    // runTime = runTime % (86400 * 30);
+    // var day = Math.floor(runTime / 86400);
+    // runTime = runTime % 86400;
+    // 时
+    var hour = Math.floor(runTime / 3600);
+    runTime = runTime % 3600;
+    // 分
+    var minute = Math.floor(runTime / 60);
+    runTime = runTime % 60;
+    // 秒
+    var second = runTime;
+    if(hour<10){
+        hour= '0' + hour;
+    }
+    if(minute<10){
+        minute= '0' + minute;
+    }
+    if(second<10){
+        second= '0' + second;
+    }
+   
+    console.log(hour+':'+minute+':'+second);
+//    console.log(year,month,day,hour,minute,second);
+// 　　return year+','+month+','+day+','+hour+','+minute+','+second;
+ 
+}
+
+
+// 实现简单的轮询
     function setTimer() {
         let timer; 
        if (a < b) {a+=1;
             console.log(a);
             timer = setInterval(() => {
                 this.setTimer()
-            }, 200)
+            })
         } else {
             clearTimeout(timer) //清理定时任务
         }

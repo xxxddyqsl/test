@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>实时监听demo + 表格头部固定 tbody超出滚动 </title>
+    <link rel="stylesheet" href="./bootstrap-日期时间选择器/demo/bootstrap/css/bootstrap.min.css">
+    <style>
+        /* 公共-开始 */
+        .gg-flex-1 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .gg-flex-2 {
+            flex-direction: column;
+        }
+
+        .gg-flex-3 {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .gg-flex-4 {
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-start;
+        }
+
+        .gg-flex-5 {
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-end;
+        }
+
+        #wrapper {
+            height: 100%;
+            /* width: calc(100% - 40px); */
+            margin: 0 auto;
+
+            max-width: 1530px;
+        }
+
+        .table th,
+        .table td {
+            text-align: center;
+        }
+
+        /* 最后一个td 可点击样式 */
+        .table td:last-child {
+            cursor: pointer;
+        }
+
+        .Invoice_icon {
+            width: 27px;
+            height: 27px;
+            margin-right: 10px;
+        }
+
+
+        .tab_box {
+            min-width: 1350px;
+            /* 设置最小高度 否则内部 内容超出无法滚动 overflow: auto; 不生效 */
+            /* min-height: 180px; */
+            max-height: 180px;
+            flex: 1;
+            width: 100%;
+            /* margin-bottom: 20px; */
+        }
+
+        .table th,
+        .table td {
+            text-align: center;
+        }
+
+        .table {
+            width: 100%;
+            table-layout: fixed;
+            margin-bottom: 0;
+        }
+
+        /* 修改 表格 头部 圆角 + 边框线 */
+        .table_thead thead tr,
+        .table_thead thead th {
+            border-bottom: 0;
+        }
+
+        .table_thead table {
+            border-bottom-right-radius: 0 !important;
+
+        }
+
+        .table_thead thead th {
+            border-right: 0;
+        }
+
+        /* 获取第一个 th */
+        .table_thead thead tr:first-child th {
+            border-bottom-left-radius: 0 !important;
+        }
+
+        /* 修改 表格 内容 圆角 */
+        .tbody_scrollbar table tbody tr td:first-child {
+            border-top-left-radius: 0 !important;
+        }
+
+        .tbody_scrollbar table {
+            border-top: 0;
+            border-top-right-radius: 0 !important;
+        }
+
+        /*兼容 tbody 出现滚动条 thead 不对齐样式  */
+        .table_thead_p {
+            /* 设置的偏移量 等于滚动条的宽 */
+            padding-right: 6px;
+        }
+
+        /* 设置滚动条样式   滚动条整体样式*/
+        .tbody_scrollbar::-webkit-scrollbar {
+            /*高宽分别对应横竖滚动条的尺寸*/
+            width: 6px;
+            height: 5px;
+        }
+
+        /*滚动条里面轨道*/
+        .tbody_scrollbar::-webkit-scrollbar-track {
+            -webkit-border-radius: 5px;
+            border-radius: 5px;
+            background: #ededed;
+        }
+
+        /*滚动条里面小方块*/
+        .tbody_scrollbar::-webkit-scrollbar-thumb {
+            -webkit-border-radius: 5px;
+            border-radius: 5px;
+            background: rgb(207, 209, 213);
+        }
+
+        .tbody_scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgb(130, 135, 145);
+        }
+
+        .tbody_scrollbar {
+            /* flex: 1; */
+            overflow: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrapper">
+        <div class="tab_box gg-flex-3 gg-flex-2">
+            <!--  添加 class table_thead_p 兼容tbody出现滚动条对齐 -->
+            <div class="table_thead ">
+                <table class="table table-bordered table-hover table-striped table-responsive   ">
+                    <thead>
+                        <tr>
+                            <th>Invoice Brief Description</th>
+                            <th width="120">Amount</th>
+                            <th>Invoice Date</th>
+                            <th width="120">Amount Due</th>
+                            <th>Status</th>
+                            <th width="140">AP inovice Number</th>
+                            <th width="160">Change</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="tbody_scrollbar">
+                <!--   table-bordered 每个元素周围都有边框  table-hover 鼠标悬停在行上时会出现浅灰色背景 table-striped 行上看到条纹 -->
+                <table class="table table-bordered table-hover table-striped table-responsive   ">
+                    <!-- <thead style="width: 100%; display: none;">
+                    <tr>
+                        <th>Invoice Brief Description</th>
+                        <th width="120">Amount</th>
+                        <th>Invoice Date</th>
+                        <th width="120">Amount Due</th>
+                        <th>Status</th>
+                        <th width="140">AP inovice Number</th>
+                        <th>Change</th>
+                    </tr>
+                </thead> -->
+                    <tbody id="tbody_content">
+                        <tr>
+                            <td>235</td>
+                            <td width="120">2574</td>
+                            <td>静静办公</td>
+                            <td width="120">张三</td>
+                            <td>亚马逊</td>
+                            <td width="140">即时通信</td>
+
+                            <td width="160">Detail</td>
+                        </tr>
+                        <tr>
+                            <td>235</td>
+                            <td width="120">2574</td>
+                            <td>静静办公</td>
+                            <td width="120">张三</td>
+                            <td>亚马逊</td>
+                            <td width="140">即时通信</td>
+
+                            <td width="160">Detail</td>
+                        </tr>
+                    </tbody>
+
+                    <!-- <tbody>
+                    <tr>
+                        <td>235</td>
+                        <td>2574</td>
+                        <td>静静办公</td>
+                        <td>张三</td>
+                        <td>亚马逊</td>
+                        <td>666</td>
+                        <td>即时通信</td>
+                        <td>2020-01-01</td>
+                        <td> </td>
+                        <td> </td>
+                        <td>Detail</td>
+                        </tr>
+                        <tr>
+                        <td>235</td>
+                        <td>2574</td>
+                        <td>静静办公</td>
+                        <td>张三</td>
+                        <td>亚马逊</td>
+                        <td>666</td>
+                        <td>即时通信</td>
+                        <td>2020-01-01</td>
+                        <td> </td>
+                        <td> </td>
+                        <td>Detail</td>
+                        </tr>
+                 </tbody> -->
+
+                </table>
+            </div>
+
+
+        </div>
+    </div>
+</body>
+<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script>
+    window.onload = () => {
+        displayMutation();
+    }
+    // 实时监听dmo 宽度高度
+    function displayMutation() {
+        //获取监听的dom元素
+        let box = document.getElementById("tbody_content");
+        //配置选项 观察器所能观察的DOM变动类型（即下面代码的options对象），有以下几种：
+        // childList：子节点的变动。
+        // attributes：属性的变动。
+        // characterData：节点内容或节点文本的变动。
+        // subtree：所有后代节点的变动。
+        let options = { attributes: true, childList: true, subtree: true };
+        //实时 监听 dom 变化 MutationObserver构造函数 当DOM发生变动，会触发Mutation Observer
+        let observer = new MutationObserver(function (mutations, observer) {
+            // 调用自定义 计算 是否添加兼容 tbody滚动条 class
+            tbodyScrollbarFu();
+            //  //返回元素的高度（包括元素高度、内边距和边框，不包括外边距）
+            // console.log(mutations[0].target.offsetHeight)
+            // console.log(mutations,observer)
+        });
+
+        //开始观测
+        observer.observe(box, options);
+
+        //停止观测
+        // observer.disconnect();
+    };
+    function tbodyScrollbarFu() {
+        // console.log($('.tbody_scrollbar')[0].scrollHeight ,$('.tbody_scrollbar')[0].clientHeight,$('.tbody_scrollbar')[0].offsetHeight)
+        if (($('.tbody_scrollbar')[0].scrollHeight > $('.tbody_scrollbar')[0].clientHeight) || ($('.tbody_scrollbar')[0].offsetHeight > $('.tbody_scrollbar')[0].clientHeight)) {
+            //    添加 兼容class
+            $('.table_thead').addClass('table_thead_p');
+            // console.log('出现滚动条')
+        } else {
+            // 兼容class 存在 
+            if ($('.table_thead').hasClass('table_thead_p')) {
+                // 移除 class
+                $('.table_thead').removeClass('table_thead_p');
+            };
+        };
+    }
+</script>
+
+</html>

@@ -7,9 +7,18 @@
     <title>class, extends, super</title>
 </head>
 <body>
-    
+    <button onclick='replaceTemplate("contact-form-7" ,"619" ,"Contact form 1")'>
+		[contact-form-7 id="619" title="Contact form 1"]
+	</button>
 </body>
 <script>
+    function replaceTemplate(contact,id,type){
+		var val='['+contact+' id="'+id+'" title="'+type+'"]';
+		// var f=`<?php echo do_shortcode('[contact-form-7 id="2406" title="form 2"]'); ?>`;
+        var f=`<?php echo do_shortcode(${val}); ?>`;
+		console.log(f)
+        var f=`<?php echo do_shortcode('['+contact+' id="'+id+'" title="'+type+'"]'); ?>`;
+	}
     // class, extends, super 这三个特性涉及了ES5中最令人头疼的的几个部分：原型、构造函数，继承
     // class定义了一个“类” ( Animal )
     class Animal {

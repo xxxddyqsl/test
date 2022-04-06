@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./bootstrap.min.css">
+    <link rel="stylesheet" href="./bootstrap-table.min.css">
+    <script src="../jquery.min.js"></script>
+    <script src="./bootstrap.min.js"></script>
+    <script src="./bootstrap-table.min.js"></script>
+    <script src="./bootstrap-table-zh-CN.min.js"></script>
+</head>
+<body>
+    <table id="table"></table>
+</body>
+<script>
+    $('#table').bootstrapTable({
+        url: './data1.json',        // 目前使用的自定义测试JSON文件表格数据来源  //请求后台的URL（*）
+        method: 'GET',                      //请求方式（*）
+        contentType: "application/x-www-form-urlencoded",//一种编码。好像在post请求的时候需要用到。这里用的get请求，注释掉这句话也能拿到数据
+        dataField: "data",//这是返回的json数组的key.默认是"rows".这里只有前后端约定好就行
+        cache: false, // 设置为 false 禁用 AJAX 数据缓存， 默认为true
+        striped: true,  //表格显示条纹，默认为false
+        pagination: true, // 在表格底部显示分页组件，默认false
+        pageNumber: 1, // 初始化加载第一页，默认第一页
+        pageSize: 5, // 页面数据条数
+        pageList: [10, 20, 50, 100, 200, 500], // 如果设置了分页，设置可供选择的页面数据条数。设置为All 则显示所有记录。
+
+        sidePagination: 'client', // server设置为服务器端分页     客户端：client
+        search: false,
+        // toolbar: '#toolbar',//指定工具栏
+        searchOnEnterKey: true, //设置为 true时，按回车触发搜索方法，否则自动触发搜索方法
+        undefinedText: '---', //当数据为 undefined 时显示的字符
+        // singleSelect: false,//设置True 将禁止多选
+        // clickToSelect: true,//设置true 将在点击行时，自动选择rediobox 和 checkbox
+        // height: 150,     //定义表格的高度。     
+        // searchTimeOut: 500,// 默认500  设置搜索超时时间。
+        // toolbarAlign: 'right',// 指定 toolbar 水平方向的位置。'left' 或 'right'
+        paginationDetailHAlign: 'left',//指定 分页详细信息 在水平方向的位置。'left' 或 'right'。
+        // showHeader: true,//是否显示列头。
+        trimOnSearch: true,//设置为 true 将自动去掉搜索字符的前后空格。
+        //得到查询的参数
+        queryParams: function (params) {
+            console.log('params===>', params)
+        },
+        columns: [
+            {
+                checkbox: true,
+                visible: false                  //是否显示复选框  
+            },
+            {
+                field: 'PONumber',
+                title: 'PO Number'
+            }, {
+                field: 'PRNumber',
+                title: 'PR Number'
+            }, {
+                field: 'DeptNumber',
+                title: 'Dept Name'
+            }, {
+                field: 'RequestingStaff',
+                title: 'Requesting Staff'
+            }, {
+                field: 'VendorName',
+                title: 'Vendor Name'
+            }, {
+                field: 'Total',
+                title: 'Total'
+            }, {
+                field: 'ProjectName',
+                title: 'Project Name'
+            }, {
+                field: 'DueDate',
+                title: 'Due Date'
+            }, {
+                field: 'Status',
+                title: 'Status'
+            }, {
+                field: 'Creator',
+                title: 'Creator'
+            }, {
+                field: 'ID',
+                title: 'Detail',
+                formatter: actionFormatter
+            }],
+        onLoadSuccess: function (row) {
+            console.log(row)
+        },
+        onLoadError: function (res) {
+            console.log("数据加载失败！")
+        },
+        onDblClickRow: function (row, $element) {
+            var id = row.ID;
+            console.log(row)
+        },
+    });
+    //操作栏的格式化
+    function actionFormatter(value, row, index) {
+        var id = value;
+        var result = "";
+        result += "<a href='javascript:;' onclick='goPoDetails()' title='查看'><span class='glyphicon glyphicon-search'>Detail</span></a>";
+        return result;
+    }
+</script>
+</html>

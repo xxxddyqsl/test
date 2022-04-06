@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <style>
+        #canvas {
+            width: 300px;
+            height: 300px;
+            border: 1px solid red;
+        }
+    </style>
+
+</head>
+
+<body>
+    <input type="file" id="file">
+    <canvas id="canvas">
+    </canvas>
+</body>
+<script>
+    $('input[type=file]').on('change', async function () {
+        // console.log(this.files);
+        let imgUrl = await getArrayBuffer(this.files[0]);
+        canvasBg(imgUrl)
+    })
+    var canvas = document.getElementById('canvas');
+    console.log(canvas)
+    var canvas2D = canvas.getContext('2d');
+    var img = new Image();
+    img.src = "../image/Loading.png";
+    img.onload = imgFn;//图片加载完在执行
+    function imgFn() {
+        var bg = canvas2D.createPattern(img, "no-repeat");//createPattern() 方法在指定的方向内重复指定的元素。
+        canvas2D.fillStyle = bg;//fillStyle 属性设置或返回用于填充绘画的颜色、渐变或模式。
+        canvas2D.fillRect(0, 0, canvas.width, canvas.height)//绘制已填充矩形fillRect(左上角x坐标, 左上角y坐标, 宽, 高)
+    }
+    function getArrayBuffer(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            // / 图片文件转换为base64
+            reader.readAsDataURL(file);
+            reader.onload = (e) => {
+                // 图片文件转换为base64 - 显示图片
+                // document.getElementById("ContractFile").src = e.target.result;
+                resolve(e.target.result)
+
+            };
+            reader.onerror = (error) => reject(error);
+        });
+    };
+    function canvasBg(src) {
+        let img = new Image();
+        img.src = src;
+        img.onload = function (src) {
+            let bg = canvas2D.createPattern(img, "no-repeat");//createPattern() 方法在指定的方向内重复指定的元素。
+            canvas2D.fillStyle = bg;//fillStyle 属性设置或返回用于填充绘画的颜色、渐变或模式。
+            canvas2D.fillRect(0, 0, canvas.width, canvas.height)//绘制已填充矩形fillRect(左上角x坐标, 左上角y坐标, 宽, 高)
+        };//图片加载完在执行
+
+    }
+</script>
+
+</html>

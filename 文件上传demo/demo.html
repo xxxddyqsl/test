@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./js/jquery-1.8.3.min.js"></script>
+</head>
+
+<body>
+    <img src="./img/add_96.png" alt="" id="ContractFile" onclick="uploadFile()">
+
+    <input type="file" id="myupload" style="display: none;" class="displayNone"
+        accept="image/png, image/jpeg, image/gif, image/jpg, .doc, .docx, .txt, .xlsx, .xls">
+</body>
+<script>
+    function uploadFile() {
+        // 获取当前点击的元素对象
+        let e = window.event || arguments.callee.caller.arguments[0];
+        var id = $(e.target).attr('id');
+        console.log('id==', id);
+        var code = $(e.target).data('code');
+        code == 'undefined' ? code = null : null;
+        // unbind() 移除 input 上传 元素的事件处理器
+        $('input[type=file]').unbind();
+        // change  监听 input 上传
+        $('input[type=file]').on('change', async function () {
+            console.log(this)
+            console.log(this.files[0])
+            let data = await getArrayBuffer(this.files[0]);
+            // 文件 转化完成 data上传接口
+            console.log(data);
+        })
+        // 调用 input点击事件 触发上传
+        $('input[type=file]').click();
+    }
+
+    function getArrayBuffer(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            // / 图片文件转换为base64
+            // reader.readAsDataURL(file);
+            //读取文件 
+            //  reader.readAsText(files[0], "UTF-8");
+            // readAsArrayBuffer 文件 转 二进制
+            reader.readAsArrayBuffer(file);
+            reader.onload = (e) => {
+                // 图片文件转换为base64 - 显示图片
+                // document.getElementById("ContractFile").src = e.target.result;
+                //查看文件输出内容
+                // console.log(e.target.result)
+
+                //查看文件内容字节大小
+                console.log(new Blob([e.target.result]))
+                resolve(e.target.result)
+
+            };
+            reader.onerror = (error) => reject(error);
+        });
+    }
+</script>
+
+</html>

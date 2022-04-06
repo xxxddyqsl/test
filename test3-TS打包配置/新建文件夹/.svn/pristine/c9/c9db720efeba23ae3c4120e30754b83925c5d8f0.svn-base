@@ -1,0 +1,659 @@
+ 
+import * as RTCEngine from './IRtcEngine';
+import * as Entity from '../entity/Entity'
+import Utils from '../utils/Utils';
+ 
+
+export class RtcPeerImpl implements RTCEngine.IPeerConntion {
+    constructor(csid: string, bSendOffer: boolean, engine: RtcEngineImpl, pm: RTCEngine.TParams) {
+        this._csid = csid;
+        this._engine = engine;
+        this._param = pm;
+         
+        let cfg: RTCConfiguration = {};  
+        cfg.iceServers = [];
+        if (null != pm.stun && pm.stun.uri.length > 0) {
+            cfg.iceServers.push({ credential: pm.stun.pwd, urls: pm.stun.uri, username: pm.stun.usr});
+        }
+
+        if (null != pm.turn && pm.turn.uri.length > 0) {
+            cfg.iceServers.push({ credential: pm.turn.pwd, urls: pm.turn.uri, username: pm.turn.usr });
+        } 
+        cfg.bundlePolicy = "balanced";
+        this._peer_connect = new RTCPeerConnection(cfg);   
+        this._peer_connect.onicecandidate = (ev)=> {
+            if (null != ev.candidate) {
+                this._param.pSink.onIceCandidate(ev.candidate.sdpMid, ev.candidate.sdpMLineIndex, ev.candidate.candidate, this._csid);
+            } else {
+                // All ICE candidates have been sent
+            }
+        }; 
+
+
+        this._peer_connect.ontrack = (ev)=> {
+
+            if (ev.track.kind == "audio")
+                return;
+            let stream = ev.streams[0];
+            this._streams[ev.track.id] = stream;
+
+            let id = this._csid;
+
+            let type = Entity.EStreamType.kVideo;
+            this._param.pSink.onAddStream(stream.id, type, ev.track.id, id);
+        }; 
+
+         
+        if (bSendOffer) {
+            this._peer_connect.createOffer()
+                .then(this.onCreateSdpSucceed.bind(this, RTCEngine.ESdpType.kOffer))
+                .catch(this.onFailed.bind(this, RTCEngine.ESdpType.kOffer)); 
+        }
+            
+    }
+
+    getVideoSize(): RTCEngine.TVideoSize {
+        let ret : RTCEngine.TVideoSize = {
+                width:0,
+                height:0,
+                fps:0
+        };
+        
+        let p = this._engine.videoSize(false);
+        if (p) return p;
+
+        return ret;
+    }
+    
+    getVideoSize1(): RTCEngine.TVideoSize {
+        let ret : RTCEngine.TVideoSize = {
+            width:0,
+            height:0,
+            fps:0
+        };
+        
+        let p = this._engine.videoSize(true);
+        if (p) return p;
+
+        return ret;
+    }
+
+    release(): void {
+
+    }
+
+
+    activeSender(sender: RTCRtpSender, sendflag: boolean): void {
+        let transcivers = this._peer_connect.getTransceivers();
+        for (let tr of transcivers) {
+            if (tr.sender == sender) { 
+                if (!sendflag) {
+                    if (tr.direction == "sendrecv")
+                        tr.direction = "recvonly";
+                    else if (tr.direction == "sendonly")
+                        tr.direction = "inactive";
+                }
+                else {
+                    if (tr.direction == "recvonly")
+                        tr.direction = "sendrecv";
+                    else if (tr.direction == "inactive")
+                        tr.direction = "sendonly";
+                }
+                break;
+            }
+        }
+    }
+
+    synStreamTypes(sendtypes: number, stoptypes: number, selfid: string): void { 
+
+        let bSenderChanged = this.addLocalTracks(sendtypes, selfid);
+        this.removeLocalTracks(stoptypes); 
+
+        if (bSenderChanged) {
+            console.log("RtcPeerImpl::synStreamTypes createOffer"); 
+
+            this._peer_connect.createOffer()
+                .then(this.onCreateSdpSucceed.bind(this, RTCEngine.ESdpType.kOffer))
+                .catch(this.onFailed.bind(this, RTCEngine.ESdpType.kOffer)); 
+        }
+
+        console.log("RtcPeerImpl::SynStreamTypes OK");
+    }
+
+    addLocalTracks(sendtypes: number, selfid:string): boolean {
+        console.log("RtcPeerImpl::addLocalTracks ...");
+
+        let bSenderChanged: boolean = false;
+        if (Entity.EStreamType.kAudio & sendtypes) {
+            if (0 == (Entity.EStreamType.kAudio & this._sendingType)) {
+
+                let mtrack = this._engine.audioTrack();
+                if (null != mtrack) {
+                    mtrack.enabled = this._enable_audio;
+
+                    if (null == this._audio_sender) {
+                        // let stream: MediaStream�� 
+                        this._audio_sender = this._peer_connect.addTrack(mtrack, this._engine._local_stream);
+                        bSenderChanged = true;
+                    }
+                    else {
+                        this._audio_sender.replaceTrack(mtrack);
+                        this.activeSender(this._audio_sender, true);
+                    }
+
+                    this._sendingType |= Entity.EStreamType.kAudio;
+                }
+            }
+        }
+
+        if (Entity.EStreamType.kVideo & sendtypes) {
+            if (0 == (Entity.EStreamType.kVideo & this._sendingType)) {
+
+                let mtrack = this._engine.videoTrack(false, false);
+                if (null != mtrack) {
+                    mtrack.enabled = this._enable_video;
+
+                    if (null == this._video_sender) {
+
+                        // let stream: MediaStream�� 
+                        this._video_sender = this._peer_connect.addTrack(mtrack, this._engine._local_stream);
+                        bSenderChanged = true;
+                        if (!this._param.p2pflag) {
+                            let track1 = this._engine.videoTrack(true, true);
+                            if (null != track1) {
+                                track1.enabled = this._enable_video1;
+                                // track1.
+                                this._video_sender1 = this._peer_connect.addTrack(track1, this._engine._local_stream);
+                            }
+                        }
+                    }
+                    else {
+                        this._video_sender.replaceTrack(mtrack);
+                        this.activeSender(this._video_sender, true);
+
+                        if (!this._param.p2pflag) {
+                            let track1 = this._engine.videoTrack(true, false);
+
+                            if (null != track1) {
+                                track1.enabled = this._enable_video1;
+                                this._video_sender1.replaceTrack(track1);
+                                this.activeSender(this._video_sender1, true);
+                            }
+                        }
+                    }
+                    this._sendingType |= Entity.EStreamType.kVideo;
+                }
+            }
+        }
+
+        return bSenderChanged;
+    }
+
+    removeLocalTracks(stoptypes: number): void
+    { 
+        console.log("RtcPeerImpl::removeLocalTracks ...");
+
+        if (Entity.EStreamType.kAudio & stoptypes)
+        {
+            if (Entity.EStreamType.kAudio & this._sendingType) {
+                this._sendingType &= ~Entity.EStreamType.kAudio;
+                if (null != this._audio_sender) {
+                    this._audio_sender.replaceTrack(null);
+                    this.activeSender(this._audio_sender, false);
+                } 
+            }
+        }
+
+        if (Entity.EStreamType.kVideo & stoptypes)
+        {
+            // if (0 == (Entity.EStreamType.kVideo & this._sendingType))
+            if ((Entity.EStreamType.kVideo & this._sendingType))
+            {
+                this._sendingType &= ~Entity.EStreamType.kVideo;
+                if (null != this._video_sender) { 
+                    this._video_sender.replaceTrack(null);
+                    this.activeSender(this._video_sender, false);
+                }
+
+                if (null != this._video_sender1) {
+                    this._video_sender1.replaceTrack(null);
+                    this.activeSender(this._video_sender1, false);
+                } 
+            }
+        }
+
+        console.log("RtcPeerImpl::removeLocalTracks OK"); 
+    }
+
+
+    onLocalStreamChanged(): void { 
+        let oldst = this._sendingType;
+        this.removeLocalTracks(oldst);
+        this.addLocalTracks(oldst, null);
+        
+        if(0 ==oldst)
+        return;
+
+        let vsize = this._engine.videoSize(false);
+
+        console.log("RtcPeerImpl::onLocalStreamChanged video size"); 
+
+        this._param.pSink.onEngineAction(RTCEngine.eEngineAct.kAct_set_video_size, vsize);
+
+        if (this._engine._supportVideo1) {
+            let vsize1 = this._engine.videoSize(true);
+            if (null == vsize1)
+                vsize1 = { width: 0, height: 0, fps:0};
+
+            this._param.pSink.onEngineAction(RTCEngine.eEngineAct.kAct_set_video_1_size, vsize1); 
+        } 
+    }
+
+
+    getRemoteStream(token:string): MediaStream {
+        return this._streams[token];
+    }
+     
+    onSucceed( s: RTCSessionDescriptionInit): void {
+
+        var type = 0;
+        if (s.type == "answer")
+            type = 2;
+        else if (s.type == "offer")
+            type = 0;
+        else if (s.type == "pranswer")
+            type = 1;
+
+        this._param.pSink.onSucceed(type, s.sdp, this._csid); 
+
+    }
+
+    onCreateSdpSucceed(sdptype: RTCEngine.ESdpType,s: RTCSessionDescriptionInit): void {
+        console.log('setLocalDescription success old:==>'+s.sdp);
+
+
+        // if(s.sdp.indexOf("UDP/TLS/RTP/SAVPF") != -1 ){
+        //     // 替换带/或者\的特殊字符 用到转义字符\/
+        //     s.sdp=s.sdp.replace(/UDP\/TLS\/RTP\/SAVPF/g,'RTP/AVPF');
+        // }
+        // if(s.sdp.indexOf("a=fingerprint:") != -1 ){
+        //     let start=s.sdp.indexOf("a=fingerprint:");
+        //     let stop=s.sdp.indexOf("a=setup:actpass\r\n");
+        //     let newsdp=s.sdp.substring(start,stop);
+        //     s.sdp=s.sdp.replace(newsdp,'');
+
+        //     console.log(s.sdp);
+        // }
+        // if(s.sdp.indexOf("a=setup:actpass") != -1 ){
+        //     let start=s.sdp.indexOf("a=setup:actpass");
+        //     let stop=s.sdp.indexOf("a=mid:0\r\n");
+        //     let newsdp=s.sdp.substring(start,stop);
+        //     s.sdp=s.sdp.replace(newsdp,'');
+        //     console.log(s.sdp)
+        // }
+        console.log('setLocalDescription new:==>'+s.sdp);
+
+        this._peer_connect.setLocalDescription(s)
+            .then(this.onSucceed.bind(this, s))
+            .catch(this.onFailed.bind(this, s));  
+    }
+
+    onFailed(sdptype: RTCEngine.ESdpType, reason: any): void { 
+        console.log("create local sdp fail type =", sdptype);
+        console.log(JSON.stringify(reason));
+                this._param.pSink.onFailed(sdptype, "sdp error", this._csid);
+    }
+
+    setRemoteDescription(sdptype: number, ssdp: string): void {
+        console.log("setRemoteDescription type=", sdptype, ",sdp=", ssdp);
+
+        let stype:RTCSdpType = "offer";
+        switch (sdptype) {
+            case RTCEngine.ESdpType.kOffer:
+                stype = "offer";
+                break;
+            case RTCEngine.ESdpType.kAnswer:
+                stype = "answer";
+                break;
+            case RTCEngine.ESdpType.kPreAnswer:
+                stype = "pranswer";
+                break; 
+            default:
+                break;
+        }
+
+        let desc: RTCSessionDescriptionInit = { sdp: ssdp, type: stype };   
+        this._peer_connect.setRemoteDescription(desc);
+ 
+        if (RTCEngine.ESdpType.kOffer == sdptype) {
+                this._peer_connect.createAnswer()
+                    .then(this.onCreateSdpSucceed.bind(this, RTCEngine.ESdpType.kAnswer))
+                    .catch(this.onFailed.bind(this, RTCEngine.ESdpType.kAnswer)); 
+        }
+    }
+
+    addIceCandidate(mline: string, mlineindex: number, sdp: string): void {
+
+        let ice: RTCIceCandidateInit = { candidate: sdp, sdpMLineIndex: mlineindex, sdpMid: mline };    
+        this._peer_connect.addIceCandidate(ice);
+    }
+
+    pauseSend(sendtype: number, bPause: boolean): void {
+        if (Entity.EStreamType.kVideo & sendtype) {
+            this._enable_video = !bPause;
+
+            if (null != this._video_sender &&  null != this._video_sender.track)
+                this._video_sender.track.enabled = this._enable_video; 
+        }
+
+        if (RTCEngine.eStreamTypeEx.kVideo1 & sendtype) {
+            this._enable_video1 = !bPause;
+
+            if (null != this._video_sender1 && null != this._video_sender1.track)
+                this._video_sender1.track.enabled = this._enable_video1;
+        }
+
+        if (Entity.EStreamType.kAudio & sendtype) {
+            this._enable_audio = !bPause;
+
+            if (null != this._audio_sender && null != this._audio_sender.track)
+                this._audio_sender.track.enabled = this._enable_audio;
+        } 
+    }
+
+     
+
+
+    setPeerParams(params: string): void { 
+    }
+
+    get(type: RTCEngine.Etype, param: any): boolean {
+        if (type == RTCEngine.Etype.kVideo_size || type == RTCEngine.Etype.kVideo_size_1)
+        {
+            let sz = <RTCEngine.TVideoSize>param;
+
+            let smallflag = (type == RTCEngine.Etype.kVideo_size_1);
+            let vsize = this._engine.videoSize(smallflag);
+            if (null == vsize) { 
+                sz.width = 0;
+                sz.height = 0;
+                return this._engine._supportVideo1;
+            }
+            else {
+                sz.width = vsize.width;
+                sz.height = vsize.height;
+                return true;
+            } 
+
+            
+        }
+        return false;
+    }
+
+    set(type: RTCEngine.Etype, param: any): boolean {
+        return false;
+    }
+
+    getPeerID(): string {
+        return this._csid;
+    }
+
+    _csid: string;
+    _peer_connect: RTCPeerConnection = null;
+    _engine: RtcEngineImpl = null;
+    _param: RTCEngine.TParams;
+    _streams: any = {};
+    _video_sender: RTCRtpSender = null;
+    _video_sender1: RTCRtpSender = null;
+    _audio_sender: RTCRtpSender = null;
+    _enable_audio: boolean = false;
+    _enable_video: boolean = false;
+    _enable_video1: boolean = false;
+    
+    _sendingType: number = 0;	   
+
+};
+
+export class TVideoToken
+{
+    video: HTMLVideoElement = null;
+    stream: MediaStream = null; 
+    peer: RTCEngine.IPeerConntion = null; 
+};
+
+export class RtcEngineImpl implements RTCEngine.IWebRtcEngine { 
+    constructor() { 
+    }
+
+    setWebrtcEngineParams(name: string, params: string): void {
+    }
+
+    openEngine(p: RTCEngine.TParams): void {
+        this._param = p;
+        this._supportVideo1 = 0 != p.video_small_sc || 0 != p.screen_small_sc;
+    }
+
+    closeEngine(): void {
+        this.removeAllStream(null);  
+        for (let key of this._peers) {
+            let peerImpl = <RtcPeerImpl>this._peers[key];
+            peerImpl.release();
+        } 
+        this._peers = null;
+    }
+
+    createPeer(csid: string, bSendOffer: boolean): RTCEngine.IPeerConntion {
+        let peer = new RtcPeerImpl(csid, bSendOffer, this, this._param); 
+        this._peers[csid] = peer; 
+        return peer;
+    }
+
+     
+
+    destroyPeer(peer: RTCEngine.IPeerConntion): void { 
+
+        let peelImpl = <RtcPeerImpl>this._peers[peer.getPeerID()]; 
+        this.removeAllStream(peer); 
+        peelImpl.release();
+        delete this._peers[peer.getPeerID()]; 
+    }
+     
+    getDeviceID(): string {
+        return "s:web|xxx";
+    }	 
+     
+    getDeviceInfo(): string {
+        return "";
+    }  
+     
+    getLocalParamsForPeer(): string {
+        return "";
+    }
+
+    removeAllStream(peer: RTCEngine.IPeerConntion): void {
+
+        var del_items = new Array<string>(); 
+        for (let key of this._remote_videos) {
+            var tk = <TVideoToken>this._remote_videos[key];
+            if (null == peer || tk.peer == peer) {
+                if (null != tk.video)  
+                    tk.video.srcObject = null;
+                else
+                    del_items.push(key);
+                    
+                tk.stream = null;
+                tk.peer = null;
+            }
+        }
+
+        for (let val of del_items) {
+            delete this._remote_videos[val];
+        }
+
+    }
+
+   
+     
+    setLocalStreams(localstream: MediaStream, screenflag: boolean): void {
+        this._local_stream = localstream; 
+        this._screen_flag = screenflag; 
+
+        //update medias
+        // for (let key of this._peers) {
+        for (let key of Object.keys(this._peers)) {
+            let peer = <RtcPeerImpl>this._peers[key];
+            peer.onLocalStreamChanged(); 
+        }
+    }
+
+    audioTrack(): MediaStreamTrack {
+        if (null == this._local_stream)
+            return null;
+
+        let mediatracks = this._local_stream.getAudioTracks();
+        if (null == mediatracks)
+            return null;
+
+        return mediatracks[0];
+    }
+
+    videoSize(small: boolean): RTCEngine.TVideoSize {
+        if (null == this._local_stream)
+            return null;
+
+        let mediatracks = this._local_stream.getVideoTracks();
+        if (null == mediatracks)
+            return null;
+
+        if (this._screen_flag) {
+            if (small)
+                return null;
+
+            let vSize: RTCEngine.TVideoSize = { width: 160, height: 320 , fps:0};
+
+            while (true) {
+                if ((vSize.width * vSize.height) >= (this._param.screen_sz - 100))
+                    return vSize;
+
+                vSize.width += 160;
+                vSize.height += 320;
+            }
+        }
+        else {  
+            if (small)
+                return { width: 320, height: 240 , fps:0};
+            else
+                return { width: 160, height: 122 , fps:0};
+        }  
+    }
+
+    videoTrack(small: boolean, firstAddTrack: boolean): MediaStreamTrack {
+        if (null == this._local_stream)
+            return null;
+
+        let mediatracks = this._local_stream.getVideoTracks();
+        if (null == mediatracks)
+            return null;
+         
+        if (!this._supportVideo1 && small)
+            return null;
+         
+        if (this._screen_flag) { 
+            return mediatracks[0];
+        }
+        else {
+
+            let vsize = this.videoSize(small); 
+            let mtrack = mediatracks[0].clone();  
+
+            let tc: MediaTrackConstraints = { frameRate: 20, height: vsize.height, width: vsize.width };
+            mtrack.applyConstraints(tc);
+            return mtrack;
+        } 
+    }
+
+    onAddStream(streamid: string, streamtype: Entity.EStreamType, token: string, csid: string, peer: RTCEngine.IPeerConntion): void {
+
+        let peerImpl = <RtcPeerImpl>this._peers[peer.getPeerID()];
+        if (null == peerImpl)
+            return;
+
+        let stream = peerImpl.getRemoteStream(token);
+        if (null == stream) {
+            console.log("onAddStream stream not found");
+            return;
+        }
+
+        console.log("RtcEngineImpl::onAddStream streamid=", streamid, " =>", csid); 
+        let tk = <TVideoToken>this._remote_videos[csid];
+        if (null == tk) {
+            tk = new TVideoToken();
+            tk.peer = peer;
+            tk.stream = stream;
+            this._remote_videos[csid] = tk;
+        }
+        else { 
+            tk.peer = peer;
+            tk.stream = stream;
+            tk.video.srcObject = stream;
+        } 
+    }
+
+    onRemoveStream(streamid: string, streamtype: Entity.EStreamType, token: string, csid: string, peer: RTCEngine.IPeerConntion): void { 
+
+        let tk = <TVideoToken>this._remote_videos[csid];
+        if (null == tk) {
+            console.log("RtcEngineImpl::onRemoveStream csid=", csid, " not found");
+            return;
+        } 
+
+
+        console.log("RtcEngineImpl::onRemoveStream csid=", csid);
+
+        tk.peer = null;
+        tk.stream = null;
+        if (null == tk.video) {
+            delete this._remote_videos[csid];
+        }
+    }
+     
+
+    setRemoteVideo(csid: string, video: HTMLVideoElement): void {
+        let tk = <TVideoToken>this._remote_videos[csid]; 
+        if (tk == null) {
+            if (null == video)
+                return;
+
+            tk = new TVideoToken();
+            tk.video = video;
+            this._remote_videos[csid] = tk;
+            return;
+        }
+        else {
+            if (tk.video == video)
+                return;
+
+            if (null != tk.video)
+                tk.video.srcObject = null;
+
+            tk.video = video;
+            if (null == tk.video && null == tk.stream) {
+                delete this._remote_videos[csid];
+                return;
+            } 
+
+            if (null != tk.video && null != tk.stream) {
+                tk.video.srcObject = tk.stream;
+            }
+        } 
+    }
+
+    _supportVideo1: boolean = false;
+    _param: RTCEngine.TParams;
+    _remote_videos: any = {};
+    _local_stream: MediaStream;
+    _screen_flag: boolean = false;
+    _peers: any = {};
+   
+};
+ 

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./js/utils.js"></script>
+    <style>
+        .content_item_video {
+            width: 300px;
+            height: 300px;
+            object-fit: contain;
+            border: 1px solid red;
+        }
+
+        #message {
+            max-height: 100px;
+            overflow: auto;
+            border: royalblue 1px solid;
+        }
+        .content_item_img{
+            width: 100px;
+            height: 100px;
+        }
+        .content_item_Audio{
+            width: 100px;
+            height: 20px;
+            border: 1px solid royalblue;
+        }
+        #audio-box{
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <ul>
+        <li>
+            <span>房间模式：
+                <select name="" id="RoomModel_select">
+                    <option value="bOrderFlag">bOrderFlag</option>
+                    <option value="0">0</option>
+                    <option value="bP2pFlag">bP2pFlag</option>
+                    <!-- <option value="bOrderFlag"  selected="selected">bOrderFlag</option> -->
+                </select>
+        </li>
+        <li><span>房间号：</span><input type="text" value="888888" id="roomid"></li>
+        <li><span>用户id：</span><input type="text" name="" id="useid" value="debug001"></li>
+        <li><span>订阅成员id或者发送消息的成员id：</span><input type="text" name="" id="Orderid"></li>
+    </ul>
+    <div style=" display: flex;">
+        <p>消息列表：</p>
+        <div id="message">
+            <!-- <p class="message_item"></p> -->
+        </div>
+    </div>
+    <div style=" display: flex;">
+        <p>成员列表：</p>
+        <!-- <video src=""  id="csss" autoplay></video> -->
+        <div id="content">
+            <!-- <div class="content_item">
+            <div class="content_item_name">name:</div>
+            <video  class="content_item_video" autoplay></video>
+        </div> -->
+        <div id="video-box">
+
+        </div>
+        <div id="audio-box">
+
+        </div>
+        </div>
+    </div>
+   
+    <button id="login">login</button>
+    <button id="logout">退出</button>
+    <button id="setuse">设置用户属性</button>
+
+    <button id="setroom">设置房间属性</button>
+    <button id="DisableMemberV">禁用成员视频功能</button>
+    <button id="recoverStreamV">恢复成员视频功能</button>
+
+    <button id="DisableMemberAu">禁用成员音频功能</button>
+    <button id="recoverStreamAu">恢复成员音频功能</button>
+
+    <button id="getStream">获取本地资源</button>
+    <button id="sendStream">发送资源</button>
+    <button id="getScreen">屏幕共享</button>
+    <button id="sendMsg">发送指令</button>
+    <button id="isp2p">检测isp2p</button>
+
+    <button id="isSupportOfflines">检测是否支持离线</button>
+
+
+    <button id="orderStream">订阅指定成员资源流</button>
+
+    <button id="addParticipant">添加会议成员</button>
+    <button id="setMaster">设置房主</button>
+    <button id="setParticipantAttr">修改添加会议成员用户属性</button>
+    <button id="submit">提交添加会议成员</button>
+
+
+    <button id="getSetting">获取设置</button>
+    <button id="getNetStatus">获取网络状态</button>
+
+
+    <button id="setRemoteVideo">设置远程视频</button>
+</body>
+<!-- ts打包文件 -->
+<script src="./dist/bundle.js"></script>
+<!-- <script src="./index.js"></script> -->
+<!-- 必须有 type="module" -->
+<!-- 调用脚本 规定异步执行脚本 async="async"-->
+<script async="async" src="./js/rtcTransfer.js"></script>
+
+<script>
+// console.log(finalModule)
+</script>
+
+</html>

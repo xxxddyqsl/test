@@ -4,7 +4,7 @@ module.exports = {
     output: {
         filename: "bundle.js",
         path: __dirname + "/src/dist",
-        library: 'finalModule',//打包的输出对象暴露在 变量上 finalModule
+        library: 'finalModule',//打包的输出对象暴露在 变量上 finalModule //整个库向外暴露的变量名
         libraryTarget: 'umd'//umd即支持所有情况的自定义输出 通过umd方式输出, 暴露为所有的模块定义下都可运行的方式， 输出文件的模块化规范 一共有这几种规范 "var"  "this" "commonjs"  "commonjs2" "amd" "umd" 否则模块无法正确的输出 
     },
 
