@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #mycanvas {
+            background-color: blue;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="mycanvas" width="500" height="500"></canvas>
+</body>
+<script>
+    var canvas, context;
+    var key = 0;//是否移动一个开关
+    var PsA = {}, PsB = {}, MinimumZoom = 1, keyclickXY;
+    var elem, imgScale = 1, elemX = 0, elemY = 0;
+    canvas = document.getElementById('mycanvas'),
+        context = canvas.getContext('2d');
+    //存储所画图形区域
+    //let tempXY = {x,y,r,i},
+    var clickXY = [];
+    //图形1
+    context.fillRect(0, 0, 100, 100);
+    clickXY.push({ id: 'A', color: '#000', x: 0, y: 0, r: 100, w: 100, h: 100 })
+    //图形2
+    context.fillStyle = 'red';//fillStyle 属性设置或返回用于填充绘画的颜色、渐变或模式。
+    context.fillRect(150, 150, 100, 100)
+    clickXY.push({ id: 'B', color: 'red', x: 150, y: 150, r: 100, w: 100, h: 100 })
+
+
+    // canvas.addEventListener('click', function (e) {
+    //     key = false;
+    //     var x = event.pageX - canvas.getBoundingClientRect().left
+    //     var y = event.pageY - canvas.getBoundingClientRect().top
+    //     for (let i of clickXY) {
+    //         if (x > (i.x - i.r) && x < (i.x + i.r) && y > (i.y - i.r) && y < (i.y + i.r)) {
+    //             // alert(i)
+    //             keyclickXY = i;
+    //             console.log(i)
+    //             //这里可以根据i 来确定你需要执行的方法
+    //             break
+    //         }
+    //     }
+    // }, false)
+
+    canvas.onmouseup = function () {
+        key = false;
+    };
+    canvas.onmousedown = function (event) {
+        key = true;
+        var x = event.pageX - canvas.getBoundingClientRect().left
+        var y = event.pageY - canvas.getBoundingClientRect().top
+        // 获取当前点击图形
+        for (let i of clickXY) { 
+            if (x > (i.x - i.r) && x < (i.x + i.r) && y > (i.y - i.r) && y < (i.y + i.r)) {
+                // alert(i)
+                // elemX 给X 坐标偏移量 赋当前点击图形的起始坐标
+                elemX = i.x;
+                elemY = i.y;
+                keyclickXY = i;
+                console.log(i)
+                //这里可以根据i 来确定你需要执行的方法
+                break
+            }
+        }
+        PsA = windowToCanvas(event.clientX, event.clientY);
+
+    };
+    canvas.onmousemove = function (evt) {
+        // 位置拖动开启
+        if (key == true) {
+            PsB = windowToCanvas(evt.clientX, evt.clientY);
+            var x = PsB.x - PsA.x,
+                y = PsB.y - PsA.y;
+                
+            elemX += x;
+            elemY += y;
+             
+            for (let i in clickXY) {
+            if (keyclickXY.id && clickXY[i].id == keyclickXY.id) {
+                clickXY[i].x = elemX;
+                clickXY[i].y = elemY;
+                
+            }
+        }
+            PsA = JSON.parse(JSON.stringify(PsB));
+           setTimeout(()=>{
+            drawImage();  //重新绘制图片
+           },100)
+        }
+    }
+
+    function drawImage() {
+
+
+        // 清除 画布
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        for (let i in clickXY) {
+            // if (keyclickXY.id && clickXY[i].id == keyclickXY.id) {
+            //     clickXY[i].x = keyclickXY.x;
+            //     clickXY[i].y = elemY;
+            
+            // }
+            // if(clickXY[i].color != ''){
+                context.fillStyle = clickXY[i].color
+            // } 
+            context.fillRect(clickXY[i].x, clickXY[i].y, clickXY[i].w, clickXY[i].h)
+        }
+    }
+
+    /* 获取鼠标按下的位置 到canvas内实际的位置 坐标转换*/
+    function windowToCanvas(x, y) {
+        var box = canvas.getBoundingClientRect();  //这个方法返回一个矩形对象，包含四个属性：left、top、right和bottom。分别表示元素各边与页面上边和左边的距离
+        // console.log(box,(box.left - (box.width - canvas.width) / 2))
+        return {
+            x: x - box.left - (box.width - canvas.width) / 2,
+            y: y - box.top - (box.height - canvas.height) / 2
+        };
+    }
+</script>
+
+</html>

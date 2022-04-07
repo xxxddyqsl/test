@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #myCanvas{
+            margin: 0 auto;
+            border: 1px solid ;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="myCanvas" width="500" height="500"></canvas>
+
+    <button onclick="clearRect()">点击放大</button>
+</body>
+<script>
+    const c = document.getElementById('myCanvas');
+    // getContext() 方法返回一个用于在画布上绘图的环境。 当前，唯一支持的是 "2d"，它返回一个 CanvasRenderingContext2D 对象
+    var ctx = c.getContext('2d');
+    // 样式设置 fillStyle  设置或返回用于填充绘画的颜色、渐变或模式
+    ctx.fillStyle ='rgba(255,165,0,1)';
+    // 边的样式 设置或返回用于笔触的颜色、渐变或模式
+    // ctx.strokeStyle = 'red';
+    
+    // rect(x,y,width,height) 方法创建矩形。矩形左上角的 x 坐标。 	矩形左上角的 y 坐标。( width,height):矩形的宽度 高度，以像素计。 
+    ctx.rect(20,20,150,150);
+   
+    // fill() 填充当前绘图（路径） 在画布上实际地绘制矩形使用fillStyle()设置的填充颜色 
+    ctx.fill();
+    // stroke()绘制已定义的路径 在画布上实际地绘制 矩形的边 使用strokeStyle()设置的边 颜色
+    // ctx.stroke();
+
+    //  缩放scale（） | 旋转rotate（） | 位移translate（）
+    window.onload = () => {
+        console.log(ctx)
+    }
+    var ws=1;
+    function clearRect(){ 
+        // 清除指定的像素
+        // ctx.clearRect(20,20,150,150);
+        
+         // 样式设置 fillStyle  设置或返回用于填充绘画的颜色、渐变或模式
+       
+        setTimeout(() => {
+           
+            ctx.clearRect(0,0,c.width,c.height);
+            ctx.fillStyle ='rgba(255,165,0,1)';
+            ctx.translate(30,30)
+            ctx.fillRect(0,0,150*ws,150*ws);
+            ctx.translate(0,0)
+            // // fill() 填充当前绘图（路径） 在画布上实际地绘制矩形使用fillStyle()设置的填充颜色 
+            // ctx.fill();
+        }, 1000);
+    }
+    var scrollFunc=function(e){
+    e=e || window.event;
+     
+    if(e.wheelDelta){//IE/Opera/Chrome
+        // clearRect(x,y,width,height) 在给定的矩形内清除指定的像素
+        ctx.clearRect(0,0,c.width,c.height); 
+      if(e.wheelDelta>0){
+        ws+=0.2;
+        
+        // ctx.scale(ws,ws)
+        ctx.fillStyle ='rgba(255,165,0,1)';
+        ctx.fillRect(20,20,150*ws,150*ws);
+        console.log('放大',ws,e.wheelDelta);
+      }else{
+        ws>1?ws-=0.2:''; 
+        // ctx.scale(ws,ws)
+        ctx.fillStyle ='rgba(255,165,0,1)';
+        ctx.fillRect(20,20,(150*ws),(150*ws));
+        console.log('缩小',ws,e.wheelDelta);
+      }
+    }else if(e.detail){//Firefox
+        console.log(  e.detail); 
+    }
+}
+/*注册事件*/
+if(document.addEventListener){
+    document.addEventListener('DOMMouseScroll',scrollFunc,false);
+}//W3C
+window.onmousewheel=document.onmousewheel=scrollFunc;//IE/Opera/Chrome
+</script>
+
+</html>

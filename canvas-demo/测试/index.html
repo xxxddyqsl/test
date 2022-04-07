@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #myCanvas {
+            margin: 0 auto;
+            /* border: 1px solid; */
+            background-color: blanchedalmond;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="myCanvas" width="800" height="800"></canvas>
+</body>
+<script>
+    var canvas, context;
+    var key = 0;//是否移动一个开关
+    var PsA = {}, PsB = {},MinimumZoom=1;
+    var img, imgScale = 1, imgX = 0, imgY = 0;
+    canvas = document.getElementById('myCanvas');
+    context = canvas.getContext('2d');
+    loadImg();
+    function loadImg() {
+        img = new Image();
+
+        img.onload = function () {
+            drawImage();
+        }
+        //图片加载完在执行
+        // img.src = 'https://static.zhihu.com/liukanshan/images/comics/bg-89c9bdc3.jpg';
+        img.src = '../../image/Loading.png';
+    }
+    function drawImage() {
+        // 清除 画布
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(
+            img, //规定要使用的图像、画布或视频。
+            0, 0, //开始剪切的 x 坐标位置。
+            img.width, img.height,  //被剪切图像的高度。
+            imgX, imgY,//在画布上放置图像的 x 、y坐标位置。
+            (img.width) * imgScale, (img.height) * imgScale  //要使用的图像的宽度、高度
+        );
+    }
+    canvas.onmouseup = function () {
+        key = false;
+    };
+    canvas.onmousedown = function (event) {
+        key = true;
+        PsA = windowToCanvas(event.clientX, event.clientY);
+
+    };
+    canvas.onmousemove = function (evt) {
+        // 位置拖动开启
+        if (key == true) {
+            PsB = windowToCanvas(evt.clientX, evt.clientY);
+            var x = PsB.x - PsA.x,
+                y = PsB.y - PsA.y;
+            imgX += x;
+            imgY += y;
+            PsA = JSON.parse(JSON.stringify(PsB));
+            drawImage();  //重新绘制图片
+        }
+    }
+  //滚轮放大缩小
+  canvas.onmousewheel = canvas.onwheel = function (event) {
+            //获取当前鼠标在canvas里的 X Y坐标位置
+            var pos = windowToCanvas(event.clientX, event.clientY);
+            event.wheelDelta = event.wheelDelta ? event.wheelDelta : (event.deltalY * (-40));  //获取当前鼠标的滚动情况
+            var newPos = { x: ((pos.x - imgX) / imgScale).toFixed(2), y: ((pos.y - imgY) / imgScale).toFixed(2) };
+            if (event.wheelDelta > 0) {// 放大
+                imgScale += 0.1;
+                imgX = (1 - imgScale) * newPos.x + (pos.x - newPos.x);
+                imgY = (1 - imgScale) * newPos.y + (pos.y - newPos.y);
+            } else {//  缩小
+                imgScale -= 0.1;
+                if (imgScale < MinimumZoom) {//最小缩放1
+                    imgScale = MinimumZoom;
+                }
+                imgX = (1 - imgScale) * newPos.x + (pos.x - newPos.x);
+                imgY = (1 - imgScale) * newPos.y + (pos.y - newPos.y);
+                console.log(imgX, imgY);
+            }
+            drawImage();   //重新绘制图片
+
+        };
+    /* 获取鼠标按下的位置 到canvas内实际的位置 坐标转换*/
+    function windowToCanvas(x, y) {
+        var box = canvas.getBoundingClientRect();  //这个方法返回一个矩形对象，包含四个属性：left、top、right和bottom。分别表示元素各边与页面上边和左边的距离
+        // console.log(box,(box.left - (box.width - canvas.width) / 2))
+        return {
+            x: x - box.left - (box.width - canvas.width) / 2,
+            y: y - box.top - (box.height - canvas.height) / 2
+        };
+    }
+</script>
+
+</html>

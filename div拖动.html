@@ -22,7 +22,7 @@
 
         #dv {
             display: flex;
-            width: 100px;
+            width: 300px;
             height: 100px;
             background-color: blue;
             /* border-radius: 50%; */
@@ -50,11 +50,12 @@
 
 <body>
     <div id="box">
-        <div id="dv">
+        <img  id="dv" src="https://static.zhihu.com/liukanshan/images/comics/bg-89c9bdc3.jpg" alt="">
+        <!-- <div id="dv">
             <div id="moveBarBox">
 
             </div>
-        </div>
+        </div> -->
     </div>
 </body>
 <script>
@@ -73,7 +74,7 @@ function goPAGE() {
         div.addEventListener('touchstart', function () {
             down();
             //绑定 鼠标移动 
-            document.addEventListener('touchmove', function () {
+            div.addEventListener('touchmove', function () {
                 move()
             });
         })
@@ -81,7 +82,7 @@ function goPAGE() {
         div.addEventListener('touchend', function () {
             seup();
             // 去除document 鼠标移动 事件
-            document.removeEventListener("touchmove", defaultEvent);
+            div.removeEventListener("touchmove", defaultEvent);
         });
          // 鼠标移动
         //  document.addEventListener('touchmove', function () {
@@ -95,14 +96,14 @@ function goPAGE() {
         div.addEventListener('mousedown', function () {
             down();
              // document绑定 鼠标移动
-            document.addEventListener('mousemove', function () {
+             div.addEventListener('mousemove', function () {
                 move()
             });
         })
         // 鼠标松开
-        document.addEventListener('mouseup', function () {
+        div.addEventListener('mouseup', function () {
             seup();
-            document.removeEventListener("mousemove", defaultEvent);
+            div.removeEventListener("mousemove", defaultEvent);
         })
         // 鼠标移动
         // document.addEventListener('mousemove', function () {
