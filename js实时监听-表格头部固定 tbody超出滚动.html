@@ -205,6 +205,46 @@
 
                             <td width="160">Detail</td>
                         </tr>
+                        <tr>
+                            <td>235</td>
+                            <td width="120">2574</td>
+                            <td>静静办公</td>
+                            <td width="120">张三</td>
+                            <td>亚马逊</td>
+                            <td width="140">即时通信</td>
+
+                            <td width="160">Detail</td>
+                        </tr>
+                        <tr>
+                            <td>235</td>
+                            <td width="120">2574</td>
+                            <td>静静办公</td>
+                            <td width="120">张三</td>
+                            <td>亚马逊</td>
+                            <td width="140">即时通信</td>
+
+                            <td width="160">Detail</td>
+                        </tr>
+                        <tr>
+                            <td>235</td>
+                            <td width="120">2574</td>
+                            <td>静静办公</td>
+                            <td width="120">张三</td>
+                            <td>亚马逊</td>
+                            <td width="140">即时通信</td>
+
+                            <td width="160">Detail</td>
+                        </tr>
+                        <tr>
+                            <td>235</td>
+                            <td width="120">2574</td>
+                            <td>静静办公</td>
+                            <td width="120">张三</td>
+                            <td>亚马逊</td>
+                            <td width="140">即时通信</td>
+
+                            <td width="160">Detail</td>
+                        </tr>
                     </tbody>
 
                     <!-- <tbody>
@@ -246,7 +286,19 @@
 <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 <script>
     window.onload = () => {
+        // 将事件侦听器函数附加到窗口的resize事件  通过实时监听页面宽度高度 变化 来实时监听 tbody 是否出现滚动条 重新添加 兼容class 否则删除 兼容class
+        window.addEventListener("resize", displayWindowSize);
+        //  调用该函数
+        displayWindowSize();
+        // 实时监听dmo 宽度高度 
         displayMutation();
+    }
+    // 实时监听页面宽度高度
+    function displayWindowSize() {
+        // console.log(mold)
+        tbodyScrollbarFu();
+        // 获取窗口的宽度和高度，不包括滚动条
+        // var w = document.documentElement.clientWidth;
     }
     // 实时监听dmo 宽度高度
     function displayMutation() {
