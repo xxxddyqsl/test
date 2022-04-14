@@ -16,9 +16,6 @@
 <script>
     // 该方法是创建下载，上面的jQuery的方法接口访问成功后调用，原生js的方法已在自己方法内部定义过该部分内容
     function downloadFile(res, fileName) { // res为后端传来的文件流，// fileName为文件名称，自己根据实际情况赋值
-        if (!res) {
-            return
-        };
         let url = window.URL.createObjectURL(res);
 
         const ele = document.createElement('a');
@@ -29,7 +26,7 @@
     };
     // 方式一 : 使用jq
     function downloadAjax(id) {
-        let data = { fileId: id||'9b71ebff-a492-42da-98ea-79a0d8783498' };
+        let data = { fileId: id || '9b71ebff-a492-42da-98ea-79a0d8783498' };
         $.ajax({
             url: '/api/FormApplication/IndiEV/SapFormMergeShow.aspx/DownloadFileTest', // url为请求接口连接
             type: 'POST',
@@ -43,13 +40,17 @@
             // responseType: 'blob', // 与上一行一样，'blob'或者'arraybuffer'两个值都可以,二选一
             success: function (res, status, xhr) {
                 // 校验 数据返回 是否是Blob二进制流的实例
-            if (!(res instanceof  Blob)) {
-              return  alert('数据流不正确');
-            }
+                if (!(res instanceof Blob)) {
+                    return alert('数据流不正确');
+                }
                 //    获取 响应标头里返回的 文件名 + 文件后缀
                 let filename = decodeURIComponent(xhr.getResponseHeader('Content-Disposition').split('filename=')[1]);
                 console.log(filename);
-                downloadFile(res, fileName);  // res为后端传来的文件流，// fileName为文件名称，自己根据实际情况赋值
+                if (filename != '' && filename != 'undefined') {
+                    downloadFile(res, fileName);  // res为后端传来的文件流，// fileName为文件名称
+                } else {
+                    alert('文件名错误，下载失败！');
+                }
             },
             error: function (res) {
                 console.log('失败')
@@ -74,11 +75,14 @@
                 let filename = decodeURIComponent(xhr.getResponseHeader('Content-Disposition').split('filename=')[1]);
                 blob = this.response;
                 // 校验 数据返回 是否是Blob二进制流的实例
-                if (!(blob instanceof  Blob)) {
-                    return  alert('数据流不正确');
+                if (!(blob instanceof Blob)) {
+                    return alert('数据流不正确');
                 }
-                console.log(blob);
-                downloadFile(blob, fileName);  // res为后端传来的文件流，// fileName为文件名称，自己根据实际情况赋值
+                if (filename != '' && filename != 'undefined') {
+                    downloadFile(blob, fileName);  // res为后端传来的文件流，// fileName为文件名称
+                } else {
+                    alert('文件名错误，下载失败！');
+                }
                 // var link = document.createElement("a");
                 // link.href = window.URL.createObjectURL(blob);
                 // link.download = filename;
