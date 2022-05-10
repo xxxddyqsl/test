@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    video {
+      width: 640px;
+      height: 480px;
+    }
+  </style>
+</head>
+
+<body>
+  <p>
+    <span>视频设备 list：</span>
+    <select id="camera_video_select"></select>
+    <button id="camera_list">点击获取音/视频设备列表</button>
+    <button id="camera_video_button">启动</button>
+  </p>
+  <p>
+    <span>音频设备 list：</span>
+    <select id="camera_audio_select"></select>
+  </p>
+  <div id="VideoList">
+    <!-- <video id="vid" autoplay playsinline controls></video>  -->
+  </div>
+
+
+  <!-- <video src="" id="LocalStream"></video> -->
+</body>
+<script>
+  //进入全屏
+  // function requestFullScreen() {
+  //     var de = document.getElementById('wn2557');
+  //     if (de.requestFullscreen) {
+  //        de.requestFullscreen();
+  //    } else if (de.mozRequestFullScreen) {
+  //        de.mozRequestFullScreen();
+  //     } else if (de.webkitRequestFullScreen) {
+  //         de.webkitRequestFullScreen();
+  //     }
+  // } requestFullScreen()
+  window.onload = function () {
+    //对象数组去重
+    // var arr = [{
+    //     "name": "ZDTX",
+    //     "gender": "AAAAAA.doc"
+    // }, {
+    //     "name": "ZYTA",   
+    //     "gender": "BBBBBB.doc"
+    // }, {
+    //     "name": "ZDTX",
+    //     "gender": "CCCCCC.doc"
+    // }];//初始化一个对象数组
+
+    // var hash = {};//缓存对象数组里的某一个属性
+    //  var arrlist= arr.reduce((item, next,index,data)=> {
+
+    //   var key=Object.keys(next);
+    //   var val= Object.values(next);
+    //   console.log(val[1]);
+    //     hash[next.name] ? (hash[next.name] = true && item.push({[key[0]]:'aa',[key[1]]:'bb'})) : hash[next.name] = true && item.push(next);
+    //     return item
+    // }, [])
+    // console.log("arr",arr);
+    // console.log('arrlist',arrlist);
+    var show=false;
+    try{
+      var array = [{id:'a',name:'a'},{id:'b',name:'b'}];
+      array.forEach(function(item,index){
+        if(item.id == "b"){
+          show=false;
+          var a = aaaa;// first second 后就报错，就跳出循环了
+          throw new Error("ending");//报错，就跳出循环
+        }else{
+          show= true;
+          console.log(item);
+        }
+      })
+      }catch(e){
+        if(e.message == "ending"){
+          console.log("结束了") ;
+        }else{
+          console.log(e.message);
+        }
+      }
+
+    //首次运行引导用户，信任域名
+    var first = window.localStorage.getItem('first');
+    console.log
+    if (first == null) {
+      if (navigator.mediaDevices.getUserMedia || navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia) {
+        //调用用户媒体设备, 访问摄像头
+        getUserMedia({ video: { width: 480, height: 320 } }, success, error);
+      } else {
+        alert('不支持访问用户媒体');
+      }
+    }
+    if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+      console.log('menumerateDevices is not supported!');
+    } else {
+      navigator.mediaDevices.enumerateDevices()
+        .then(gotDevices).catch(handleError);
+    }
+
+    // 遍历所有的设备，包括视频和音频设备,找到摄像头
+    function gotDevices(deviceInfos) {
+      console.log(deviceInfos);
+    }
+
+    function handleError(error) {
+      console.log('Error: ', error);
+    }
+
+
+
+    //访问用户媒体设备的兼容方法
+    function getUserMedia(constraints, success, error) {
+      if (navigator.mediaDevices.getUserMedia) {
+        //最新的标准API
+        navigator.mediaDevices.getUserMedia(constraints).then(success).catch(error);
+      } else if (navigator.webkitGetUserMedia) {
+        //webkit核心浏览器
+        navigator.webkitGetUserMedia(constraints, success, error)
+      } else if (navigator.mozGetUserMedia) {
+        //firfox浏览器
+        navigator.mozGetUserMedia(constraints, success, error);
+      } else if (navigator.getUserMedia) {
+        //旧版API
+        navigator.getUserMedia(constraints, success, error);
+      }
+    }
+    function success(stream) {
+      console.log(stream);
+      window.localStorage.setItem('first', "false");
+      window.location.reload();
+    }
+    function error(error) {
+      console.log(`访问用户媒体设备失败${error.name}, ${error.message}`);
+    }
+
+  }
+  // 给按钮绑定点击事件-获取音/视频设备列表
+  document.getElementById("camera_list").addEventListener("click", () => {
+    // 视频设备 下拉框
+    var selectCount = document.getElementById("camera_video_select");
+    // 视频设备select有值 则清空select的项
+    if (selectCount.options.length > 0) {
+      selectCount.options.length = 0;
+    }
+    // 音频设备 下拉框
+    var selectAudioCount = document.getElementById("camera_audio_select");
+    // 音频设备select有值 则清空select的项
+    if (selectAudioCount.options.length > 0) {
+      selectAudioCount.options.length = 0;
+    }
+    // select 赋值
+    // 视频设备 下拉框设置 默认 给第一个添加 屏幕共享
+    selectCount.options[0] = new Option("screenshare", "screenshare");
+    // 收集系统上可用的多媒体输入和输出设备信息
+    navigator.mediaDevices.enumerateDevices().then(function (MediaDeviceInfo) {
+      console.log(MediaDeviceInfo);
+      for (let i in MediaDeviceInfo) {
+        if (MediaDeviceInfo[i].kind == 'videoinput') {//   视频设备 下拉框赋值
+          // 原生js select赋值  new Option(text, value) 第一个值为text  第二个值为vale
+          var varItem = new Option(MediaDeviceInfo[i].label != '' ? MediaDeviceInfo[i].label : (Number(i) + 1), MediaDeviceInfo[i].deviceId);
+          selectCount.options.add(varItem);
+          // selectCount.options[i]=new Option(list[i].label, list[i].deviceId);
+        } else if (MediaDeviceInfo[i].kind == 'audioinput') {//   音频设备 下拉框赋值
+          console.log(MediaDeviceInfo[i]);
+          var varItem = new Option(MediaDeviceInfo[i].label != '' ? MediaDeviceInfo[i].label : (Number(i) + 1), MediaDeviceInfo[i].deviceId);
+          selectAudioCount.options.add(varItem);
+        }
+      }
+    });
+  })
+
+  document.getElementById("camera_video_button").addEventListener("click", () => {
+    // 视频设备 下拉框
+    var selectCount = document.getElementById("camera_video_select");
+    // 音频设备 下拉框 
+    var selectAudioCount = document.getElementById("camera_audio_select");
+    if (selectCount.selectedIndex == 0) {
+      // 原生 屏幕共享
+      navigator.mediaDevices.getDisplayMedia({ audio: true, video: true }).then(function (stream) {
+        // 创建本地视频流 容器 或者 切换容器视频流
+        AddVideo(stream);
+      }).catch(function (error) {
+        console.log(error);
+      });
+    } else {
+      // 使用 设备 配置
+      let constraints = {
+        audio: true
+    //     {
+    //     optional: [{
+    //       sourceId:  selectAudioCount.options[selectAudioCount.selectedIndex].value
+    //     }]
+    //   }
+      ,
+      video: {
+        optional: [{
+          sourceId:  selectCount.options[selectCount.selectedIndex].value
+        }]
+      }
+        // audio: {
+        //   deviceId: selectAudioCount.options[selectAudioCount.selectedIndex].value, //用哪个音频设备（耳机/电脑 麦克风 ）
+          
+        //   optional: [{
+        //     sourceId: selectAudioCount.options[selectAudioCount.selectedIndex].value,
+        //   }]
+        //   //volume: 0.5  //（声音大小 0~1）
+        // },
+        // video: {//  选择的本地摄像头
+        //   width: 640,
+        //   height: 480,
+        //   frameRate: 30,//帧率
+        //   deviceId: selectCount.options[selectCount.selectedIndex].value,//用哪个视频设备 
+        //   optional: [{
+        //     sourceId: selectCount.options[selectCount.selectedIndex].value,
+        //   }],
+        //   //放在app里面需要下面配置一下
+        //   "permissions": {
+        //     "audio-capture": {
+        //       "description": "Required to capture audio using getUserMedia()"
+        //     },
+        //     "video-capture": {
+        //       "description": "Required to capture video using getUserMedia()"
+        //     }
+        //   }
+
+        // }
+      };
+      console.log(constraints);
+      // 获取指定设备的流
+      navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
+          console.log(stream)
+        // 创建本地视频流 容器 或者 切换容器视频流
+        AddVideo(stream);
+      }).catch(function (err) {
+        console.log(err.name + ": " + err.message);
+      });
+    }
+  })
+  // 监听 视频下拉框
+  var SelectVal = '';
+  document.getElementById("camera_video_select").addEventListener("change", () => {
+    var selectNodesObj = document.getElementById('camera_video_select');
+    if (SelectVal == '') {
+      SelectVal = selectNodesObj.value;
+    } else if (SelectVal != selectNodesObj.value) {
+      SelectVal = selectNodesObj.value;
+    }
+    console.log(selectNodesObj.value);
+  })
+
+  // 视频流输出显示
+  function AddVideo(stream) {
+    console.log(stream);
+    var node = document.getElementById('localVideo');
+    if (node) {
+      node.srcObject = stream;
+    } else {
+      var node = document.createElement('video');
+      node.muted = true;
+      node.controls = true;
+      node.autoplay = true;
+      node.id = 'localVideo';
+      node.playsinline = true;
+      node.srcObject = stream;
+      document.getElementById('VideoList').appendChild(node);
+    }
+
+  }
+</script>
+
+</html>
+
+<!--   
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Check getDisplayMedia</title>
+</head>
+<body>
+<p>Pick which <em>displaySurface</em> constraint to apply to <em>getDisplayMedia</em></p>
+<p>
+    <button id="display">Display</button>
+    <button id="application">Application</button>
+    <button id="window">Window</button>
+    <button id="browser">Browser</button>
+</p>
+<p>
+    <label for="frameRate">Frame rate</label>
+    <input id="frameRate" type="text" size="2"/>
+</p>
+<p>
+    <input type="checkbox" id="audioCapture" value="audioCapture" checked>
+    <label for="audioCapture">Audio</label>
+</p>
+<p><em><span id="mode"></span></em></p>
+
+<h3>Result</h3>
+<p id="result"></p>
+<h3>Display Surface Video Track Details</h3>
+<p id="displaySettings"></p>
+<h3>Audio Capture Track Details</h3>
+<p id="audioSettings"></p>
+
+<script>
+
+    const result = document.getElementById('result');
+    const displaySettings = document.getElementById('displaySettings');
+    const audioSettings = document.getElementById('audioSettings');
+    const frameRate = document.getElementById('frameRate');
+    const audioCapture = document.getElementById('audioCapture');
+
+
+    const buttons = document.querySelectorAll('button');
+    buttons.forEach(button => button.addEventListener('click', async () => {
+        try {
+            let stream = await navigator.mediaDevices.getDisplayMedia({
+                video: {displaySurface: button.id, frameRate: frameRate.value > 0 ? frameRate.value : null},
+                audio: audioCapture.checked
+            });
+                //.then(s=>stream=s); // ToDo: add support for Safari
+            console.log(stream.getTracks());
+
+            let trackSettings = stream.getVideoTracks()[0].getSettings();
+            result.innerHTML = `You asked for <strong>${button.id}</strong> and got <strong>${trackSettings.displaySurface}</strong>`;
+
+            // Show all video and audio track settings - there should only be a single track on each max
+            let videoDetails = "";
+            stream.getVideoTracks().forEach((track, i) => {
+                videoDetails += `<strong>Track ${i}</strong>`;
+                videoDetails += JSON.stringify(track.getSettings(), null, '<br/>').replace(/["{},]/g, "");
+            });
+            displaySettings.innerHTML = videoDetails === "" ? "No video track captured" : videoDetails;
+
+            let audioDetails = "";
+            stream.getAudioTracks().forEach((track, i) => {
+                audioDetails += `<strong>Track ${i}</strong>`;
+                audioDetails += JSON.stringify(track.getSettings(), null, '<br/>').replace(/["{},]/g, "");
+            });
+            audioSettings.innerHTML = audioDetails === "" ? "No audio track captured" : audioDetails;
+
+        } catch (e) {
+            result.innerText = e;
+            console.error(e);
+        }
+    }));
+</script>
+</body>
+</html> -->

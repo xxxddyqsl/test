@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+<script type="text/javascript" src="./node_modules\babel-polyfill\dist\polyfill.min.js"></script>
+<!-- <script type="text/javascript" src="./node_modules/babel-polyfill/dist/polyfill.min.js"></script> -->
+<script type="text/babel">
+
+  var arrayLike = {
+      '0': 1,
+      '1': 2,
+      '2': 3,
+      length: 3
+  };
+  // Array.from为ES6新添加的方法
+  var arr2 = Array.from(arrayLike, x => x + x);
+  console.log(arr2); // [2, 4, 6]
+  let test = 1;
+    alert(test);
+
+    class aa{
+        dd='测试';
+    }
+    let cc= new aa();
+    alert(cc.dd)
+    let arr = [1, 2, 3];
+    arr.forEach(n => {
+        console.log(n)
+    });
+    // async function getName() {
+    //    return '张三';
+    // }
+     function getName() {
+        return new Promise((resolve) => {  
+            resolve('张三'); 
+        }).catch(Error => {
+            resolve(Error);
+        }); 
+    };
+    async function init() {
+        let name = await getName();
+        console.log(name);
+    }
+    init();
+</script>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!--  IE使用Promise，async,await   -->
+    <!-- 转换 Iterator、Generator、Set、Maps、Proxy、Reflect、Symbol、Promise等语法 -->
+    <script src="./babal/browser-polyfill.min.js"></script>
+    <!-- 定义了一些处理es6新的语法关键字的帮助函数 -->
+    <script src="./babal/runtime.js"></script>
+</head>
+
+<body>
+</body>
+
+<script type="text/babel">
+    let test = 1;
+    console.log(test);
+
+    class aa {
+        constructor() {
+            this.pp = '测试pp';
+        };
+        dd() {
+            console.log(this.pp);
+            console.log('测试');
+            return 'dd测试';
+        };
+    }
+    let cc = new aa();
+    console.log(cc.dd())
+    //     let arr = [1, 2, 3];
+    //     arr.forEach(n => {
+    //         console.log(n)
+    //     });
+    // async function getName() {
+    //    return '张三';
+    // }
+    function getName() {
+        return new Promise((resolve) => {
+            resolve('张三');
+        }).catch(Error => {
+            resolve(Error);
+        });
+    };
+    async function init() {
+        let name = await getName();
+        console.log(name);
+    }
+    init();
+</script>
+<!-- IE兼容ES6基本语法（不包含Promise）-->
+<script src="./babal/browser.min.js"></script>
+
+</html>
