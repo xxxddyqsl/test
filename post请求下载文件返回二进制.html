@@ -14,6 +14,43 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
+    // ie不支持a标签download方式 下载文件兼容ie
+    function DownloadFile(url, name) {
+        // url ? url : url = '../css/PoDetails.css';
+        // name ? name : name = '测试下载';
+        if (!url || url == '')
+            return alert(window.languageFn('无法下载，文件路径错误'));
+        // 下载路径转发 - 测试地址
+        // url = '/api' + url;
+        maskLayerShow(window.languageFn('正在下载！'));
+        //判断是否是IE浏览器，是的话返回true
+        if (window.navigator.msSaveOrOpenBlob) {
+            console.log('IE浏览器,', url)
+            const xhr = new XMLHttpRequest()
+            xhr.open('GET', url, true)
+            xhr.responseType = 'blob'
+            xhr.onload = function () {
+                if (this.status === 200) {
+                    // 返回200
+                    let blob = this.response;
+                    try {
+                        window.navigator.msSaveOrOpenBlob(blob, name)
+                    } catch (e) {
+                        console.log(e);
+                    }
+                }
+            }
+            xhr.send()
+        } else {
+            const ele = document.createElement('a');
+            ele.setAttribute('href', url);//设置下载文件的文件路径
+            ele.setAttribute('download', name);//设置下载文件的文件名称
+            ele.click();
+        }
+        // 删除 蒙层 提示元素
+        $('.maskLayer').remove();
+
+    }
     // 该方法是创建下载，上面的jQuery的方法接口访问成功后调用，原生js的方法已在自己方法内部定义过该部分内容
     function downloadFile(res, fileName) { // res为后端传来的文件流，// fileName为文件名称，自己根据实际情况赋值
         let url = window.URL.createObjectURL(res);

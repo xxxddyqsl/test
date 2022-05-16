@@ -9,10 +9,11 @@ var Mold = function () {
     function Mold() {
         _classCallCheck(this, Mold);
 
+        // 分页 插件参数
         this.pageData = {
-            pageSizes: [10, 20, 30, 40, 50, 100], // 选择每页条数 
+            pageSizes: [10, 20, 30, 40, 50, 100], // 选择每页条数  TODO: layout的sizes属性存在才生效
             pageIndex: 1, // 当前页码 [非必填]
-            pageSize: 10, // 每页显示条数 
+            pageSize: 10, // 每页显示条数   TODO: 默认选中sizes [非必填]
             total: 0 // 数据总条数 [必填] 默认0
         };
         // po单查询 QueryPO 查询接口参数
@@ -21,11 +22,11 @@ var Mold = function () {
             "creator": "", "dueDateFrom": "", "dueDateTo": "", "totalFrom": '', "totalTO": '', "pageSize": this.pageData.pageSize, "pageIndex": this.pageData.pageIndex
         };
     }
-    // 初始化
-
 
     _createClass(Mold, [{
         key: "init",
+
+        // 初始化
         value: function init() {
             var that = this;
             // 日期选择插件

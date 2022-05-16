@@ -16,6 +16,15 @@
         accept="image/png, image/jpeg, image/gif, image/jpg, .doc, .docx, .txt, .xlsx, .xls">
 </body>
 <script>
+    // 获取文件名带有盘符信息的处理方法
+    var str = "C:\\Users\\Administrator\\Desktop\\上传文件测试ts编译报错.txt";
+    if (str && (str.lastIndexOf('\\') >= 0 || str.lastIndexOf('/') >= 0)) {
+        var winSep = str.lastIndexOf('\\');
+        var unixSep = str.lastIndexOf('/');
+        var pos = (winSep > unixSep ? winSep : unixSep);
+        // 截取字符串
+        str = str.substr(pos + 1);
+    };
     function uploadFile() {
         // 获取当前点击的元素对象
         let e = window.event || arguments.callee.caller.arguments[0];
