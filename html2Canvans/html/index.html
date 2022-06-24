@@ -20,7 +20,7 @@
     <div id="yourcssselector">
         <img src="../../image/Loading.png" alt="">
     </div>
-
+    <button onclick="cutImg()">截屏</button>
 </body>
 <script>
 
@@ -86,7 +86,35 @@
         // node.height = 100;
         document.body.appendChild(node)
     }
-
+/* 使用方法 */
+function cutImg() {
+   // 手动创建一个 canvas 标签
+   const canvas = document.createElement("canvas")
+            // 获取父标签，意思是这个标签内的 DOM 元素生成图片
+            // imageTofile是给截图范围内的父级元素自定义的ref名称
+            let canvasBox =  document.body;
+            // 获取父级的宽高
+            const width = parseInt(window.getComputedStyle(canvasBox).width)
+            const height = parseInt(window.getComputedStyle(canvasBox).height)
+            // 宽高 * 2 并放大 2 倍 是为了防止图片模糊
+            canvas.width = width * 2
+            canvas.height = height * 2
+            canvas.style.width = width + 'px'
+            canvas.style.height = height + 'px'
+            const context = canvas.getContext("2d");
+            context.scale(2, 2);
+            const options = {
+                backgroundColor: null,
+                canvas: canvas,
+                useCORS: true
+            }
+            html2canvas(canvasBox, options).then((canvas) => {
+                // toDataURL 图片格式转成 base64
+                let dataURL = canvas.toDataURL("image/png")
+                console.log(dataURL)
+                // this.downloadImage(dataURL)
+            })
+  }
 </script>
 
 </html>

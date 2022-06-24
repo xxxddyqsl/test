@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #wraper {
+            width: 800px;
+            height: 1131px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        #myCanvas {
+            /* border: 1px solid; */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wraper">
+        <!-- <img src="./image/snailgame.png" style="width:800px" alt=""> -->
+        <canvas id="myCanvas" width="800" height="1131"></canvas>
+    </div>
+</body>
+<script>
+    var c, ctx;
+    var msg = [{ title: '页眉', type:'img',width: 0, heigh: 0, url: './image/snailgame.png', x: 0, y: 0, Proportion: 0 }, 
+    { title: '页脚',type:'text',font:15,border:true,lineWidth:5,strokeStyle:'#e1e1e3',moveTo:{}, text: '苏州蜗牛数字科技股份有限公司 Suzhou Snail Digital Technology Co.,Ltd.', x: 0, y: 0 }];
+   
+    window.onload = function () {
+        c = document.getElementById('myCanvas');
+        ctx = c.getContext("2d");
+        // 图片
+        for (let i in msg) {
+            if(msg[i].type=='img'){
+                loadImg(msg[i])
+            }else if(msg[i].type=='text'){
+                CanvasText(msg[i])
+            }
+        };
+        CanvasTText()
+    };
+    function loadImg(item) {
+        let img = new Image();
+        img.src = item.url;
+        // 容器 宽度 计算 比例图片高度
+        let cHei = c.clientWidth;
+        img.onload = function () {
+            // 获取图片的原始尺寸  img.naturalWidth  img.naturalHeight
+            item.Proportion = (img.naturalWidth / img.naturalHeight);//比例
+            item.width = c.clientWidth;
+            item.heigh = (c.clientWidth / item.Proportion);
+            // if (item.title == '页脚') {
+            //     item.y = (c.clientHeight - item.heigh);
+            // }
+            ctx.drawImage(img, item.x, item.y, item.width, item.heigh);
+        };
+    };
+    function CanvasText(item){
+        ctx.font = item.font+'px Arial';
+        // 字体宽度
+        var width = ctx.measureText(item.text).width;
+         if (item.title == '页脚') {
+                item.y = (c.clientHeight - item.font);
+                ctx.lineWidth=5;//设置线条的宽度
+                ctx.strokeStyle="#e1e1e3"//.或者canvas.fillStyle="";设置线条的样式，主要是颜色。
+                // 定义开始坐标 
+                ctx.moveTo(0,item.y-item.font-8)
+                // 和结束坐标
+                ctx.lineTo(800,item.y-item.font-8);
+                ctx.stroke();
+            }
+        console.log('text的宽度为' + width);
+        // width/2 = 距离左侧的位置 +20 间距
+        ctx.fillText(item.text,  item.x,  item.y );
+    }
+    // Canvas - 文本
+    function CanvasTText() {
+        ctx.font = "23px Arial";
+        // 水平居中：设置 ctx.textAlign = "center"；x = 画布宽度的一半。
+        ctx.textAlign = "center";
+        // 垂直居中：设置 ctx.textBaseline = "middle"；y = 画布高度的一半。
+        ctx.textBaseline = "middle";
+        ctx.fillText("离职证明（员工联）", (c.clientWidth / 2), 110);
+        ctx.font = "18px Arial";
+        // 字体宽度
+        var width = ctx.measureText('兹证明：').width;
+        console.log('text的宽度为' + width);
+        // width/2 = 距离左侧的位置 +20 间距
+        ctx.fillText("兹证明：", width / 2 + 20, 110 + 23 + 18);
+    }
+    // 用JavaScript将画布保持成图片格式
+    function convertCanvasToImage() {
+        var image = new Image();
+        image.src = c.toDataURL("image/png");
+        console.log(image.src)
+        // 打印
+        window.print();
+        // return image;
+    }
+    // #e1e1e3
+</script>
+
+</html>

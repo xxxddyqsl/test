@@ -13,6 +13,30 @@
     <button onclick="gettest()">测试http请求</button>
 </body>
 <script>
+     var data=  [
+    {
+      "cabinCode": "M",
+      "lsv": 7,
+      "persons": 5
+    },
+    {
+      "cabinCode": "E",
+      "lsv": 7,
+      "persons": 5
+    }
+  ];
+  console.log(data)
+  var obj ={};
+  for(let i in data){
+      for(let j in data[i]){
+        if(j =='cabinCode'){
+            let k= data[i][j];
+            delete data[i][j];
+            obj[k]= data[i]
+      }
+      }
+  }
+  console.log(obj)
     function gettest(){
         console.log(111);
         let url='http://127.0.0.1:5501/';

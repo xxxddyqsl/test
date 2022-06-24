@@ -1,0 +1,139 @@
+.personalinfo-wrapper {
+  position: fixed;
+  width: 473px;
+  height: 545px;
+  background: #FFFFFF;
+  box-shadow: 0px 4px 50px 0px rgba(0, 0, 0, 0.07), 0px 0px 8px 0px rgba(0, 0, 0, 0.11);
+  border-radius: 4px;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  transform: translate(-50%, -50%);
+}
+
+.personalinfo-header {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+
+}
+
+.personalinfo-header-quit {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+
+}
+
+.personalinfo-main {
+  width: 100%;
+}
+
+.personalinfo-main-icon-box {
+  margin-top: 21px;
+}
+
+.personalinfo-main-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 1px solid #FFFFFF;
+}
+
+.personalinfo-main-name {
+
+  font-size: 20px;
+  color: #070E0B;
+  margin-top: 10px;
+}
+
+.personalinfo-main-contactDetails {
+  width: 100%;
+  height: 50px;
+  margin-top: 17px;
+  background: #F6F7F8;
+  border-radius: 0px 0px 0px 4px;
+}
+
+.personalinfo-main-contactDetails img {
+  margin-right: 14px;
+}
+
+.personalinfo-main-contactDetails .personalinfo-main-contactDetails-name {
+    max-width: 103px;
+  font-size: 12px;
+  color: #070E0B;
+}
+
+.personalinfo-main-contactDetails-phone-box {
+  flex: 1;
+}
+
+.personalinfo-main-contactDetails-phone-icon {
+  width: 20px;
+  height: 24px;
+  cursor: pointer;
+
+}
+
+.personalinfo-main-contactDetails-separation {
+  width: 1px;
+  height: 100%;
+  background: #EDF0F2;
+  cursor: pointer;
+
+}
+
+.personalinfo-main-contactDetails-email-box {
+  flex: 1;
+}
+
+.personalinfo-main-contactDetails-email-icon {
+  width: 30px;
+  height: 30px;
+}
+
+.personalinfo-main-info {
+  width: 100%;
+  margin-top: 30px;
+  margin-bottom: 35px;
+}
+
+.personalinfo-main-info-item {
+  width: 100%;
+  margin-bottom: 17px;
+}
+
+.personalinfo-main-info-item:last-child {
+  margin-bottom: 0px;
+}
+
+.personalinfo-main-info-item-title {
+  width: 161px;
+  height: 15px;
+  opacity: 0.4;
+  font-size: 12px;
+  color: #070E0B;
+  text-align: right;
+}
+
+.personalinfo-main-info-item-val {
+  height: 19px;
+  font-size: 14px;
+  color: #070E0B;
+  margin-left: 24px;
+   /*超出部分文字以...显示 - 兼容英文数字*/
+   max-width: 244px;
+   white-space: normal;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   display: -webkit-box;
+   -webkit-line-clamp: 1;
+   -webkit-box-orient: vertical;
+   word-break: break-all;
+}
+
+.personalinfo-main-info-item-val-icon {
+  width: 14px;
+  height: 14px;
+}

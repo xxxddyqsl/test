@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 </head>
 
 <body>
@@ -14,9 +15,93 @@
     <button onclick="oNdelete()">删除本条cookies</button>
 
     <h3 id="text"></h3>
+
+
+    <div class="div-editable">
+        测1试<img src="http://bbs.cn.yimg.com/user_img/200701/31/jisuanji986_117025184198149.jpg" title="[微笑1]"> 消息<img src="http://bbs.cn.yimg.com/user_img/200701/31/jisuanji986_117025184198149.jpg" title="[微笑2]">
+    </div>
 </body>
 
 <script>
+    console.log(splitContent(document.querySelector('.div-editable')))
+      function  splitContent (node,res,keep){
+        res = res || [];
+         var childNodes = node.childNodes;
+          var cur;
+           for (var i = 0; i < childNodes.length; i++) {
+            cur = childNodes[i];
+            var nodeType = cur.nodeType;
+            var prev = res[Math.max(0, res.length - 1)];
+            if (!prev) {
+                prev = '';
+            }
+            if (nodeType == 1) {
+                var tagName = cur.tagName.toLowerCase();
+                if (tagName == 'div') {
+                    splitContent(cur, res);
+                } else if (tagName == 'img') {
+                    if (cur.getAttribute('isface')) {
+                        res[Math.max(0, res.length - 1)] = prev + cur.outerHTML;
+                    } else {
+                        var reg = /\?_=\w+$/g;
+                        cur.src = cur.src.replace(reg, '');
+                        res.push(cur);
+                        res.push('');
+                    }
+                } else {
+                    res[Math.max(0, res.length - 1)] = prev + cur.outerHTML;
+                }
+            } else if (nodeType == 3) {
+                res[Math.max(0, res.length - 1)] = prev + cur.nodeValue;
+            }
+        }
+        if (!keep) {
+            for (var i = res.length - 1; i >= 0; i--) {
+                if (typeof res[i] == 'string') {
+                    res[i] = res[i].replace(/<br\s*\/*>\s*\n*$/, '');
+                    res[i] = res[i].replace(/^<br\s*\/*>\s*\n*/, '');
+                }
+                if (/^\s*(\s*<br\s*\/*>\s*\n*)*\s*$/.test(res[i])) {
+                    res.splice(i, 1);
+                }
+            }
+        }
+        return res;
+    }
+    function labelString(str) {
+        // 简单（单纯标签，不带任何属性）的正则表达式
+        // 正则一
+        // replace(/\<[a-zA-Z]+\>|\<\/[a-zA-Z]+\>/ig, '')
+
+        // 复杂的正则表达式
+        // 正则二
+        str = str.replace(/\<[^>]*\>(([^<])*)/gi, function (a, b) {
+            console.log(a, b)
+            return arguments[1];
+        });
+        console.log(str);
+        // 撒旦法师打发水电费撒的发生对光反射发个梵蒂冈士大夫撒多公分杀伐果断
+
+        // 这一步可以不用，
+        // 如果有这一步会更可靠一点
+        // substring 的第二个参数可选，
+        // 如果不写表示取到末尾
+        str = str.substring(0, str.length);
+        console.log(str);
+        // 撒旦法师打发水电费撒的发生对光反射发个梵蒂冈士大夫撒多公分杀伐果断
+
+        // 正则三
+        // str = str.replace(/\<[^>]*\>/gi, '');
+
+        return str;
+    };
+    let str = '测1试<img src="http://bbs.cn.yimg.com/user_img/200701/31/jisuanji986_117025184198149.jpg" mce_src="http://bbs.cn.yimg.com/user_img/200701/31/jisuanji986_117025184198149.jpg">消息';
+
+    console.log(labelString(str));
+    // '测1试<img src="http://bbs.cn.yimg.com/user_img/200701/31/jisuanji986_117025184198149.jpg" mce_src="http://bbs.cn.yimg.com/user_img/200701/31/jisuanji986_117025184198149.jpg">消息'
+    console.log(document.querySelector('.div-editable').innerHTML)
+
+
     let node = document.getElementById('text');
     window.onload = () => {
         node.innerHTML = 'cookies信息：' + getCookie('username');

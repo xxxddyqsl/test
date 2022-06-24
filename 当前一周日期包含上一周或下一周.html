@@ -1,0 +1,218 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>日历操作</title>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+
+</head>
+
+<body>
+    <div>输入日期 <input type="text" name="" value="2022-05-01" id=""><button id="changedate">查询</button></div>
+    <button id="last-week">上一周</button><button id="next-week">下一周</button>
+    <div style="display: flex;">
+        <div id="week" style="flex: 1; margin: 0 10px;">
+        </div>
+        <div id="lastweek" style="flex: 1; margin: 0 10px;">
+        </div>
+        <div id="nextweek" style="flex: 1; margin: 0 10px;">
+
+        </div>
+    </div>
+</body>
+<script>
+    //调用方法
+
+    function format(format, fdate) {
+        var args = {
+            "M+": fdate.getMonth() + 1,
+            "d+": fdate.getDate(),
+            "h+": fdate.getHours(),
+            "m+": fdate.getMinutes(),
+            "s+": fdate.getSeconds(),
+            "q+": Math.floor((fdate.getMonth() + 3) / 3),  //quarter
+            "S": fdate.getMilliseconds()
+        };
+        if (/(y+)/.test(format))
+            format = format.replace(RegExp.$1, (fdate.getFullYear() + "").substr(4 - RegExp.$1.length));
+        for (var i in args) {
+            var n = args[i];
+            if (new RegExp("(" + i + ")").test(format))
+                format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? n : ("00" + n).substr(("" + n).length));
+        }
+        return format;
+    };
+
+
+    // alert(format(" hh:mm",new Date('2022-6-13 6:06')));
+    var newDate = new Date();
+    // MondayDate 周一   SundayDate周日
+    var MondayDate, SundayDate;
+    window.onload = function () {
+
+        let msg = getWeekDataList(newDate);
+        html('week', msg)
+    }
+    function timeConvert(date) {
+        // let date = new Date(str);
+        let time = date.getFullYear() + "-" + ((date.getMonth() + 1) < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1)) + "-" + ((date.getDate()) < 10 ? '0' + date.getDate() : date.getDate());
+        return time;
+    };
+    // getDay() 方法可返回一周（0~6）的某一天的数字。  星期天为 0, 星期一为 1, 以此类推。
+    function getWeekDataList(data) {
+        //根据日期获取本周周一~周日的年-月-日
+        var weekList = [];
+        var date = new Date(data);
+        //判断本日期是否为周日，获取本周一日期
+        if (date.getDay() == "0") {
+            date.setDate(date.getDate() - 6);
+        } else {
+            date.setDate(date.getDate() - date.getDay() + 1);
+        }
+        var myDate = date.getDate();
+        var myMonth = date.getMonth() + 1;
+        if (date.getDate() < 10) {
+            myDate = '0' + myDate;
+        }
+        if (date.getMonth() + 1 < 10) {
+            myMonth = '0' + myMonth;
+        }
+        // 每一周的 周一时间 点击上一周 调用
+        // MondayDate = (date.getFullYear() + "-" + myMonth + "-" + myDate);
+        // 周 一
+        weekList.push({ name: getWeekDate(date.getFullYear() + "-" + myMonth + "-" + myDate), date: (date.getFullYear() + "-" + myMonth + "-" + myDate) });
+        // 获取周二以后日期
+        for (var i = 0; i < 6; i++) {
+            date.setDate(date.getDate() + 1);
+            myDate = date.getDate();
+            myMonth = date.getMonth() + 1;
+            if (date.getDate() < 10) {
+                myDate = '0' + myDate;
+            }
+            if (date.getMonth() + 1 < 10) {
+                myMonth = '0' + myMonth;
+            }
+            // 每一周的 周日时间 点击下一周 调用
+            // i == 5 ? SundayDate = (date.getFullYear() + "-" + myMonth + "-" + myDate) : '';
+            // if (i == 5) {
+            // 周日 放在 第一位
+            //     weekList.unshift({ name: getWeekDate(date.getFullYear() + "-" + myMonth + "-" + myDate), date: (date.getFullYear() + "-" + myMonth + "-" + myDate) });
+            // } else {
+            weekList.push({ name: getWeekDate(date.getFullYear() + "-" + myMonth + "-" + myDate), date: (date.getFullYear() + "-" + myMonth + "-" + myDate) });
+            // }
+        }
+        MondayDate = weekList[0].date
+        SundayDate = weekList[weekList.length - 1].date
+        console.log(weekList);
+        return weekList
+    };
+    // 获取 时间 为周几
+    function getWeekDate(date) {
+        var now = new Date(date);
+        var day = now.getDay();
+        var weeks = new Array(
+            "周日||Sunday",
+            "周一||Monday",
+            "周二||Tuesday",
+            "周三||Wednesday",
+            "周四||Thursday",
+            "周五||Friday",
+            "周六||Saturday"
+        );
+        // var weekday=new Array(7);
+        // weekday[0]="Sunday";
+        // weekday[1]="Monday";
+        // weekday[2]="Tuesday";
+        // weekday[3]="Wednesday";
+        // weekday[4]="Thursday";
+        // weekday[5]="Friday";
+        // weekday[6]="Saturday";
+        var week = weeks[day];
+        return week;
+    }
+    function html(id, msg) {
+        for (let i in msg) {
+            let node = ` ${id == 'lastweek' ? '<div>上一周</div>' : id == 'nextweek' ? '<div>下一周</div>' : '<div>本周</div>'}  <div>${msg[i].name}==${msg[i].date}</div> `;
+            $('#' + id).append(node)
+        }
+        $('#' + id).append('<br>')
+    }
+    $('#changedate').on('click', function () {
+        let nwedate = $('input').val();
+        let date = new Date(nwedate);
+
+        newgetWeekDataList(date)
+    })
+    // 上一周
+    $('#last-week').on('click', function () {
+        // var date = newDate;
+        //  //判断本日期是否为周日，获取本周一日期
+        //  if (date.getDay() == "0") {
+        //     date.setDate(date.getDate() - 6);
+        // } else {
+        //     date.setDate(date.getDate() - date.getDay() + 1);
+        // }
+        // 获取 周一日期 时间戳 - 一天的时间戳 = 上一周日 （上一周 时间）
+        newDate = new Date(new Date(MondayDate).getTime() - (3600 * 1000 * 24));
+        let msg = newgetWeekDataList(newDate);
+        html('lastweek', msg)
+        // console.log(date,newDate)
+    })
+    // 下一周
+    $('#next-week').on('click', function () {
+        // 获取 周日时间戳 - 一天的时间戳 = 下一周一 （下一周 时间）
+        newDate = new Date(new Date(SundayDate).getTime() + (3600 * 1000 * 24));
+        let msg = newgetWeekDataList(newDate);
+        html('nextweek', msg)
+        // console.log(date,newDate)
+    })
+
+
+    function newgetWeekDataList(date) {
+        var weekList = [];
+        //判断本日期是否为周日，获取本周一日期
+        if (date.getDay() == "0" && localStorage.getItem('lang') == 'cn') {
+            date.setDate(date.getDate() - 6);
+        } else {
+            date.setDate(date.getDate() - date.getDay() + 1);
+        }
+        var myDate = date.getDate();
+        var myMonth = date.getMonth() + 1;
+        if (date.getDate() < 10) {
+            myDate = '0' + myDate;
+        }
+        if (date.getMonth() + 1 < 10) {
+            myMonth = '0' + myMonth;
+        }
+        var newMondayDate = date.getFullYear() + "-" + myMonth + "-" + myDate;
+        // 周 一
+        weekList.push({ name: getWeekDate(date.getFullYear() + "-" + myMonth + "-" + myDate), date: (date.getFullYear() + "-" + myMonth + "-" + myDate) });
+        // 获取周二以后日期
+        for (var i = 0; i < 6; i++) {
+            date.setDate(date.getDate() + 1);
+            myDate = date.getDate();
+            myMonth = date.getMonth() + 1;
+            if (date.getDate() < 10) {
+                myDate = '0' + myDate;
+            }
+            if (date.getMonth() + 1 < 10) {
+                myMonth = '0' + myMonth;
+            }
+
+            weekList.push({ name: getWeekDate(date.getFullYear() + "-" + myMonth + "-" + myDate), date: (date.getFullYear() + "-" + myMonth + "-" + myDate) });
+        }
+        if (localStorage.getItem('lang') != 'cn') {
+            let data = new Date(new Date(newMondayDate).getTime() - (3600 * 1000 * 24));
+            weekList.splice(weekList.length - 1, 1);
+            weekList.unshift({ name: getWeekDate(data), date: (data.getFullYear() + "-" + ((data.getMonth() + 1) < 10 ? '0' + (data.getMonth() + 1) : (data.getMonth() + 1)) + "-" + ((data.getDate()) < 10 ? '0' + data.getDate() : data.getDate())) });
+        }
+        console.log(weekList);
+
+        MondayDate = weekList[0].date
+        SundayDate = weekList[weekList.length - 1].date
+        return weekList
+    }
+</script>
+
+</html>

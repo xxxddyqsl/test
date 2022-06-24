@@ -1,0 +1,599 @@
+/* 公共样式 - 开始 */
+
+
+/* 未读消息 */
+.gg-unread {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #17BA77;
+  margin-left: auto;
+  margin-right: 30px;
+}
+
+.gg-unread span {
+  font-size: 10px;
+  font-family: 'Futura-Medium, Futura';
+  font-weight: 500;
+  color: #FFFFFF;
+}
+
+/* 公共样式 - 结束 */
+
+.main-wrapper {
+  /* width: 1364px;
+  height: 844px; */
+  width: 100%;
+  height: 100%;
+  background: #FFFFFF;
+  border-radius: 10px;
+  margin: 0 auto;
+}
+
+.main-leftColumn {
+  min-width: 100px;
+  /* height: 844px; */
+  height: 100%;
+  background: #070E0B;
+}
+
+.main-leftColumn-MenuBar-box {
+  width: 100%;
+  margin-top: 92px;
+}
+
+.main-leftColumn-MenuBar-item {
+  width: 100%;
+  margin: 10px 0;
+  height: 58px;
+}
+
+.main-leftColumn-MenuBar-item-icon {
+  width: 40px;
+  height: 40px;
+}
+
+.main-leftColumn-MenuBar-item-checked {
+  position: relative;
+  height: 58px;
+  /* margin: 0; */
+  background-color: rgba(23, 186, 119, 0.1);
+}
+
+.main-leftColumn-MenuBar-item-checked::after {
+  content: '';
+  width: 4px;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: #17BA77;
+}
+
+.main-leftColumn-footer {
+  width: 100%;
+  margin-top: auto;
+  margin-bottom: 25px;
+  position: relative;
+
+}
+
+.main-leftColumn-footer-setting {
+  width: 40px;
+  height: 40px;
+}
+
+.main-content-box {
+  height: 100%;
+  flex: 1;
+}
+
+.main-content-header-box {
+  width: 100%;
+  height: 80px;
+  background: #FFFFFF;
+  /* 提高层级 否则box-shadow 会被下方兄弟的元素遮挡 */
+  box-shadow: 0px 1px 0px 0px #E6E9EB;
+  z-index: 2;
+  /* margin-bottom: 1px; */
+}
+
+.main-content-header-left-box {
+
+  margin-left: 20px;
+}
+
+.main-content-header-left-icon {
+  cursor: pointer;
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(126deg, #FD570D 0%, #FF901E 100%);
+
+}
+
+.main-content-header-left-icon span {
+  /* width: 36px; */
+  height: 24px;
+  color: #FFFFFF;
+  font-size: 18px;
+  font-family: 'Futura-Bold, Futura';
+  font-weight: bold;
+}
+
+.main-content-header-left-title {
+  font-size: 18px;
+  font-family: 'Futura-Medium, Futura';
+  font-weight: 500;
+  color: #000000;
+  margin-left: 25px;
+}
+
+/* 中间- 搜索 */
+.main-content-header-mid-box {
+  margin: 0 auto;
+}
+
+.main-content-header-mid-Search-box {
+  width: 340px;
+  height: 50px;
+  /* position: relative; */
+  /* background: #F1F3F4; */
+  /* border-radius: 25px; */
+  /* border: 1px solid #E6E9EB; */
+}
+
+/* .main-content-header-mid-Search-box:hover{
+  border: 1px solid #17BA77;
+} */
+
+.main-content-header-mid-Search-inpt {
+  flex: 1;
+  height: 100%;
+  margin-left: 10px;
+  background: #F1F3F4;
+  border-radius: 25px;
+  border: 0px;
+}
+
+/* 使用  ::v-deep 深度选择器  修改element 样式 */
+/* .main-content-header-mid-Search-box >>> .el-input__inner {
+  width: 100%;
+  height: 100%;
+  background: #F1F3F4;
+  border-radius: 25px;
+  border: 0px;
+  padding-left: 0;
+  font-family: 'Avenir-Heavy, Avenir' !important;
+} */
+
+.main-content-header-mid-Search-icon {
+  width: 18px;
+  height: 18px;
+  margin-left: 14px;
+  cursor: pointer;
+}
+
+/*  */
+.main-content-header-right-box {
+  position: relative;
+  width: 120px;
+  margin-right: 40px;
+}
+
+.main-content-header-right-icon {
+  width: 120px;
+  height: 50px;
+  cursor: pointer;
+}
+
+.addNewChat-select-box {
+  position: absolute;
+  right: 0;
+  top: 60px;
+  width: 184px;
+  /* height: 190px; */
+  background: #FFFFFF;
+  box-shadow: 0px 4px 50px 0px rgba(0, 0, 0, 0.07), 0px 0px 8px 0px rgba(0, 0, 0, 0.11);
+  border-radius: 4px;
+}
+
+.addNewChat-select-list {
+  margin: 14px 0 15px 14px;
+}
+
+.addNewChat-select-item {
+  margin-bottom: 30px;
+  cursor: pointer;
+}
+
+.addNewChat-select-item:last-child {
+  margin-bottom: 0;
+}
+
+.addNewChat-select-item-icon {
+  width: 20px;
+  width: 20px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.addNewChat-select-item-title {
+  height: 19px;
+  font-size: 14px;
+  color: #070E0B;
+  line-height: 19px;
+}
+
+
+
+
+.main-content {
+  width: 100%;
+  /* 子元素默认占满父元素剩余高度 */
+  flex: 1;
+  /* 子元素 横向需要滚动条 */
+  /* width: 0; */
+  /* 子元素 纵向需要滚动条 */
+  height: 0;
+  position: relative;
+
+}
+
+/* 左侧消息列表 */
+.main-content-chat {
+  width: 360px;
+  height: 100%;
+  background: #F6F7F8;
+  box-shadow: 0px 1px 0px 0px #EAEDEF;
+}
+
+.main-content-chat-list {
+  width: 100%;
+  height: 100%;
+  /* 父元素 height: 0; */
+  overflow: auto;
+}
+
+/* 隐藏滚动条 */
+.main-content-chat-list::-webkit-scrollbar {
+  width: 0 !important
+}
+
+/* 隐藏滚动条兼容 */
+.main-content-chat-list {
+  /* IE 10+   */
+  -ms-overflow-style: none;
+  /* Firefox */
+  overflow: -moz-scrollbars-none;
+}
+
+.main-content-chat-list-item {
+  height: 80px;
+
+  box-shadow: 0px 1px 0px 0px #EAEDEF;
+}
+
+.chat-active {
+  background: #FFFFFF;
+  box-shadow: 0px 1px 0px 0px #EAEDEF;
+}
+
+.main-content-chat-list-item-icon-box {
+  position: relative;
+  min-width: 48px;
+  height: 48px;
+  margin: 0 20px;
+  border-radius: 50%;
+  border: 1px solid #FFFFFF;
+}
+
+.main-content-chat-list-item-icon {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.main-content-chat-list-item-info {
+  flex: 1;
+}
+
+.main-content-chat-list-item-info-name-box {
+  height: 21px;
+  margin-bottom: 5px;
+}
+
+.main-content-chat-list-item-info-name {
+  /* width: 104px; */
+  flex: 1;
+  margin-right: 12px;
+  font-size: 16px;
+  color: #070E0B;
+  /*超出部分文字以...显示 - 兼容英文数字*/
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  word-break: break-all;
+}
+
+.main-content-chat-list-item-info-time {
+  font-size: 10px;
+  color: #070E0B;
+  opacity: 0.4;
+  margin-left: auto;
+  margin-right: 26px;
+}
+
+.main-content-chat-list-item-info-content-box {}
+
+.main-content-chat-list-item-info-content {
+  width: 210px;
+  font-size: 12px;
+  color: #070E0B;
+  margin-right: 12px;
+  /*超出部分文字以...显示 - 兼容英文数字*/
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* display: -webkit-box; */
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  word-break: break-all;
+}
+
+.main-content-msg {
+  flex: 1;
+  height: 100%;
+  position: relative;
+}
+
+.main-content-msg-header {
+  width: 100%;
+  height: 80px;
+  z-index: 1;
+  background: #FFFFFF;
+  margin-bottom: 2px;
+  box-shadow: 0px 1px 0px 0px #EAEDEF;
+}
+
+.main-content-msg-header-name-box {
+  margin-left: 40px;
+}
+
+.main-content-msg-header-name {
+  font-size: 20px;
+  /* font-family: 'Avenir-Medium, Avenir';
+    font-weight: 500; */
+  color: #000000;
+  /*超出部分文字以...显示 - 兼容英文数字*/
+  max-width: 400px;
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  word-break: break-all;
+}
+
+.main-content-msg-header-name-Status span {
+  font-size: 14px;
+  color: #070E0B;
+  opacity: 0.6;
+  margin-left: 5px;
+}
+
+.main-content-msg-header-Function {
+  margin-left: auto;
+  margin-right: 40px;
+}
+
+.main-content-msg-header-Function-icon {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.main-content-msg-header-Function-icon:last-child {
+  margin-right: 0px;
+}
+
+.main-content-msg-mid {
+  flex: 1;
+  width: 100%;
+  height: 0px;
+  margin-bottom: 2px;
+  background: #FFFFFF;
+}
+
+
+
+.main-content-msg-footer {
+  width: 100%;
+  height: 270px;
+  background: #FFFFFF;
+  box-shadow: 0px -1px 0px 0px #EAEDEF;
+}
+
+.main-content-msg-footer-edit-area-box {
+  margin: 17px 0;
+  width: 100%;
+  flex: 1;
+  height: 0;
+}
+
+.main-content-msg-edit-area {
+  flex: 1;
+  /* border: 1px solid ; */
+  margin-left: 40px;
+  height: 100%;
+  margin-right: 17px;
+}
+
+.main-content-msg-history {
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  margin-right: 40px;
+}
+
+
+.main-content-msg-footer-tool-bar-box {
+  width: 100%;
+  height: 40px;
+  position: relative;
+  margin-bottom: 40px;
+}
+
+.main-content-msg-footer-tool-bar {
+  margin: 0 40px 0 40px;
+}
+
+.main-content-msg-tool-bar-icon {
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.main-content-msg-tool-bar-icon:last-child {
+  margin-right: 0px;
+}
+
+/* 语音录制 */
+.voiceRecord-box {
+  position: absolute;
+  width: 415px;
+  height: 60px;
+  background: #FFFFFF;
+  box-shadow: 0px 4px 50px 0px rgba(0, 0, 0, 0.07), 0px 0px 8px 0px rgba(0, 0, 0, 0.11);
+  border-radius: 4px;
+  top: -70px;
+  left: 2px;
+
+}
+
+.voiceRecord-icon {
+  width: 20px;
+  height: 20px;
+  margin-left: 20px;
+
+
+}
+
+.voiceRecord-title {
+  height: 19px;
+  font-size: 14px;
+  /* font-family: Futura-Medium, Futura;
+  font-weight: 500; */
+  color: #17BA77;
+  line-height: 19px;
+  margin: 0 10px;
+}
+
+.voiceRecord-time {
+  opacity: 0.4;
+  height: 19px;
+  font-size: 14px;
+  /* font-family: Futura-Medium, Futura;
+  font-weight: 500; */
+  color: #070E0B;
+  line-height: 19px;
+}
+
+.voiceRecord-send-icon {
+  margin-left: auto;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.voiceRecord-quit-icon {
+  margin: 0 20px 0 40px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.voiceRecord-icon-animation {
+  -webkit-animation-name: voiceRecordAnimation;
+  -webkit-animation-timing-function: ease-in-out;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-duration: 1.5s;
+}
+
+@keyframes voiceRecordAnimation {
+  0% {
+    transform: scale(0.25);
+    opacity: 0.25;
+  }
+
+  25% {
+    transform: scale(0.5);
+    opacity: 0.5;
+  }
+
+  50% {
+    transform: scale(0.7);
+    opacity: 0.7;
+  }
+
+  75% {
+    transform: scale(0.9);
+    opacity: 0.9;
+  }
+
+  100% {
+    -webkit-transform: scale(1);
+    opacity: 1
+  }
+}
+
+/* 表情 - 容器 */
+.message-face-box {
+  position: absolute;
+  top: -216px;
+  left: -141px;
+  width: 402px;
+  height: 206px;
+  background: #FFFFFF;
+  box-shadow: 0px 4px 50px 0px rgba(0, 0, 0, 0.07), 0px 0px 8px 0px rgba(0, 0, 0, 0.11);
+  border-radius: 4px;
+  z-index: 1;
+}
+.message-face-list{
+  /* margin-left: 10px; */
+  flex-wrap: wrap;
+  margin: 5px;
+  /* margin: 0px 0  0 10px; */
+}
+.message-face-list-item{
+  /* width: 18px;
+  height: 18px; */
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+/* margin: 10px 10px 0 0; */
+}
+.message-face-list-item img{
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+/* 设置 */
+.Setting {
+  position: absolute;
+  top: -465px;
+  z-index: 9;
+  left: 110px;
+  width: 757px;
+  height: 495px;
+  background: #FFFFFF;
+  box-shadow: 0px 4px 50px 0px rgba(0, 0, 0, 0.07), 0px 0px 8px 0px rgba(0, 0, 0, 0.11);
+  border-radius: 4px;
+}

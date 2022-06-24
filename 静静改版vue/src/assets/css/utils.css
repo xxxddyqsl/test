@@ -1,0 +1,124 @@
+/* 公共-开始 */
+html {
+  font-size: 62.5%;
+
+  /*10
+   ÷ 16 × 100% = 62.5%*/
+}
+body {
+  font-size: 1.4rem;
+  /* font-family: 'Futura-Medium, Futura' !important; */
+  /*1.4 × 10px = 14px */
+}
+/* html,body{-moz-user-select: none; -khtml-user-select: none; user-select: none;} */
+.gg-flex-1 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gg-flex-2 {
+  flex-direction: column;
+}
+/* 子元素反向排列 */
+.gg-flex-6 { flex-direction: row-reverse;}
+
+.gg-flex-3 {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.gg-flex-4 {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+.gg-flex-5 {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+/* 清除input 聚焦状态下默认样式 */
+p, input, button {
+    outline: none;
+}
+/* 清除 ul  默认样式 */
+ul{
+  margin: 0;
+  padding: 0;
+  list-style:none;
+}
+/* 左侧栏表情大小 */
+.main-content-chat .qq_face{
+  height: 16px;
+  width: 16px;
+}
+/* 在线状态 */
+.gg-onlineStatus-box{
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.gg-onlineStatus{
+  /* position: relative; */
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  /* background: #17BA77; */
+  border: 1px solid #F6F7F8;
+  /* display: none; */
+}
+.gg-onlineStatus-green{
+  background: #17BA77;
+}
+.gg-onlineStatus-yellow{
+  background: #FC8F00;
+}
+.gg-input-focus{
+border: 1px solid #17BA77 !important;
+}
+
+/* 公共-结束 */
+/* 修改 element    默认字体样式 */
+.el-input__inner{
+  /* font-family:'Futura-Medium, Futura' !important; */
+}
+
+/* login 页面 修改element默认样式 */ 
+.login-main .el-input--suffix .el-input__inner {
+  padding: 0 15px;
+}
+.login-main .el-input__inner {
+  border: 0px ;
+}
+/* 获取焦点时边框颜色 */
+.el-input__inner:hover,.el-input__inner:focus{
+  border: 1px solid #17BA77;
+}
+
+.el-range-editor.is-active, .el-range-editor.is-active:hover{
+  border: 1px solid #17BA77;
+}
+.el-select .el-input__inner:focus{
+  border: 1px solid #17BA77;
+}
+.el-select .el-input.is-focus .el-input__inner{
+ border: 1px solid #17BA77;
+}
+
+/* @消息 */
+.msg_at_emp{
+  text-decoration: none;
+  color: #17BA77;
+}
+
+.main-content-msg-mid-list-item-content-box .qq_face{
+  width: 24px;
+  height: 24px;
+}
+.qq_face {
+  width: 28px;
+  height: 28px;
+  display: inline-block;
+  vertical-align: middle;
+}

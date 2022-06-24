@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+</head>
+
+<body>
+    <input type="file" style="display: none;">
+    <button class="uploadFile">上传</button>
+    <button class="Download">下载</button>
+</body>
+<script>
+    var msg;
+    // 文件上传
+    $('.uploadFile').click(function () {
+        uploadFile();
+    });
+    function uploadFile() {
+
+        // unbind() 移除 input 上传 元素的事件处理器
+        $('input[type=file]').unbind();
+        // change  监听 input 上传
+        $('input[type=file]').on('change', function () {
+            // 获取整个 文件
+            let file = this.files[0];
+            // 当前未返回地址 -   获取 file对象  使用createObjectURL对象转  可预览 可下载 上传的文件
+            let url = window.URL.createObjectURL(file);
+            msg = {
+                    "FileId": this.files[0].name.split(".")[0] + '_' + this.files[0].lastModified,
+                    "FileName": this.files[0].name,
+                    "DownloadURL": url
+                } ;
+            console.log(msg)
+        });
+        $('input[type=file]').click();
+    }
+    $('.Download').click(function(){
+        DownloadFile(msg.FileId, msg.DownloadURL, msg.FileName);
+    })
+    // 点击下载文件
+    function DownloadFile(id, url, name) {
+        if (!url || url == '')
+            return alert('无法下载，文件路径错误');
+
+        //判断是否是IE浏览器，是的话返回true
+        if (window.navigator.msSaveOrOpenBlob) {
+            // console.log('IE浏览器,', url)
+            const xhr = new XMLHttpRequest()
+            xhr.open('GET', url, true)
+            xhr.responseType = 'blob'
+            xhr.onload = function () {
+                if (this.status === 200) {
+                    // 返回200
+                    let blob = this.response;
+                    try {
+                        window.navigator.msSaveOrOpenBlob(blob, name)
+                    } catch (e) {
+                        console.log(e);
+                    }
+                }
+            }
+            xhr.send()
+        } else {
+            const ele = document.createElement('a');
+            ele.setAttribute('href', url);//设置下载文件的文件路径
+            ele.setAttribute('download', name);//设置下载文件的文件名称
+            ele.click();
+        }
+    };
+</script>
+
+</html>

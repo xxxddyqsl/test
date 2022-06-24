@@ -1,0 +1,108 @@
+
+.main-content-msg-mid-list{
+    width: 100%;
+    height: 100%;
+    /* overflow: auto; */
+}
+.main-content-msg-mid-list-item{
+    /* margin-top: 35px; */
+    margin: 35px 52px 0 40px; 
+}
+.main-content-msg-mid-list-item-self{
+    /* 子元素反向排列 */
+    flex-direction: row-reverse; 
+}
+.main-content-msg-mid-list-item-self .main-content-msg-mid-list-item-time{
+    margin: 4px auto auto 0;
+}
+.main-content-msg-mid-list-item-self .main-content-msg-mid-list-item-content-box{
+  margin-right: 14px;
+}
+.main-content-msg-mid-list-item-content-text{
+    padding: 10px;
+    background: #F1F3F4;
+    border-radius: 4px;
+
+    white-space: pre-wrap;
+    /* font-size: 14px; */
+    word-wrap: break-word;
+    word-break: normal;
+}
+.main-content-msg-mid-list-item-self .main-content-msg-mid-list-item-content-text{
+    background: rgba(23, 186, 119, 0.15);
+
+}
+.main-content-msg-mid-list-item-icon{
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    margin-bottom: auto;
+    border: 1px solid #FFFFFF;
+    cursor: pointer;
+}
+.main-content-msg-mid-list-item-content-box{
+    /* flex: 1 ; */
+    margin-left: 14px; 
+
+    font-size: 16px;
+    /* font-family: 'PingFangSC-Medium, PingFang SC'; */
+    font-weight: 500;
+    color: #070E0B;
+    max-width: 640px;
+    /* 英文强制换行 */
+    word-wrap: break-word;
+
+    white-space: pre-wrap;
+   
+}
+ 
+.main-content-msg-mid-list-item-content-img{
+    max-width: 100%;
+    /* border: 1px solid #d9dfe6; */
+    box-sizing: border-box;
+    max-height: 400px;
+    /* height: 400px; */
+    cursor: pointer;
+}
+
+
+.main-content-msg-mid-list-item-time{
+    min-width: 96px;
+    font-size: 12px; 
+    color: #070E0B;
+    /* margin: 4px 0 auto auto; */
+    margin-top: 34px;
+    opacity: 0.6;
+    text-align: center;
+}
+
+
+/* 语音 */
+.main-content-msg-mid-list-item-content-voice-triangle{
+    width: 7px;
+    height: 10px;
+}
+.main-content-msg-mid-list-item-content-voice-box{
+    width: 151px;
+    height: 40px;
+    /* background: #F1F3F4; */
+    background-image: url('../images/voice_area.png');
+    background-size: 151px 40px;
+    background-repeat: no-repeat;
+    justify-content: space-between;
+}
+
+.main-content-msg-mid-list-item-content-voice-time{
+    height: 22px;
+    font-size: 16px;
+    font-family: 'Avenir-Medium, Avenir';
+    font-weight: 500;
+    color: #B3B3B3;
+    line-height: 22px;
+
+    margin-left: 24px;
+}
+.main-content-msg-mid-list-item-content-voice-animation{
+    margin-right: 8px;
+    margin-left: auto;
+}

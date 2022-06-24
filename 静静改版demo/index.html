@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
+    <script src="https://cdn.staticfile.org/vue-router/2.7.0/vue-router.min.js"></script>
+    <!-- <script src="js/vue.js"></script>
+    <script src="js/vue-router.js"></script> -->
+    <script src="./components/login.js"></script>
+    <script src="./components/main.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <!--用于渲染匹配的组件-->
+        <router-view></router-view>
+    </div>
+</body>
+
+<script>
+    /* 创建组件构造器  */
+    // var Home = Vue.extend({
+    // 	template: '#home',
+    // 	data: function() {
+    // 		return {
+    // 			msg: 'Hello, vue router!'
+    // 		}
+    // 	}
+    // })
+
+
+    const routes = [
+        // 设置默认路由
+        {
+            path: '/',
+            redirect: 'login'
+        },
+        { path: '/login', component: Login, },
+        { path: '/main', component: Main, }
+    ]
+
+    var router = new VueRouter({
+        routes // （缩写）相当于 routes: routes
+    })
+    // router.redirect({
+    //         '/': '/login'
+    // 	})
+    // 4. 创建和挂载根实例。
+    // 记得要通过 router 配置参数注入路由，
+    // 从而让整个应用都有路由功能
+    const app = new Vue({
+        el: '#app',
+        data: {
+            list: [1, 2, 3, 4]
+        },
+        router
+    }).$mount('#app')
+
+</script>
+
+</html>

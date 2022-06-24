@@ -1,0 +1,7 @@
+[
+    {"id":"A","name":"张三_A","age":"18","gender":"男_A"},
+    {"id":"B","name":"王二_B","age":"18","gender":"男_B"},
+    {"id":"C","name":"李四_C","age":"18","gender":"男_C"},
+    {"id":"D","name":"杰克_D","age":"18","gender":"男_D"},
+    {"id":"E","name":"肉丝_E","age":"18","gender":"女_E"}
+]

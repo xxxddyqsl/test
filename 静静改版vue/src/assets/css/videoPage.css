@@ -1,0 +1,484 @@
+.Video-wrapper {
+  width: 100%;
+  height: 100%;
+  background: #000000;
+}
+
+.Video-header {
+  width: 100%;
+  height: 60px;
+  /* background: #070E0B; */
+  background: #141414;
+  justify-content: space-between;
+}
+
+.Video-header-title {
+  height: 21px;
+  font-size: 16px;
+  /* font-family: Futura-Medium, Futura;
+    font-weight: 500; */
+  color: #FFFFFF;
+  line-height: 21px;
+  margin-left: 20px;
+}
+
+.Video-header-mid {
+  margin: 0 auto;
+  height: 100%;
+}
+
+.Video-header-mid-item {
+  width: 60px;
+  height: 100%;
+  cursor: pointer;
+}
+
+.Video-header-mid-item-icon {
+  width: 100%;
+  height: 100%;
+  background-size: 20px 20px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.Video-header-mid-item-video-icon {
+  background-image: url('../images/video-icon.png');
+}
+
+.Video-header-mid-item-video-icon:hover {
+  background-image: url('../images/video-hover-icon.png');
+}
+.Video-header-mid-item-disableVideo-icon{
+    background-image: url('../images/video-disable-icon.png');
+}
+
+.Video-header-mid-item-audio-icon {
+  background-size: 18px 20px;
+  background-image: url('../images/audio-icon.png');
+}
+
+.Video-header-mid-item-audio-icon:hover {
+  background-image: url('../images/audio-hover-icon.png');
+}
+.Video-header-mid-item-disableAudio-icon {
+    background-image: url('../images/audio-disable-icon.png');
+  }
+
+.Video-header-mid-item-userListDelete-icon {
+  background-image: url('../images/userList-delete.png');
+}
+
+.Video-header-mid-item-userListDelete-icon:hover {
+  background-image: url('../images/userList-delete-hover-icon.png');
+}
+
+.Video-header-mid-item-userListAdd-icon {
+  background-image: url('../images/userList-add.png');
+}
+
+.Video-header-mid-item-userListAdd-icon:hover {
+  background-image: url('../images/userList-add-hover-icon.png');
+}
+
+.Video-header-mid-item-userList-icon {
+  background-image: url('../images/userList.png');
+}
+
+.Video-header-mid-item-userList-icon:hover {
+  background-image: url('../images/userList-hover-icon.png');
+}
+
+.Video-header-mid-item-shareScreen-icon {
+  background-image: url('../images/shareScreen.png');
+}
+
+.Video-header-mid-item-shareScreen-icon:hover {
+  background-image: url('../images/shareScreen-hover-icon.png');
+}
+
+.Video-header-mid-item-message-icon {
+  background-image: url('../images/video-message.png');
+}
+
+.Video-header-mid-item-message-icon:hover {
+  background-image: url('../images/message-hover-icon.png');
+}
+
+.Video-header-mid-item-raiseYourHand-icon {
+  background-image: url('../images/video-raiseYourHand.png');
+}
+
+.Video-header-mid-item-raiseYourHand-icon:hover {
+  background-image: url('../images/raiseYourHand-hover-icon.png');
+}
+.Video-header-mid-item-raiseYourHand-active-icon{
+    background-image: url('../images/raiseYourHand-active-icon.png');
+}
+.Video-header-right {
+  /* margin-left: auto; */
+}
+
+.Video-header-right-minimize {
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+}
+
+.minimize {
+  width: 14px;
+  height: 2px;
+}
+
+.Video-header-right-Finish {
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+  margin-left: 1px;
+}
+
+.Finish {
+  width: 20px;
+  height: 20px;
+}
+
+.Video-main {
+  flex: 1;
+  width: 100%;
+  position: relative;
+}
+
+.video-last-page {
+  width: 20px;
+  height: 48px;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translate(0, -50%);
+  z-index: 1;
+}
+
+.video-next-page {
+  width: 20px;
+  height: 48px;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translate(0, -50%);
+  z-index: 1;
+}
+
+.Video-main-fourPlayerMode {
+  width: 100%;
+  height: 100%;
+  flex-wrap: wrap;
+}
+
+.Video-main-fourPlayerMode-item {
+  position: relative;
+  width: 50%;
+  /* height: 50%; */
+  color: #fff;
+  height: calc(50% - 1px);
+  margin-bottom: 1px;
+}
+
+.Video-main-fourPlayerMode-item:nth-child(2n) {
+  background-color: tan;
+}
+
+.Video-main-fourPlayerMode-item:nth-child(2n+1) {
+  background-color: thistle;
+  width: calc(50% - 2px);
+  margin-right: auto;
+}
+
+.Video-main-fourPlayerMode-item:nth-last-child(2),
+.Video-main-fourPlayerMode-item:last-child {
+  margin-bottom: 0px;
+  margin-top: 1px;
+}
+
+/* 主持人  */
+.Video-Host {
+  position: absolute;
+  right: 0;
+  touch-action: 0;
+  width: 48px;
+  height: 48px;
+}
+
+.Video-footer-toolbar-box {
+  width: 100%;
+  margin-top: auto;
+  margin-bottom: 26px;
+}
+
+.Video-footer-name {
+  margin-top: auto;
+  margin-left: 24px;
+  height: 15px;
+  font-size: 12px;
+  color: #FFFFFF;
+  line-height: 15px;
+  text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.5);
+}
+
+.Video-footer-toolbar {
+  margin-left: 137px;
+}
+
+.Video-footer-toolbar-icon {
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  margin-right: 24px;
+}
+
+.Video-footer-toolbar-icon:last-child {
+  margin-right: 0;
+}
+
+
+
+/* 成员列表 */
+.Video-userList-box {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  justify-content: flex-end;
+}
+
+.Video-Subassembly-hide {
+  width: 26px;
+  height: 54px;
+}
+
+.Video-userList {
+  width: 414px;
+  height: 100%;
+  /* height: 794px; */
+  background: #000000;
+  border-radius: 0px 0px 7px 0px;
+}
+
+.Video-userList-header {
+  width: 100%;
+  margin-top: 14px;
+}
+
+.Video-userList-header-name {
+  margin-left: 12px;
+  height: 21px;
+  font-size: 16px;
+  color: #FFFFFF;
+  line-height: 21px;
+}
+
+.Video-userList-main {
+  width: 100%;
+  flex: 1;
+  margin-top: 19px;
+}
+
+.Video-userList-main-header {
+  width: 100%;
+  height: 15px;
+  font-size: 12px;
+  color: #FFFFFF;
+  line-height: 15px;
+  text-align: center;
+  opacity: 0.7;
+  margin-bottom: 7px;
+}
+
+.Video-userList-main-Name {
+  flex: 1;
+  margin-left: 13px;
+  text-align: left;
+}
+
+.Video-userList-main-Admin {
+  width: 48px;
+  margin-right: 32px;
+}
+
+.Video-userList-main-Microphone {
+  width: 66px;
+  margin-right: 32px;
+}
+
+.Video-userList-main-Camera {
+  width: 48px;
+  margin-right: 24px;
+}
+
+.Video-userList-main-list-box {
+  width: 100%;
+  flex: 1;
+}
+
+.Video-userList-main-list {
+  width: 100%;
+  height: 78px;
+  margin: 0;
+  padding: 0;
+}
+
+.Video-userList-main-list-Name {
+  flex: 1;
+}
+
+.Video-userList-item-icon {
+  margin-left: 12px;
+  border-radius: 50%;
+  width: 52px;
+  height: 52px;
+  border: 1px solid #FFFFFF;
+}
+
+.Video-userList-item-name {
+  height: 21px;
+  font-size: 16px;
+  color: #FFFFFF;
+  line-height: 21px;
+  margin-left: 12px;
+
+
+  /*超出部分文字以...显示 - 兼容英文数字*/
+  /* max-width: 244px; */
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  word-break: break-all;
+}
+
+.video-userList-Admin-icon {
+  width: 48px;
+  height: 48px;
+}
+
+.video-userList-Microphone-icon {
+  width: 48px;
+  height: 48px;
+}
+
+.video-userList-Camera-icon {
+  width: 48px;
+  height: 48px;
+}
+
+/* 消息列表 */
+.Video-message-box {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  justify-content: flex-end;
+}
+
+.Video-message {
+  width: 320px;
+  height: 100%;
+  background: #070E0B;
+  box-shadow: inset 1px 0px 0px 0px #000000;
+  border-radius: 0px 7px 7px 0px;
+}
+
+.Video-message-header {
+  width: 100%;
+  margin-top: 16px;
+  margin-bottom: 54px;
+}
+
+.Video-message-header-title {
+  margin-left: 18px;
+  height: 21px;
+  font-size: 16px;
+  color: #FFFFFF;
+  line-height: 21px;
+  text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);
+}
+
+.Video-message-main-list-box {
+  flex: 1;
+  width: 100%;
+
+  /* 阻止容器被撑大，不设置容器的高度会被子元素撑大溢出。 */
+  height: 0;
+}
+
+.Video-message-main-item {
+  /* width: 100%; */
+  margin: 0 16px 20px 16px;
+}
+
+.Video-message-main-item-name {
+  opacity: 0.6;
+  /* height: 15px; */
+  font-size: 12px;
+  color: #FFFFFF;
+  line-height: 15px;
+  margin-bottom: 4px;
+  text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.5);
+}
+
+.Video-message-main-item-text {
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  max-width: 100%;
+  /* height: 19px; */
+  font-size: 14px;
+  color: #FFFFFF;
+  line-height: 19px;
+  text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.5);
+}
+
+.Video-message-main-item-time {
+  opacity: 0.4;
+  height: 15px;
+  font-size: 12px;
+  color: #FFFFFF;
+  line-height: 15px;
+  text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.5);
+}
+.Video-message-main-item-end{
+    align-items: flex-end;
+}
+.Video-message-footer-box{
+    width: 100%;
+    height: 200px;
+    background: #000000;
+}
+
+
+
+
+.video_user_A{
+  background-image: url('../images/video_user_A.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.video_user_B{
+  background-image: url('../images/video_user_B.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.video_user_C{
+  background-image: url('../images/video_user_C.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.video_user_D{
+  background-image: url('../images/video_user_D.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+}

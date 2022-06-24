@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+</head>
+
+<body>
+
+</body>
+<script>
+    var sTime = new Date("2022-06-14 11:30").getTime(); var eTime = new Date("2022-06-14 13:00").getTime();
+    calculateDiffTime(sTime, eTime)
+    function calculateDiffTime(sTime, eTime) {
+
+        let startTime = sTime  //2021-08-16 17:51
+
+        let endTime = eTime  //2032-08-16 17:51
+
+        let runTime = parseInt((endTime - startTime) / 1000);
+
+        var year = Math.floor(runTime / 86400 / 365);
+
+        runTime = runTime % (86400 * 365);
+
+        var month = Math.floor(runTime / 86400 / 30);
+
+        runTime = runTime % (86400 * 30);
+
+        var day = Math.floor(runTime / 86400);
+
+        runTime = runTime % 86400;
+
+        var hour = Math.floor(runTime / 3600);
+
+        runTime = runTime % 3600;
+
+        var minute = Math.floor(runTime / 60);
+
+        runTime = runTime % 60;
+
+        var second = runTime;
+
+        console.log(`相差${year}年${month}月${day}天${hour}小时${minute}分${second}秒`);
+
+        return year + ',' + month + ',' + day + ',' + hour + ',' + minute + ',' + second;
+
+    };
+
+    TimeDifference('2022-06-15 01:00', '2022-06-15 2:30')
+// 计算 分钟差
+    function TimeDifference(startTime, endTime){
+        var sTime = new Date(startTime).getTime(); var eTime = new Date(endTime).getTime();
+        // 时间戳 相差的毫秒值
+        var Difference = Math.abs(sTime-eTime);
+        // 一分钟等于 1000*60 毫秒
+        var minute=1000*60;
+console.log(Difference/minute);
+}
+    //判断天
+    // GetDateDiff1("2020-06-06", "2020-06-07", "day");
+    //判断小时
+    // GetDateDiff1("2022-06-13 9:00", "2022-06-13 10:00", "hour");
+    //判断分钟
+    // GetDateDiff1("2022-06-13 9:00", "2022-06-13 10:00", "minute");
+    //判断秒
+    // GetDateDiff1("2022-06-13 9:00", "2022-06-13 10:00", "second");
+    function GetDateDiff1(startTime, endTime, diffType) {
+        //alert(endTime);
+        //将xxxx-xx-xx的时间格式，转换为 xxxx/xx/xx的格式
+        startTime = startTime.replace(/\-/g, "/");
+        endTime = endTime.replace(/\-/g, "/");
+        //将计算间隔类性字符转换为小写
+        diffType = diffType.toLowerCase();
+
+        var sTime = new Date(startTime); //开始时间
+        var eTime = new Date(endTime); //结束时间
+        //作为除数的数字
+        var timeType = 1;
+        switch (diffType) {
+            case "second":
+                timeType = 1000;
+                break;
+            case "minute":
+                timeType = 1000 * 60;
+                break;
+            case "hour":
+                timeType = 1000 * 3600;
+                break;
+            case "day":
+                timeType = 1000 * 3600 * 24;
+                break;
+            default:
+                break;
+        }
+        return parseInt((eTime.getTime() - sTime.getTime()) / parseInt(timeType));
+    }
+</script>
+
+</html>

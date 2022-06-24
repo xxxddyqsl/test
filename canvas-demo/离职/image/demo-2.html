@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #outer {
+            display: table;
+            height: 400px;
+            position:relative;
+            overflow: hidden;
+        }
+
+        #middle {
+            display: table-cell;
+            vertical-align: middle;
+            position:absolute;
+    top:50%;
+        }
+
+        #inner {
+            position:relative;
+    top:-50%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id='outer'>
+        <div id='middle'>
+            <div id='inner'>
+                测试
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    function preview(oper) {
+        if (oper < 10) {
+            bdhtml = window.document.body.innerHTML;//获取当前页的html代码
+            sprnstr = "<!--startprint" + oper + "-->";//设置打印开始区域
+            eprnstr = "<!--endprint" + oper + "-->";//设置打印结束区域
+            prnhtml = bdhtml.substring(bdhtml.indexOf(sprnstr) + 18); //从开始代码向后取html
+
+            prnhtml = prnhtml.substring(0, prnhtml.indexOf(eprnstr));//从结束代码向前取html
+            window.document.body.innerHTML = prnhtml;
+            window.print();
+            window.document.body.innerHTML = bdhtml;
+        } else {
+            window.print();
+        }
+    }
+</script>
+
+</html>

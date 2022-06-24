@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .login{
+            width: 300px;
+            height: 300px;
+            border: 1px solid ;
+        }
+    </style>
+</head>
+<body>
+    测试 请求 自定义 nodejs - post 接口请求
+   <div class="login">
+       登录调用测试post接口 - 返回数据
+       <input type="text" name="" id="name" placeholder="输入测试账号">
+       <input type="text" name="" id="password" placeholder="输入测试密码">
+       <button onclick="geLogin()"> login</button>
+   </div>
+</body>
+<script  src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script>
+    // 登录测试数据
+//    [
+//     {"id":"A","name":"张三_A","password":"A_123"},
+//     {"id":"B","name":"王二_B","password":"B_123"},
+//     {"id":"C","name":"李四_C","password":"C_123"},
+//     {"id":"D","name":"杰克_D","password":"D_123"},
+//     {"id":"E","name":"肉丝_E","password":"E_123"}
+// ]
+    var code='1994';
+    function geLogin(){
+        let name=$('#name').val();
+        let password=$('#password').val();
+        if( name==''||password==''){
+            return alert('必填项目');
+        };
+        $.ajax({ 
+            type: "POST",//必须是get请求
+            url: "http://172.18.70.26:4399/login",
+            
+            data:JSON.stringify({"name":name,"password":password}),
+            // data:{"name":"张三_A","password":"A_123"},
+            success: function (res) {
+                console.log(res);
+            },error:function(err){
+                console.log(err)
+            }
+        });
+    }
+    // 跨域请求
+    function getFunJsonp(){
+        $.ajax({
+            async:false,
+            type: "GET",//必须是get请求
+            url: "http://172.18.70.26:5642/?code="+code+'&codeA=codeA',
+            dataType: 'jsonp',
+             //传递给请求处理程序，用以获得jsonp回调函数名的参数名(默认为:callback)
+            jsonp: 'jsoncallback',
+            data: {aa:'测试data',bb:'测试b'},
+            //自定义的jsonp回调函数名称，默认为jQuery自动生成的随机函数名  //成功获取跨域服务器上的json数据后,会动态执行这个callback函数
+            jsonpCallback:"success_jsonpCallback",
+            success: function (res) {
+                console.log(res);
+            },error:function(err){
+                console.log(err)
+            }
+        });
+    }
+</script>
+</html>

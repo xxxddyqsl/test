@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- Nodejs还有个重要概念，就是非阻塞处理。 -->
+</body>
+<script>
+    // 1、阻塞代码实例 - 在文件读取完后才执行完程序 -阻塞按是按顺序执行
+    // 创建一个文件 input.txt ，内容如下：
+
+    // W3Cschool教程官网地址：www.w3cschool.cn
+    // 创建 main.js 文件, 代码如下：
+
+    // var fs = require("fs");
+
+    // var data = fs.readFileSync('input.txt');
+
+    // console.log(data.toString());
+    // console.log("程序执行结束!");
+    // 以上代码执行结果如下：
+
+    // $ node main.js
+    // W3Cschool教程官网地址：www.w3cschool.cn
+
+    // 程序执行结束!
+
+    // 2、非阻塞代码实例  - 不需要等待文件读取完，这样就可以在读取文件时同时执行接下来的代码，大大提高了程序的性能 - 非阻塞是不需要按顺序的
+    // 创建一个文件 input.txt ，内容如下：
+
+    // W3Cschool教程官网地址：www.w3cschool.cn
+    // 创建 main.js 文件, 代码如下：
+
+    // var fs = require("fs");
+
+    // fs.readFile('input.txt', function (err, data) {
+    //     if (err) return console.error(err);
+    //     console.log(data.toString());
+    // });
+
+    // console.log("程序执行结束!");
+    // 以上代码执行结果如下：
+
+    // $ node main.js
+    // 程序执行结束!
+    // W3Cschool教程官网地址：www.w3cschool.cn
+
+    //说明： 以上两个实例我们了解了阻塞与非阻塞调用的不同。第一个实例在文件读取完后才执行完程序。 第二个实例我们呢不需要等待文件读取完，这样就可以在读取文件时同时执行接下来的代码，大大提高了程序的性能。
+    // 因此，阻塞按是按顺序执行的，而非阻塞是不需要按顺序的，所以如果需要处理回调函数的参数，我们就需要写在回调函数内。
+
+
+</script>
+<script type="text/javascript">
+    // 回调的例子：回调的函数一般是作为最后一个形参出现。实际工作中，最具体的应用就是jq的$.ajax()。
+    function aaa(a, b, callback) {
+        console.log(a , b);
+        callback(a, b);
+    }
+
+
+    function num(a, b) {
+        console.log(a + b);
+    }
+    //在这个例子中，num就是作为回调函数传入aaa中的。
+    aaa(1, 2, num);
+</script>
+
+</html>

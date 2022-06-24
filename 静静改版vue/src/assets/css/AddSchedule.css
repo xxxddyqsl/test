@@ -1,0 +1,136 @@
+ .AddSchedule-box {
+   position: absolute;
+   top: 0;
+   right: 0;
+   width: 100%;
+   height: 100%;
+   z-index: 3;
+
+   justify-content: flex-end;
+ }
+
+ .AddSchedule-wrapper {
+   margin-top: auto;
+   margin-bottom: 24px;
+   margin-right: 100px;
+   width: 516px;
+   height: 504px;
+   background: #FFFFFF;
+   box-shadow: 0px 4px 50px 0px rgba(0, 0, 0, 0.07), 0px 0px 8px 0px rgba(0, 0, 0, 0.11);
+   border-radius: 4px;
+ }
+
+ .AddSchedule-header {
+   width: 100%;
+ }
+
+ .AddSchedule-header-icon {
+   width: 20px;
+   height: 20px;
+   margin: 9px 7px 23px auto;
+
+ }
+
+ .AddSchedule-main {
+   width: 100%;
+   /* flex: 1; */
+ }
+
+ .AddSchedule-main-item {
+   width: 100%;
+   margin-bottom: 21px;
+ }
+ /* .AddSchedule-main-item:last-child{
+   margin-bottom: 0;
+ } */
+ .AddSchedule-main-item-title {
+   width: 106px;
+   text-align: right;
+   height: 21px;
+   font-size: 16px;
+   /* font-family: Futura-Medium, Futura; */
+   /* font-weight: 500; */
+   color: #242527;
+   line-height: 21px;
+ }
+
+ .AddSchedule-main-item-val {
+   position: relative;
+   flex: 1;
+   margin-left: 12px;
+   margin-right: 24px;
+   height: 30px;
+   /* background: #F1F3F4; */
+   background-color: #FFFFFF;
+   border-radius: 15px;
+   /* border: 1px solid #E6E9EB; */
+ }
+
+ .AddSchedule-main-item-date-icon {
+   width: 14px;
+   height: 14px;
+   position: absolute;
+   right: 12px;
+ }
+
+ .AddSchedule-main-item-val-radio {
+   margin-right: 16px;
+   cursor: pointer; 
+ }
+
+ .AddSchedule-main-item-val-radio:last-child {
+   margin-right: 0;
+ }
+
+ .AddSchedule-main-item-val-radio-icon {
+   width: 16px;
+   height: 16px;
+   margin-right: 6px;
+   background-image: url('../images/radio-icon.png');
+   background-size: contain;
+   background-repeat: no-repeat;
+ }
+
+ .AddSchedule-main-item-val-radio:hover .AddSchedule-main-item-val-radio-icon {
+   background-image: url('../images/radio-icon-hover.png');
+ }
+.AddSchedule-main-item-val-radio-checked{
+  background-image: url('../images/radio-icon-click.png') !important;
+}
+ .AddSchedule-main-item-val-radio label {
+   /* width: 82px; */
+   font-size: 14px;
+   color: #070E0B;
+   opacity: 0.4;
+ }
+
+
+
+ .AddSchedule-main .AddSchedule-main-item:last-child  .AddSchedule-main-item-val{
+  height: 153px;
+  background: #F1F3F4;
+  border-radius: 15px;
+  /* border: 1px solid #E6E9EB; */
+ }
+
+ .AddSchedule-footer{
+   width: 100%;
+   justify-content: flex-end;
+ }
+ .AddSchedule-btn{
+   width: 120px;
+   height: 50px;
+   color: #ffff;
+   font-size: 18px;
+   border-radius:6px ;
+ }
+ .AddSchedule-btn-Cancel {
+  margin-right: 10px;
+  cursor: pointer; 
+  background-color: rgba(7, 14, 11, 1);
+ }
+ .AddSchedule-btn-Save {
+  margin-right: 24px;
+  cursor: pointer; 
+  background-color:rgba(23, 186, 119, 1);
+}
